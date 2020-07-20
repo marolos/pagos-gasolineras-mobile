@@ -3,7 +3,7 @@ import rootReducers from './reducers';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage  from '@react-native-community/async-storage';
 import createEncryptor from 'redux-persist-transform-encrypt';
-import { ENCRYPTOR_KEY } from '../common/constants';
+import { ENCRYPTOR_KEY } from '../utils/constants';
 import thunk from 'redux-thunk';
 
 

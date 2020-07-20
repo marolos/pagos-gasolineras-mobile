@@ -1,20 +1,19 @@
 import React from 'react';
 import Touchable from 'react-native-platform-touchable';
 import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
-import { colors } from '../../common/constants';
 
-export default function CustomButton({ text, onPress, icon, loading, style }) {
+export default function CustomButton({ text, onPress, icon, loading, style, textStyle }) {
   return (
     <Touchable
-      style={style || styles.default}
       background={Touchable.Ripple('white')}
-      onPress={onPress || (() => {})}
+			onPress={onPress || (() => {})}
+			style={style || styles.default}
     >
       <View>
         <ActivityIndicator animating={loading} size="small" color="#ffffff" />
         <>
           {icon && <View>{icon}</View>}
-          <Text style={props.textStyle || styles.text}>{text}</Text>
+          <Text style={textStyle || styles.text}>{text}</Text>
         </>
       </View>
     </Touchable>
@@ -26,12 +25,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.primary,
+    backgroundColor: 'black',
     margin: 10,
     borderRadius: 5,
   },
   text: {
-    color: 'white',
+    color: 'black',
     fontFamily: 'Poppins-SemiBold',
     fontSize: 16,
   },

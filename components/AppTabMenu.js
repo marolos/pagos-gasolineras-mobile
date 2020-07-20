@@ -1,10 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
+import { connect } from 'react-redux';
+import { TabOptions } from '../redux/reducers';
 
 const Tab = createBottomTabNavigator();
 
-function AppTabMenu(props) {
+function AppTabMenu({ activeTab }) {
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -14,6 +16,11 @@ function AppTabMenu(props) {
             <Text>home</Text>
           </View>
         )}
+        options={() => ({
+          tabBarIcon: () => (
+            <Label label={'home'} active={activeTab === TabOptions.HOME} />
+          ),
+        })}
       />
       <Tab.Screen
         name="search"
@@ -22,6 +29,11 @@ function AppTabMenu(props) {
             <Text>search</Text>
           </View>
         )}
+        options={() => ({
+          tabBarIcon: () => (
+            <Label label={'search'} active={activeTab === TabOptions.SEARCH} />
+          ),
+        })}
       />
       <Tab.Screen
         name="notifications"
@@ -30,9 +42,25 @@ function AppTabMenu(props) {
             <Text>notifications</Text>
           </View>
         )}
+        options={() => ({
+          tabBarIcon: () => (
+            <Label
+              label={'notifications'}
+              active={activeTab === TabOptions.NOTIFICATIONS}
+            />
+          ),
+        })}
       />
     </Tab.Navigator>
   );
 }
 
-export default AppTabMenu;
+function Label({ label, active }) {
+  return <Text style={{ color: active ? 'blue' : 'black' }}>{label}</Text>;
+}
+
+const mapStateToProps = (state) => ({
+  activeTab: state.activeTab,
+});
+
+export default connect(mapStateToProps)(AppTabMenu);

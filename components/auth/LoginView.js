@@ -1,21 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { View, Text, TextInput } from 'react-native';
-import AxiosClient from '../../common/axiosClient';
 import CustomButton from '../shared/CustomButton';
+import { loginRequest } from '../../redux/auth/actions';
 
 function LoginView(props) {
   const [loading, setLoading] = React.useState(false);
-  const [credential, setCredemtials] = React.useState({
+  const [credentials, setCredentials] = React.useState({
     identifier: '',
     password: '',
   });
 
-  React.useEffect(() => {
-    AxiosClient.get('/auth/check')
-      .then((res) => console.log('done'))
-      .catch((err) => console.error('error:', err));
-  }, []);
+  function onLogin() {
+    props.dispatch(
+      loginRequest(
+        credentials,
+        (res) => console.log('res::', res),
+        (err) => console.log('err::', err),
+      ),
+    );
+  }
 
   return (
     <View>
@@ -26,16 +30,16 @@ function LoginView(props) {
         <View>
           <TextInput
             placeholder="email, cédula o código"
-            onChangeText={(text) => setCredemtials({ ...credential, identifier: text })}
+            onChangeText={(text) => setCredentials({ ...credentials, identifier: text })}
           />
         </View>
         <View>
           <TextInput
             placeholder="contraseña"
-            onChangeText={(text) => setCredemtials({ ...credential, password: text })}
+            onChangeText={(text) => setCredentials({ ...credentials, password: text })}
           />
         </View>
-        <CustomButton text="Iniciar sesión" loading={loading} onPress={() => {}} />
+        <CustomButton text="Iniciar sesión" loading={loading} onPress={onLogin} />
       </View>
     </View>
   );
