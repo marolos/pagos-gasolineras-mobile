@@ -1,31 +1,30 @@
 import React from 'react';
 import 'react-native-gesture-handler';
-import AppNavigator from './AppNavigator';
 import AuthFlowNavigator from './AuthFlowNavigator';
 import { connect } from 'react-redux';
 import SplashScreen from 'react-native-splash-screen';
 import { getGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import FetchClient from '../utils/FetchClient';
+import AppDrawerNavigator from './AppDrawerNavigator';
 
 function App(props) {
   React.useEffect(() => {
     getGenericPassword()
       .then((credentials) => {
         FetchClient.setAuthToken(credentials.password);
-        SplashScreen.hide();
       })
       .catch((error) => {
         FetchClient.setAuthToken('');
-        SplashScreen.hide();
         resetGenericPassword()
-          .then((done) => {})
+          .then(() => {})
           .catch((err) => {});
+      })
+      .finally(() => {
+        SplashScreen.hide();
       });
   }, []);
 
-  return (
-    props.user.loggedIn ? <AppNavigator /> : <AuthFlowNavigator />
-  );
+  return props.user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />;
 }
 
 const mapStateToProps = (state) => ({ user: state.user });

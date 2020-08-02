@@ -25,7 +25,9 @@ export const loginRequest = (form, onSuccess, onError) => (dispatch) => {
           dispatch(login({ userData: data.user }));
           onSuccess(data);
         })
-        .catch((error) => {console.error("Error saving the token")});
+        .catch((error) => {
+          console.error('Error saving the token', error.message);
+        });
     })
     .catch((error) => {
       onError(error);

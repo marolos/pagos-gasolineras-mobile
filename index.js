@@ -1,8 +1,5 @@
-/**
- * @format
- */
-
-import { AppRegistry } from 'react-native';
+import React from 'react';
+import { AppRegistry, View, ActivityIndicator } from 'react-native';
 import App from './components/App';
 import { name as appName } from './app.json';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -17,7 +14,7 @@ const Loading = () => (
 
 const AppWrapper = () => (
   <ReduxProvider store={getStore()}>
-    <PersistGate persistor={getPersistor()} loading={<Loading/>}>
+    <PersistGate persistor={getPersistor()} loading={<Loading />}>
       <App />
     </PersistGate>
   </ReduxProvider>

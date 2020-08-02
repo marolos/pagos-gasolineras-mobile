@@ -1,20 +1,24 @@
 import React from 'react';
 import Touchable from 'react-native-platform-touchable';
 import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import tailwind from 'tailwind-rn';
 
 export default function CustomButton({ text, onPress, icon, loading, style, textStyle }) {
   return (
     <Touchable
       background={Touchable.Ripple('white')}
-			onPress={onPress || (() => {})}
-			style={style || styles.default}
+      onPress={onPress}
+      style={tailwind('items-center')}
     >
-      <View>
-        <ActivityIndicator animating={loading} size="small" color="#ffffff" />
-        <>
-          {icon && <View>{icon}</View>}
-          <Text style={textStyle || styles.text}>{text}</Text>
-        </>
+      <View style={tailwind('bg-black rounded-md items-center w-56 p-4')}>
+        {loading ? (
+          <ActivityIndicator animating={loading} size="small" color="#ffffff" />
+        ) : (
+          <>
+            {icon && <View>{icon}</View>}
+            <Text style={tailwind('text-white')}>{text}</Text>
+          </>
+        )}
       </View>
     </Touchable>
   );

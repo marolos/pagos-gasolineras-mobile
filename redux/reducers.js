@@ -2,12 +2,12 @@ import { combineReducers } from 'redux';
 import * as authReducers from './auth/reducers'
 
 export const TabOptions = {
-	HOME: 'HOME',
+	GAS: 'GAS',
 	SEARCH: 'SEARCH',
 	NOTIFICATIONS: 'NOTIFICATIONS'
 }
 
-const activeTab = (state = TabOptions.HOME, action) => {
+const activeTab = (state = TabOptions.GAS, action) => {
   switch (action.type) {
     case 'SET_ACTIVE_TAB':
       return action.activeTab;

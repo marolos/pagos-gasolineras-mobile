@@ -12,11 +12,18 @@ function LoginView(props) {
   });
 
   function onLogin() {
+    setLoading(true);
     props.dispatch(
       loginRequest(
         credentials,
-        (res) => console.log('res::', res),
-        (err) => console.log('err::', err),
+        (res) => {
+          console.log(':: res ::', res);
+          setLoading(false);
+        },
+        (err) => {
+          console.error(':: err ::', err);
+          setLoading(false);
+        },
       ),
     );
   }
@@ -39,7 +46,7 @@ function LoginView(props) {
             onChangeText={(text) => setCredentials({ ...credentials, password: text })}
           />
         </View>
-        <CustomButton text="Iniciar sesión" loading={loading} onPress={onLogin} />
+        <CustomButton text="Iniciar sesión" onPress={onLogin} loading={loading}/>
       </View>
     </View>
   );
