@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { View } from 'react-native';
-import CustomButton from '../shared/CustomButton';
+import LoadingButton from '../shared/LoadingButton';
 
 function SignupView(props) {
   return (
     <View>
-      <CustomButton>Sign up</CustomButton>
+      <LoadingButton text={'signup'}/>
     </View>
   );
 }

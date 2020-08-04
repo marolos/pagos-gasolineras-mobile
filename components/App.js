@@ -2,7 +2,6 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import AuthFlowNavigator from './AuthFlowNavigator';
 import { connect } from 'react-redux';
-import SplashScreen from 'react-native-splash-screen';
 import { getGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import FetchClient from '../utils/FetchClient';
 import AppDrawerNavigator from './AppDrawerNavigator';
@@ -19,9 +18,6 @@ function App(props) {
           .then(() => {})
           .catch((err) => {});
       })
-      .finally(() => {
-        SplashScreen.hide();
-      });
   }, []);
 
   return props.user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />;
