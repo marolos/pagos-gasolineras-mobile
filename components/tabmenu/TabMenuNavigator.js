@@ -18,7 +18,7 @@ function TabMenuNavigator(props) {
 				component={GasCompaniesView}
 				listeners={{
           tabPress: () => props.setActiveTab(TabOptions.GAS)
-        }}
+				}}
         options={() => ({
 					tabBarIcon: (focused) => <Label label={'gas'} active={focused} />,
         })}

@@ -6,8 +6,8 @@ import { typefaces } from '../../utils/styles';
 export default function LoadingButton({ text, onPress, icon, loading }) {
   return (
     <TouchableOpacity
-			onPress={onPress}
-			activeOpacity={0.9}
+      onPress={onPress}
+      activeOpacity={0.85}
       style={tailwind('rounded-md items-center w-56')}
     >
       <View style={tailwind('bg-black rounded-md items-center w-full py-4')}>
@@ -23,4 +23,3 @@ export default function LoadingButton({ text, onPress, icon, loading }) {
     </TouchableOpacity>
   );
 }
-
