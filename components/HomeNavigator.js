@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 
 function HomeNavigator(props) {
   return (
-    <Stack.Navigator screenOptions={{cardStyle: {backgroundColor: 'white'}}}>
+    <Stack.Navigator>
       <Stack.Screen
         name="tabmenu"
         component={TabMenuNavigator}

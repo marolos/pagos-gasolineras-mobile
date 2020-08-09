@@ -10,7 +10,8 @@ const Loading = () => (
   <View>
     <ActivityIndicator />
   </View>
-);
+)
+
 
 const AppWrapper = () => (
   <ReduxProvider store={getStore()}>

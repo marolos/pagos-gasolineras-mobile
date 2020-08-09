@@ -6,15 +6,17 @@ import ProfileView from './profile/ProfileView';
 import PaymentMethodsView from './payment/PaymentMethodsView';
 import HomeNavigator from './HomeNavigator';
 import SplashScreen from 'react-native-splash-screen';
+import { theme } from '../utils/constants';
 
 const Drawer = createDrawerNavigator();
+
 
 function AppDrawerNavigator(props) {
   React.useEffect(() => {
     SplashScreen.hide();
   }, []);
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={theme}>
       <StatusBar hidden={false} backgroundColor="black" />
       <Drawer.Navigator>
         <Drawer.Screen

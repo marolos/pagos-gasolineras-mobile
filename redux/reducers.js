@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
-import * as authReducers from './auth/reducers'
+import * as authReducers from './auth/reducers';
 
 export const TabOptions = {
-	GAS: 'GAS', //{ label: 'Gasolineras'},
-	SEARCH: 'SEARCH', //{ label: 'Buscar'},
-	NOTIFICATIONS:'NOTIFICATIONS',// { label: 'Notificaciones'}
-}
+  GAS: { label: 'Gasolineras' },
+  SEARCH: { label: 'Buscar' },
+  NOTIFICATIONS: { label: 'Notificaciones' },
+};
 
 const activeTab = (state = TabOptions.GAS, action) => {
   switch (action.type) {

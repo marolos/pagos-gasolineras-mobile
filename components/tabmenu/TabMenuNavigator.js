@@ -7,49 +7,65 @@ import SearchView from './SearchView';
 import NotificationsView from './NotificationsView';
 import { setActiveTab } from '../../redux/actions';
 import { TabOptions } from '../../redux/reducers';
+import tailwind from 'tailwind-rn';
+import DispenserIcon from '../icons/DispenserIcon';
+import SearchIcon from '../icons/SearchIcon';
+import NotificationIcon from '../icons/NotificationIcon';
+import { typefaces } from '../../utils/styles';
 
 const Tab = createBottomTabNavigator();
 
 function TabMenuNavigator(props) {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator tabBarOptions={{ style: tailwind('px-8') }}>
       <Tab.Screen
-				name="gascompanies"
-				component={GasCompaniesView}
-				listeners={{
-          tabPress: () => props.setActiveTab(TabOptions.GAS)
-				}}
+        name="gascompanies"
+        component={GasCompaniesView}
+        listeners={{
+          tabPress: () => props.setActiveTab(TabOptions.GAS),
+        }}
         options={() => ({
-					tabBarIcon: (focused) => <Label label={'gas'} active={focused} />,
+          tabBarIcon: ({ focused }) => <DispenserIcon focused={focused} />,
+          tabBarLabel: ({ focused }) => (
+            <Label focused={focused} text={TabOptions.GAS.label} />
+          ),
         })}
       />
       <Tab.Screen
         name="search"
         component={SearchView}
         listeners={{
-          tabPress: () => props.setActiveTab(TabOptions.SEARCH)
+          tabPress: () => props.setActiveTab(TabOptions.SEARCH),
         }}
         options={() => ({
-          tabBarIcon: (focused) => <Label label={'search'} active={focused} />,
+          tabBarIcon: ({ focused }) => <SearchIcon focused={focused} />,
+          tabBarLabel: ({ focused }) => (
+            <Label focused={focused} text={TabOptions.SEARCH.label} />
+          ),
         })}
       />
       <Tab.Screen
         name="notifications"
-				component={NotificationsView}
-				listeners={{
-          tabPress: () => props.setActiveTab(TabOptions.NOTIFICATIONS)
+        component={NotificationsView}
+        listeners={{
+          tabPress: () => props.setActiveTab(TabOptions.NOTIFICATIONS),
         }}
         options={() => ({
-          tabBarIcon: (focused) => <Label label={'notifications'} active={focused} />,
+          tabBarIcon: ({ focused }) => <NotificationIcon focused={focused} />,
+          tabBarLabel: ({ focused }) => (
+            <Label focused={focused} text={TabOptions.NOTIFICATIONS.label} />
+          ),
         })}
       />
     </Tab.Navigator>
   );
 }
 
-function Label({ label, active }) {
-  return <Text style={{ color: active ? 'blue' : 'black' }}>{label}</Text>;
-}
+const Label = ({ focused, text }) => (
+  <Text style={[tailwind(focused ? 'text-black text-xs' : 'text-black text-opacity-50 text-xs'), typefaces.pm]}>
+    {text}
+  </Text>
+);
 
 const mapStateToProps = (state) => ({
   activeTab: state.activeTab,
