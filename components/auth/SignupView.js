@@ -7,6 +7,8 @@ import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, FULL_HIGHT } from '../../utils/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import BackIcon from '../icons/BackIcon';
+import { signupRequest } from '../../redux/auth/actions';
+
 
 function SignupView(props) {
   const [loading, setLoading] = React.useState(false);
@@ -20,6 +22,17 @@ function SignupView(props) {
 
   function onRegister() {
     setLoading(true);
+    props.dispatch(
+      signupRequest(
+        credentials,
+        (res) => {
+        },
+        (err) => {
+          console.error(':: err ::', err);
+          setLoading(false);
+        },
+      ),
+    );
   }
 
   return (
@@ -41,7 +54,6 @@ function SignupView(props) {
             <Text style={[tailwind('text-2xl'), typefaces.pb]}>Crear una cuenta</Text>
           </View>
         </View>
-
         <View
           style={[
             tailwind(
