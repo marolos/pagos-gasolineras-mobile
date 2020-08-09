@@ -15,7 +15,7 @@ function LoginView(props) {
     identifier: '',
     password: '',
   });
-	
+
   function onLogin() {
     setLoading(true);
     props.dispatch(
@@ -66,7 +66,9 @@ function LoginView(props) {
           <Text style={[typefaces.pr, { marginRight: 10 }]}>¿No tienes cuenta?</Text>
           <TextButton
             text="Regístrate"
-            onPress={() => {props.navigation.push('signup')}}
+            onPress={() => {
+              props.navigation.push('signup');
+            }}
             style={{ textDecorationLine: 'underline' }}
           />
         </View>
