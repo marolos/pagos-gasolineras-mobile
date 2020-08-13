@@ -1,31 +1,34 @@
 import React from 'react';
-import { View, Text, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Image, ActivityIndicator, StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, ADS_MAX_HEIGHT } from '../../utils/constants';
 import { fakeFetch } from '../../utils/mocks';
 
 function AdsPaginator(props) {
-  const [items, setItems] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [actualIndex, setActualIndex] = React.useState(0);
-  const [total, setTotal] = React.useState(0);
+  const [state, setState] = React.useState({
+    items: [],
+    loading: false,
+  });
 
   React.useEffect(() => {
-    setLoading(true);
+    setState({
+      ...state,
+      loading: false
+    })
     fakeFetch().then((itemsMocks) => {
-      setItems(itemsMocks);
-      setTotal(itemsMocks.length);
-      setLoading(false);
+      setState({
+        items: itemsMocks,
+        loading: false
+      })
     });
   }, []);
 
-  React.useEffect(() => {}, [items]);
 
   return (
     <View style={{ width: FULL_WIDTH, height: ADS_MAX_HEIGHT }}>
       <Swiper
-        key={items.length}
+        key={state.items.length}
         showsButtons={false}
         loop={false}
         height={ADS_MAX_HEIGHT}
@@ -34,17 +37,17 @@ function AdsPaginator(props) {
 				activeDot={<ActiveDot />}
 				paginationStyle={{bottom: 10}}
       >
-        {loading ? (
+        {state.loading ? (
           <View style={loadingContainerStyles.container}>
             <ActivityIndicator
               style={tailwind('flex flex-row justify-center items-center')}
-              animating={loading}
+              animating={state.loading}
               size="small"
               color="#000"
             />
           </View>
         ) : (
-          items.map((item, index) => <AdsItem href={item.href} key={index} />)
+          state.items.map((item, index) => <AdsItem href={item.href} key={index} />)
         )}
       </Swiper>
     </View>

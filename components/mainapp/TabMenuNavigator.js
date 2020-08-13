@@ -17,7 +17,9 @@ const Tab = createBottomTabNavigator();
 
 function TabMenuNavigator(props) {
   return (
-    <Tab.Navigator tabBarOptions={{ style: tailwind('px-8') }}>
+    <Tab.Navigator
+      tabBarOptions={{ style: [tailwind('px-12'), { height: 60 }], showLabel: true }}
+    >
       <Tab.Screen
         name="gascompanies"
         component={GasCompaniesView}
@@ -61,11 +63,8 @@ function TabMenuNavigator(props) {
   );
 }
 
-const Label = ({ focused, text }) => (
-  <Text style={[tailwind(focused ? 'text-black text-xs' : 'text-black text-opacity-50 text-xs'), typefaces.pm]}>
-    {text}
-  </Text>
-);
+const Label = ({ focused, text }) =>
+  focused ? <Text style={[tailwind('text-black text-xs'), typefaces.pm]}>{text}</Text> : null;
 
 const mapStateToProps = (state) => ({
   activeTab: state.activeTab,

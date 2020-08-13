@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
-import TabMenuNavigator from './tabmenu/TabMenuNavigator';
+import TabMenuNavigator from './mainapp/TabMenuNavigator';
 import TopupView from './topup/TopupView';
 import BuyView from './buy/BuyView';
 import { CustomHeaderTitle, CustomHeaderLeft } from './shared/CustomHeader';

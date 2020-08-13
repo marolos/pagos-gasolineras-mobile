@@ -18,3 +18,20 @@ export const itemsMocks = [
 ];
 
 export const fakeFetch = () => new Promise((resolve) => setTimeout(resolve, 2000, itemsMocks));
+
+export const companies = [
+  { name: 'PDV', balance: 130.0, logo: 'pdv.png', id: 0 },
+  { name: 'Shell', balance: 55.0, logo: 'shell.png', id: 1 },
+  { name: 'Terpel', balance: 30.0, logo: 'terpel.png', id: 2 },
+  { name: 'Primax', balance: 0.0, logo: 'primax.png', id: 3 },
+  { name: 'REPSOL', balance: 7.0, logo: 'repsol.png', id: 4 },
+];
+
+
+export const logos = [
+  require('../assets/images/pdv.png'),
+  require('../assets/images/shell.png'),
+  require('../assets/images/terpel.png'),
+  require('../assets/images/primax.png'),
+  require('../assets/images/repsol.png'),
+]
