@@ -1,18 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {StyleSheet, View, TextInput, Image, Dimensions, Text, ScrollView, SafeAreaView } from 'react-native';
-import {useHeaderHeight} from '@react-navigation/stack'
+import {StyleSheet, View, TextInput, Image, Dimensions, Text, ScrollView, SafeAreaView, ToastAndroid } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import { typefaces } from '../../utils/styles';
 import tailwind from 'tailwind-rn';
-
+import { signupRequest } from '../../redux/auth/actions';
 function SignupView(props) {
 
   const [loading, setLoading] = React.useState(false);
   const [information, setInformation] = React.useState({
     first_name: '',
     last_name: '',
-    emial: '',
+    email: '',
     password1: '',
     password2: '',
   });
@@ -84,8 +83,66 @@ function SignupView(props) {
 
   function onRegister(){
     setLoading(true);
-    console.log(information);
+    var nameEmpty = information.first_name == "";
+    var lastEmpty = information.last_name == "";
+    var emailEmpty = information.emial == "";
+    if(nameEmpty || lastEmpty || emailEmpty){
+      setLoading(false);
+      //TODO: Implement for IOS
+      ToastAndroid.show("Debe llenar todos los campos.", ToastAndroid.SHORT)
+      return ;
+    }
+    var passValid = passwordValidator(information.password1, information.password2);
+    if(!passValid.isValid){
+      setLoading(false);
+      //TODO: Implement for IOS
+      ToastAndroid.show(passValid.message, ToastAndroid.LONG)
+      return ;
+    }
+    
+    var data = {
+      cc: '0000000000',  //FIXME: send generic identification,  field in register user class
+      email: information.email,
+      first_name: information.first_name,
+      last_name: information.last_name,
+      password: information.password1,
+      password1: information.password1,
+      password2: information.password2,
+      is_gas_station_admin: false
+    }
+
+    props.dispatch(
+      signupRequest(data,
+        (res) => {
+          setLoading(false);
+          console.log(res);
+        },
+        (err) => {
+          console.log(err);
+          setLoading(false);
+        }
+      )
+    );
+
   }
+
+  function passwordValidator(pass1, pass2){
+    var status = {
+      message: "",
+      isValid: false
+    }
+    if(pass1.length < 8) {
+      status.message = "La contraseña debe tener al menos 8 catacteres";
+      return status;
+    }
+    if(pass1 != pass2){
+      status.message = "Las contraseñas son diferentes";
+      return status
+    }
+    status.isValid = true;
+    return status;
+  }
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -118,7 +175,7 @@ function SignupView(props) {
               <TextInput
                 placeholder="Correo"
                 style={[tailwind('bg-gray-200 rounded-md w-64 my-2 mx-3 pl-5'), typefaces.pm]}
-                onChangeText={(data) => setInformation({ ...information, emial: data })}/>
+                onChangeText={(data) => setInformation({ ...information, email: data })}/>
             </View>
             <View>
               <TextInput
