@@ -19,6 +19,6 @@ const mapStateToProps = (state) => ({
 });
 export const CustomHeaderTitle = connect(mapStateToProps)((props) => {
   return (
-    <Text style={[tailwind('text-base mt-2'), typefaces.pm]}>{props.activeTab}</Text>
+    <Text style={[tailwind('text-base mt-2'), typefaces.pm]}>{props.activeTab.label}</Text>
   );
 });

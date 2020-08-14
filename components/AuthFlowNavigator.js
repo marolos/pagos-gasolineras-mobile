@@ -17,18 +17,13 @@ function AuthFlowNavigator(props) {
   return (
     <NavigationContainer>
       <StatusBar hidden={false} backgroundColor='black' />
-      <Stack.Navigator screenOptions={{ cardStyle: { backgroundColor: 'white' } }}>
+      <Stack.Navigator screenOptions={{ cardStyle: { backgroundColor: 'white' }, headerShown: false }}>
         <Stack.Screen
           name="login"
-          options={{ headerShown: false }}
           component={LoginView}
         />
         <Stack.Screen
           name="signup"
-          options={{
-						headerTitle: 'Registrarse',
-						headerTitleStyle: [tailwind('text-base mt-2'), typefaces.pm] 
-          }}
           component={SignupView}
         />
       </Stack.Navigator>
