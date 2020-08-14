@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, TouchableOpacity, View, TextInput, Image, Text } from 'react-native';
+//import Toast, {DURATION} from 'react-native-easy-toast'
 import LoadingButton from '../shared/LoadingButton';
 import { typefaces } from '../../utils/styles';
 import tailwind from 'tailwind-rn';
@@ -11,6 +12,7 @@ import { signupRequest } from '../../redux/auth/actions';
 
 
 function SignupView(props) {
+  var toast = React.createRef()
   const [loading, setLoading] = React.useState(false);
   const [information, setInformation] = React.useState({
     first_name: '',
@@ -27,15 +29,15 @@ function SignupView(props) {
     var emailEmpty = information.emial == "";
     if(nameEmpty || lastEmpty || emailEmpty){
       setLoading(false);
-      //TODO: Implement for IOS
-      ToastAndroid.show("Debe llenar todos los campos.", ToastAndroid.SHORT)
+      //toast.show("Debe llenar todos los campos.", DURATION.LENGTH_SHORT)
+      console.log("Debe llenar todos los campos.");
       return ;
     }
     var passValid = passwordValidator(information.password1, information.password2);
     if(!passValid.isValid){
       setLoading(false);
-      //TODO: Implement for IOS
-      ToastAndroid.show(passValid.message, ToastAndroid.LONG)
+      //toast.show(passValid.message, DURATION.LENGTH_SHORT)
+      console.log(passValid.message);
       return ;
     }
     
@@ -150,6 +152,7 @@ function SignupView(props) {
           <View style={tailwind('mt-5 items-center')}>
             <LoadingButton text={'Registrarse'} onPress={onRegister} loading={loading} />
           </View>
+          <Toast ref={toast}/>
         </View>
       </View>
     </ScrollView>
