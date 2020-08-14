@@ -45,8 +45,6 @@ function SignupView(props) {
       first_name: information.first_name,
       last_name: information.last_name,
       password: information.password1,
-      password1: information.password1,
-      password2: information.password2,
       is_gas_station_admin: false
     }
 
