@@ -10,7 +10,6 @@ import { theme } from '../utils/constants';
 
 const Drawer = createDrawerNavigator();
 
-
 function AppDrawerNavigator(props) {
   React.useEffect(() => {
     SplashScreen.hide();
