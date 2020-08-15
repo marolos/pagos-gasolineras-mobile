@@ -17,11 +17,11 @@ export function passwordValidator(pass1, pass2) {
     isValid: false,
   };
   if (pass1.length < 8) {
-    status.message = 'La contraseña debe tener al menos 8 catacteres';
+    status.message = 'La contraseña debe tener al menos 8 caracteres, un numero, y un caracter especial';
     return status;
   }
   if (pass1 != pass2) {
-    status.message = 'Las contraseñas son diferentes';
+    status.message = 'Las contraseñas no coinciden';
     return status;
   }
   status.isValid = true;

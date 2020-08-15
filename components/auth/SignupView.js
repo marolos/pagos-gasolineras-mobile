@@ -1,17 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, TouchableOpacity, View, TextInput, Image, Text } from 'react-native';
-//import Toast, {DURATION} from 'react-native-easy-toast'
 import LoadingButton from '../shared/LoadingButton';
 import { typefaces } from '../../utils/styles';
 import tailwind from 'tailwind-rn';
-import { FULL_WIDTH, FULL_HIGHT, EMAIL_REGEX } from '../../utils/constants';
+import { FULL_WIDTH, FULL_HIGHT, EMAIL_REGEX, PASSWORD_REGEX } from '../../utils/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import BackIcon from '../icons/BackIcon';
 import { signupRequest } from '../../redux/auth/actions';
 import { passwordValidator } from '../../utils/utils';
 import BasicInput from './BasicInput';
 import PasswordInput from './PasswordInput';
+import Toast from 'react-native-simple-toast';
 
 class SignupView extends React.Component {
   constructor(props) {
@@ -37,14 +37,15 @@ class SignupView extends React.Component {
     } = this.state;
 
     if (!first_name && !last_name && !email) {
+      Toast.show('Por favor llene todos los campos.');
       this.setState({ loading: false });
       return;
     }
 
     const passValid = passwordValidator(password1, password2);
     if (!passValid.isValid) {
+      Toast.show(passValid.message);
       this.setState({ loading: false });
-      console.log(passValid.message);
       return;
     }
 
@@ -80,7 +81,7 @@ class SignupView extends React.Component {
               <TouchableOpacity
                 onPress={() => this.props.navigation.goBack()}
                 activeOpacity={0.7}
-                style={tailwind('rounded-md mb-4')}
+                style={tailwind('rounded-md mb-2')}
               >
                 <BackIcon />
               </TouchableOpacity>
@@ -103,7 +104,7 @@ class SignupView extends React.Component {
                     information: { ...state.information, first_name: text },
                   }))
                 }
-                validate={(text) => text && text != ''}
+                validate={(text) => text.length > 0}
               />
               <BasicInput
                 placeholder="Apellidos"
@@ -112,7 +113,7 @@ class SignupView extends React.Component {
                     information: { ...state.information, last_name: text },
                   }))
                 }
-                validate={(text) => text && text != ''}
+                validate={(text) => text.length > 0}
               />
               <BasicInput
                 placeholder="Correo"
@@ -130,7 +131,7 @@ class SignupView extends React.Component {
                     information: { ...state.information, password1: text },
                   }))
                 }
-                validate={(text) => text && text != ''}
+                validate={(text) => PASSWORD_REGEX.test(text)}
               />
               <PasswordInput
                 placeholder="Contraseña"
@@ -139,7 +140,7 @@ class SignupView extends React.Component {
                     information: { ...state.information, password2: text },
                   }))
                 }
-                validate={(text) => text && text != ''}
+                validate={(text) => PASSWORD_REGEX.test(text)}
               />
             </View>
             <View style={tailwind('mt-5 items-center')}>
@@ -157,7 +158,7 @@ class SignupView extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  card: { top: 200 },
+  card: { top: 150 },
 });
 
 export default connect()(SignupView);

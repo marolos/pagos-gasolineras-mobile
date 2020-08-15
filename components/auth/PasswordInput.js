@@ -11,20 +11,22 @@ export default function PasswordInput({ placeholder, onChangeText, validate }) {
       <TextInput
         placeholder={placeholder}
         style={[
-          tailwind('rounded-md w-64 my-2 mx-3 pl-5'),
-          editing ? tailwind('bg-white border border-black') : tailwind('bg-gray-200'),
-          hasErrors ? tailwind('bg-white border border-red-400') : {},
+          tailwind('rounded-md border-2 border-gray-200 w-64 my-2 mx-3 pl-5'),
+          editing ? tailwind('bg-white border-2 border-gray-600') : tailwind('bg-gray-200'),
+          hasErrors ? tailwind('bg-white border-2 border-red-400') : {},
           typefaces.pm,
         ]}
-        secureTextEntry={true}
         onChangeText={(text) => {
-          onChangeText(text);
           if (validate) {
             setHasError(!validate(text));
-            setEditing(false);
           }
         }}
         onFocus={(e) => setEditing(true)}
+        onEndEditing={(e) => {
+          onChangeText(e.nativeEvent.text);
+          setEditing(false);
+        }}
+        secureTextEntry={true}
       />
     </View>
   );
