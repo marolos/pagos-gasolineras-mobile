@@ -17,7 +17,7 @@ export const itemsMocks = [
   },
 ];
 
-export const fakeFetch = () => new Promise((resolve) => setTimeout(resolve, 2000, itemsMocks));
+export const fakeFetch = (data, timing) => new Promise((resolve) => setTimeout(resolve, timing || 2000, data));
 
 export const companies = [
   { name: 'PDV', balance: 130.0, logo: 'pdv.png', id: 0 },
@@ -34,4 +34,10 @@ export const logos = [
   require('../assets/images/terpel.png'),
   require('../assets/images/primax.png'),
   require('../assets/images/repsol.png'),
+]
+
+export const vehiclesIds = [
+  {id: 0, user_id: 0, number: 'abc123', alias: 'carro azul' },
+  {id: 1, user_id: 1, number: 'def452' },
+  {id: 2, user_id: 2, number: 'cba321', alias: 'carro de mami' },
 ]

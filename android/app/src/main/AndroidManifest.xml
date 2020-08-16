@@ -26,6 +26,7 @@
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
 				android:exported="true"
+        android:screenOrientation="portrait"
 			/>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>

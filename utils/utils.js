@@ -1,15 +1,14 @@
 export function createChunks(array, chunkSize) {
-	const chunks = []
+  const chunks = [];
   const n = array.length;
-  let i = 0
+  let i = 0;
 
   while (i < n) {
-    chunks.push(array.slice(i, i += chunkSize));
+    chunks.push(array.slice(i, (i += chunkSize)));
   }
 
   return chunks;
 }
-
 
 export function passwordValidator(pass1, pass2) {
   const status = {
@@ -17,7 +16,8 @@ export function passwordValidator(pass1, pass2) {
     isValid: false,
   };
   if (pass1.length < 8) {
-    status.message = 'La contraseña debe tener al menos 8 caracteres, un numero, y un caracter especial';
+    status.message =
+      'La contraseña debe tener al menos 8 caracteres, un numero, y un caracter especial';
     return status;
   }
   if (pass1 != pass2) {
@@ -26,4 +26,9 @@ export function passwordValidator(pass1, pass2) {
   }
   status.isValid = true;
   return status;
+}
+
+export function randomInt(nmax) {
+  const max = nmax || 10000;
+  return Math.floor(Math.random() * max);
 }

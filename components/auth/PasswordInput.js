@@ -3,7 +3,7 @@ import { View, TextInput } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
 
-export default function PasswordInput({ placeholder, onChangeText, validate }) {
+export default function PasswordInput({ placeholder, onEndEditing, validate }) {
   const [hasErrors, setHasError] = React.useState(false);
   const [editing, setEditing] = React.useState(false);
   return (
@@ -23,7 +23,7 @@ export default function PasswordInput({ placeholder, onChangeText, validate }) {
         }}
         onFocus={(e) => setEditing(true)}
         onEndEditing={(e) => {
-          onChangeText(e.nativeEvent.text);
+          onEndEditing(e.nativeEvent.text);
           setEditing(false);
         }}
         secureTextEntry={true}

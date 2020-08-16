@@ -9,7 +9,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import BackIcon from '../icons/BackIcon';
 import { signupRequest } from '../../redux/auth/actions';
 import { passwordValidator } from '../../utils/utils';
-import BasicInput from './BasicInput';
+import BasicInput from '../shared/BasicInput';
 import PasswordInput from './PasswordInput';
 import Toast from 'react-native-simple-toast';
 
@@ -99,7 +99,7 @@ class SignupView extends React.Component {
             <View>
               <BasicInput
                 placeholder="Nombres"
-                onChangeText={(text) =>
+                onEndEditing={(text) =>
                   this.setState((state) => ({
                     information: { ...state.information, first_name: text },
                   }))
@@ -108,7 +108,7 @@ class SignupView extends React.Component {
               />
               <BasicInput
                 placeholder="Apellidos"
-                onChangeText={(text) =>
+                onEndEditing={(text) =>
                   this.setState((state) => ({
                     information: { ...state.information, last_name: text },
                   }))
@@ -117,7 +117,7 @@ class SignupView extends React.Component {
               />
               <BasicInput
                 placeholder="Correo"
-                onChangeText={(text) =>
+                onEndEditing={(text) =>
                   this.setState((state) => ({
                     information: { ...state.information, email: text },
                   }))
@@ -126,7 +126,7 @@ class SignupView extends React.Component {
               />
               <PasswordInput
                 placeholder="Contraseña"
-                onChangeText={(text) =>
+                onEndEditing={(text) =>
                   this.setState((state) => ({
                     information: { ...state.information, password1: text },
                   }))
@@ -135,7 +135,7 @@ class SignupView extends React.Component {
               />
               <PasswordInput
                 placeholder="Contraseña"
-                onChangeText={(text) =>
+                onEndEditing={(text) =>
                   this.setState((state) => ({
                     information: { ...state.information, password2: text },
                   }))

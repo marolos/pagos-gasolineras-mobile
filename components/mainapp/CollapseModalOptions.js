@@ -5,7 +5,7 @@ import Modal from 'react-native-modal';
 import ArrowDownIcon from '../icons/ArrowDownIcon';
 import { logos } from '../../utils/mocks';
 import { typefaces } from '../../utils/styles';
-import { Button } from '../shared/Button';
+import Button from '../shared/Button';
 import { useNavigation } from '@react-navigation/native';
 
 function CollapseModalOptions({ visible, closeCollapse, company }) {
@@ -40,7 +40,7 @@ function CollapseModalOptions({ visible, closeCollapse, company }) {
               primary={false}
               onPress={() => {
                 closeCollapse();
-                setTimeout(() => navigation.navigate('topup'), 400);
+                setTimeout(() => navigation.navigate('billingdata'), 400);
               }}
             />
             <Button
