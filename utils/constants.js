@@ -19,6 +19,7 @@ export const FULL_WIDTH = Dimensions.get('window').width;
 export const FULL_HIGHT = Dimensions.get('window').height
 export const ADS_MAX_HEIGHT = 200
 
+export const ADD_VALUE_STEP = 10.0
 
 export const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 export const PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,20}$/

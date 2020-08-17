@@ -11,7 +11,7 @@ import tailwind from 'tailwind-rn';
 import DispenserIcon from '../icons/DispenserIcon';
 import SearchIcon from '../icons/SearchIcon';
 import NotificationIcon from '../icons/NotificationIcon';
-import { typefaces } from '../../utils/styles';
+import Label from '../shared/Label';
 
 const Tab = createBottomTabNavigator();
 
@@ -63,8 +63,6 @@ function TabMenuNavigator(props) {
   );
 }
 
-const Label = ({ focused, text }) =>
-  focused ? <Text style={[tailwind('text-black text-xs'), typefaces.pm]}>{text}</Text> : null;
 
 const mapStateToProps = (state) => ({
   activeTab: state.activeTab,

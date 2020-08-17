@@ -3,7 +3,7 @@ import { View, Image, ActivityIndicator, StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, ADS_MAX_HEIGHT } from '../../utils/constants';
-import { fakeFetch } from '../../utils/mocks';
+import { fakeFetch, itemsMocks } from '../../utils/mocks';
 
 function AdsPaginator(props) {
   const [state, setState] = React.useState({
@@ -16,7 +16,7 @@ function AdsPaginator(props) {
       ...state,
       loading: false
     })
-    fakeFetch().then((itemsMocks) => {
+    fakeFetch(itemsMocks).then((itemsMocks) => {
       setState({
         items: itemsMocks,
         loading: false
