@@ -8,6 +8,8 @@ import { typefaces } from '../../utils/styles';
 import TextButton from '../shared/TextButton';
 import UserLoginIcon from '../icons/UserLoginIcon';
 import PasswordLoginIcon from '../icons/PasswordLoginIcon';
+import FacebookButton from '../shared/FacebookButton'
+import { signupRequest } from '../../redux/auth/actions';
 
 function LoginView(props) {
   const [loading, setLoading] = React.useState(false);
@@ -27,6 +29,24 @@ function LoginView(props) {
         (err) => {
           console.error(':: err ::', err);
           setLoading(false);
+        },
+      ),
+    );
+  }
+
+  function onFacebookLogin(fbdata) {
+    const data = {
+      email: fbdata.additionalUserInfo.profile.email,
+      first_name: fbdata.additionalUserInfo.profile.first_name,
+      last_name: fbdata.additionalUserInfo.profile.last_name,
+      password: fbdata.user.uid // Firebase user id as password
+    };
+    props.dispatch(
+      signupRequest(
+        data,
+        (res) => {},
+        (err) => {
+          console.log(err);
         },
       ),
     );
@@ -72,6 +92,9 @@ function LoginView(props) {
             style={{ textDecorationLine: 'underline' }}
           />
         </View>
+        <FacebookButton
+          onFacebookLogin={onFacebookLogin}
+        />
       </View>
     </View>
   );
