@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator } from 'react-native';
+import Modal from 'react-native-modal';
 import LoadingButton from '../shared/LoadingButton';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
@@ -11,14 +12,17 @@ import FacebookButton from '../shared/FacebookButton';
 import { authRequest } from '../../redux/auth/actions';
 
 function LoginView(props) {
-  const [loading, setLoading] = React.useState(false);
-  const [credentials, setCredentials] = React.useState({
-    identifier: '',
-    password: '',
+  const [state, setState] = React.useState({
+    loading: false,
+    showModal: false,
+    credentials: {
+      identifier: '',
+      password: '',
+    },
   });
 
   function onLogin() {
-    setLoading(true);
+    setState((state) => ({ ...state, loading: true }));
     props.dispatch(
       authRequest(
         '/auth/local/',
@@ -28,13 +32,14 @@ function LoginView(props) {
         },
         (err) => {
           console.error(':: err ::', err);
-          setLoading(false);
+          setState((state) => ({ ...state, loading: false }));
         },
       ),
     );
   }
 
   function onFacebookLogin(user_access_token) {
+    setState((state) => ({ ...state, showModal: true }));
     props.dispatch(
       authRequest(
         '/users/signup/facebook/',
@@ -42,6 +47,7 @@ function LoginView(props) {
         (res) => {},
         (err) => {
           console.log(err);
+          setState((state) => ({ ...state, showModal: false }));
         },
       ),
     );
@@ -59,7 +65,12 @@ function LoginView(props) {
           <TextInput
             style={[tailwind('bg-gray-200 rounded-md w-64 m-2 pl-5'), typefaces.pm]}
             placeholder="email, cédula o código"
-            onChangeText={(text) => setCredentials({ ...credentials, identifier: text })}
+            onChangeText={(text) =>
+              setState((state) => ({
+                ...state,
+                credentials: { ...state.credentials, identifier: text },
+              }))
+            }
           />
         </View>
         <View style={tailwind('flex flex-row')}>
@@ -68,11 +79,16 @@ function LoginView(props) {
             style={[tailwind('bg-gray-200 rounded-md w-64 m-2 pl-5'), typefaces.pm]}
             placeholder="contraseña"
             secureTextEntry={true}
-            onChangeText={(text) => setCredentials({ ...credentials, password: text })}
+            onChangeText={(text) =>
+              setState((state) => ({
+                ...state,
+                credentials: { ...state.credentials, password: text },
+              }))
+            }
           />
         </View>
         <View style={tailwind('mt-8')}>
-          <LoadingButton text="Iniciar sesión" onPress={onLogin} loading={loading} />
+          <LoadingButton text="Iniciar sesión" onPress={onLogin} loading={state.loading} />
         </View>
         <View style={tailwind('mt-8')}>
           <TextButton text="¿Olvidaste tu contraseña?" onPress={() => {}} />
@@ -88,6 +104,21 @@ function LoginView(props) {
           />
         </View>
         <FacebookButton onFacebookLogin={onFacebookLogin} />
+        <Modal
+          isVisible={state.showModal}
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          backdropTransitionOutTiming={0}
+          style={tailwind('w-full flex items-center m-0')}
+        >
+          <View style={tailwind('flex flex-row w-56 h-56 rounded bg-white justify-center')}>
+            <ActivityIndicator
+              size="large"
+              animating={state.showModal}
+              color="black"
+            />
+          </View>
+        </Modal>
       </View>
     </View>
   );
