@@ -2,14 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { View, Text, TextInput, Button } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
-import { loginRequest } from '../../redux/auth/actions';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
 import TextButton from '../shared/TextButton';
 import UserLoginIcon from '../icons/UserLoginIcon';
 import PasswordLoginIcon from '../icons/PasswordLoginIcon';
-import FacebookButton from '../shared/FacebookButton'
-import { signupRequest } from '../../redux/auth/actions';
+import FacebookButton from '../shared/FacebookButton';
+import { authRequest } from '../../redux/auth/actions';
 
 function LoginView(props) {
   const [loading, setLoading] = React.useState(false);
@@ -21,7 +20,8 @@ function LoginView(props) {
   function onLogin() {
     setLoading(true);
     props.dispatch(
-      loginRequest(
+      authRequest(
+        '/auth/local/',
         credentials,
         (res) => {
           //setLoading(false);
@@ -34,16 +34,11 @@ function LoginView(props) {
     );
   }
 
-  function onFacebookLogin(fbdata) {
-    const data = {
-      email: fbdata.additionalUserInfo.profile.email,
-      first_name: fbdata.additionalUserInfo.profile.first_name,
-      last_name: fbdata.additionalUserInfo.profile.last_name,
-      password: fbdata.user.uid // Firebase user id as password
-    };
+  function onFacebookLogin(user_access_token) {
     props.dispatch(
-      signupRequest(
-        data,
+      authRequest(
+        '/users/signup/facebook/',
+        { token: user_access_token },
         (res) => {},
         (err) => {
           console.log(err);
@@ -54,7 +49,7 @@ function LoginView(props) {
 
   return (
     <View>
-      <View style={tailwind('flex flex-row justify-center items-center my-8 mt-24 flex')}>
+      <View style={tailwind('flex flex-row justify-center items-center my-8 mt-20 flex')}>
         <Text style={[tailwind('text-gray-800 text-2xl'), typefaces.psb]}>Fuel</Text>
         <Text style={[tailwind('text-gray-600 text-2xl'), typefaces.psb]}>pay</Text>
       </View>
@@ -92,9 +87,7 @@ function LoginView(props) {
             style={{ textDecorationLine: 'underline' }}
           />
         </View>
-        <FacebookButton
-          onFacebookLogin={onFacebookLogin}
-        />
+        <FacebookButton onFacebookLogin={onFacebookLogin} />
       </View>
     </View>
   );

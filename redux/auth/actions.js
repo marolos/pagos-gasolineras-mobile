@@ -16,8 +16,11 @@ export const logout = () => ({
 /**
  * ASYNC actions creator
  */
-export const loginRequest = (form, onSuccess, onError) => (dispatch) => {
-  return FetchClient.post('/auth/local/', form)
+
+export const authRequest = (url, form, onSuccess, onError) => (
+  dispatch,
+) => {
+  return FetchClient.post(url, form)
     .then((data) => {
       setGenericPassword('token', data.token)
         .then((succes) => {
@@ -34,24 +37,3 @@ export const loginRequest = (form, onSuccess, onError) => (dispatch) => {
       dispatch(logout());
     });
 };
-
-
-export const signupRequest = (form, onSuccess, onError) => (dispatch) => {
-  return FetchClient.post('/users/signup/', form)
-    .then((data) => {
-      setGenericPassword('token', data.token)
-        .then((succes) => {
-          FetchClient.setAuthToken(data.token);
-          dispatch(login({ userData: data.user }));
-          onSuccess(data);
-        })
-        .catch((error) => {
-          console.error('Error saving the token', error.message);
-        });
-    })
-    .catch((error) => {
-      onError(error);
-      dispatch(logout());
-    });
-};
-

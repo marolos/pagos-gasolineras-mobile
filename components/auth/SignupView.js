@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, TouchableOpacity, View, TextInput, Image, Text } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Image, Text } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import { typefaces } from '../../utils/styles';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, FULL_HIGHT, EMAIL_REGEX, PASSWORD_REGEX } from '../../utils/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import BackIcon from '../icons/BackIcon';
-import { signupRequest } from '../../redux/auth/actions';
+import { authRequest } from '../../redux/auth/actions';
 import { passwordValidator } from '../../utils/utils';
 import BasicInput from '../shared/BasicInput';
 import PasswordInput from './PasswordInput';
@@ -57,7 +57,8 @@ class SignupView extends React.Component {
     };
 
     this.props.dispatch(
-      signupRequest(
+      authRequest(
+        '/users/signup/',
         data,
         (res) => {},
         (err) => {
