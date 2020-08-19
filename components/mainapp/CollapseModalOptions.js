@@ -40,7 +40,7 @@ function CollapseModalOptions({ visible, closeCollapse, company }) {
               primary={false}
               onPress={() => {
                 closeCollapse();
-                setTimeout(() => navigation.navigate('billingdata'), 400);
+                setTimeout(() => navigation.navigate('billingData'), 400);
               }}
             />
             <Button

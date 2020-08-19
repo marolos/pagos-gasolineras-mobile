@@ -61,7 +61,7 @@ function LoginView(props) {
       </View>
       <View style={tailwind('items-center items-center w-full')}>
         <View style={tailwind('flex flex-row')}>
-          <UserLoginIcon style={tailwind('mt-4')} width={16} heigth={20} />
+          <UserLoginIcon style={tailwind('mt-5')} width={16} height={20} />
           <TextInput
             style={[tailwind('bg-gray-200 rounded-md w-64 m-2 pl-5'), typefaces.pm]}
             placeholder="email, cédula o código"
@@ -74,7 +74,7 @@ function LoginView(props) {
           />
         </View>
         <View style={tailwind('flex flex-row')}>
-          <PasswordLoginIcon style={tailwind('mt-4')} width={18} heigth={23} />
+          <PasswordLoginIcon style={tailwind('mt-5')} width={18} height={23} />
           <TextInput
             style={[tailwind('bg-gray-200 rounded-md w-64 m-2 pl-5'), typefaces.pm]}
             placeholder="contraseña"

@@ -10,27 +10,11 @@ import AddSubInput from '../shared/AddSubInput';
 
 export default function TopupDataView(props) {
   return (
-    <View>
+    <View style={{flex: 1}}>
       <View style={tailwind('p-6')}>
         <Text style={[tailwind('text-base mb-2'), typefaces.pm]}>Facturacion:</Text>
         <View>
-          <TouchableOpacity
-            delayPressIn={0}
-            activeOpacity={0.6}
-            onPress={props.navigation.goBack}
-          >
-            <View
-              style={tailwind(
-                'border-2 rounded border-gray-400 flex flex-row justify-between px-6 py-4',
-              )}
-            >
-              <Text style={[typefaces.pm]}>{'Manuela canizares'}</Text>
-              <View style={tailwind('flex flex-row items-center')}>
-                <Text style={[typefaces.pm, tailwind('mr-4 ')]}>editar</Text>
-                <ArrowRightIcon />
-              </View>
-            </View>
-          </TouchableOpacity>
+          <GoEditButton navigation={props.navigation} />
         </View>
       </View>
       <Line style={tailwind('w-full bg-gray-300 my-2')} />
@@ -46,15 +30,34 @@ export default function TopupDataView(props) {
       <View style={tailwind('p-6')}>
         <Resume />
       </View>
-      <View style={tailwind('flex flex-row justify-end pr-6 mt-12 mb-4')}>
+      <View style={tailwind('absolute bottom-0 right-0')}>
         <LoadingButton
           icon={<NextIcon />}
           iconPos={'right'}
           text="continuar"
-          style={tailwind('w-48')}
+          style={tailwind('w-48 self-end mr-6 mb-6')}
+          onPress={() => props.navigation.push('chooseCard')}
         />
       </View>
     </View>
+  );
+}
+
+function GoEditButton({ navigation }) {
+  return (
+    <TouchableOpacity delayPressIn={0} activeOpacity={0.6} onPress={navigation.goBack}>
+      <View
+        style={tailwind(
+          'border rounded-lg border-gray-400 flex flex-row justify-between px-6 py-4',
+        )}
+      >
+        <Text style={[typefaces.pm]}>{'Manuela canizares'}</Text>
+        <View style={tailwind('flex flex-row items-center')}>
+          <Text style={[typefaces.pm, tailwind('mr-4 ')]}>editar</Text>
+          <ArrowRightIcon />
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 }
 

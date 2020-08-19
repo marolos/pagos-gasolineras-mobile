@@ -41,3 +41,9 @@ export const vehiclesIds = [
   {id: 1, user_id: 1, number: 'def452' },
   {id: 2, user_id: 2, number: 'cba321', alias: 'carro de mami' },
 ]
+
+
+export const cards = [
+  {id: 0, alias: 'débito - MANUELA CAÑISAREZ', type: 'visa'},
+  {id: 1, alias: 'crédito - MANUELA CAÑISAREZ', type: 'mastercard'}
+]

@@ -8,16 +8,17 @@ import { CustomHeaderTitle, CustomHeaderLeft } from './shared/CustomHeader';
 import BillingDataView from './topup/BillingDataView';
 import Label from './shared/Label';
 import tailwind from 'tailwind-rn';
+import ChooseCardView from './payment/ChooseCardView';
 
 const Stack = createStackNavigator();
 
-const screenOptions = {}
-
 function HomeNavigator(props) {
   return (
-    <Stack.Navigator screenOptions={{cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS}}>
+    <Stack.Navigator
+      screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
+    >
       <Stack.Screen
-        name="tabmenu"
+        name="tabMenu"
         component={TabMenuNavigator}
         options={({ navigation }) => ({
           headerLeft: () => <CustomHeaderLeft navigation={navigation} />,
@@ -25,7 +26,7 @@ function HomeNavigator(props) {
         })}
       />
       <Stack.Screen
-        name="billingdata"
+        name="billingData"
         component={BillingDataView}
         options={() => ({
           headerTitle: () => (
@@ -35,15 +36,24 @@ function HomeNavigator(props) {
               focused={true}
             />
           ),
-          cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
         })}
       />
       <Stack.Screen
-        name="topupdata"
+        name="topupData"
         component={TopupDataView}
         options={() => ({
           headerTitle: () => (
             <Label text={'Recargar saldo'} style={tailwind('text-base mt-1')} focused={true} />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="chooseCard"
+        component={ChooseCardView}
+        options={() => ({
+          headerTitle: () => (
+            <Label text={'Elegir tarjeta'} style={tailwind('text-base mt-1')} focused={true} />
           ),
         })}
       />

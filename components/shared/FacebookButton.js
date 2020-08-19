@@ -1,5 +1,4 @@
 import React from 'react';
-//import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import tailwind from 'tailwind-rn';
@@ -18,8 +17,8 @@ export default function FacebookButton({ onFacebookLogin }) {
       throw 'Something went wrong obtaining access token';
     }
     // Create a Firebase credential with the AccessToken
-    //const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-    //return auth().signInWithCredential(facebookCredential);
+    // const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+    // return auth().signInWithCredential(facebookCredential);
     return data.accessToken
   }
 
@@ -29,11 +28,13 @@ export default function FacebookButton({ onFacebookLogin }) {
 
   return (
     <TouchableOpacity
-      style={tailwind('rounded-md items-center w-48 mt-6')}
+      style={tailwind('rounded-md items-center w-40 mt-6')}
       onPress={() => onFacebookButtonPress().then(onFacebookLogin)}
+      delayPressIn={0}
+      activeOpacity={0.7}
     >
       <View style={[tailwind('rounded-md items-center w-full py-3'), styles.blue]}>
-        <Text style={tailwind('text-white')}>Iniciar con facebook</Text>
+        <Text style={tailwind('text-white text-xs')}>Iniciar con facebook</Text>
       </View>
     </TouchableOpacity>
   );

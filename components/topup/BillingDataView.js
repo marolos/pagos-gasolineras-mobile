@@ -20,7 +20,7 @@ export default function BillingDataView(props) {
 	});
 	
 	function next(){
-		props.navigation.push('topupdata')
+		props.navigation.push('topupData')
 	}
 
   return (
