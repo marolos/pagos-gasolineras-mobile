@@ -4,6 +4,13 @@
     ".vscode/": false
   },
   "[javascript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.detectIndentation": false,
+    "editor.tabSize": 3
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.detectIndentation": false,
+    "editor.tabSize": 3
+  },
 }

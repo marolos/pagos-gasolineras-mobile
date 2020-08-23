@@ -5,30 +5,24 @@ import { StatusBar } from 'react-native';
 import LoginView from './auth/LoginView';
 import SignupView from './auth/SignupView';
 import SplashScreen from 'react-native-splash-screen';
-import { typefaces } from '../utils/styles';
-import tailwind from 'tailwind-rn';
 
 const Stack = createStackNavigator();
 
 function AuthFlowNavigator(props) {
-  React.useEffect(() => {
-    SplashScreen.hide();
-  }, []);
-  return (
-    <NavigationContainer>
-      <StatusBar hidden={false} backgroundColor='black' />
-      <Stack.Navigator screenOptions={{ cardStyle: { backgroundColor: 'white' }, headerShown: false }}>
-        <Stack.Screen
-          name="login"
-          component={LoginView}
-        />
-        <Stack.Screen
-          name="signup"
-          component={SignupView}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+   React.useEffect(() => {
+      SplashScreen.hide();
+   }, []);
+   return (
+      <NavigationContainer>
+         <StatusBar hidden={false} backgroundColor="black" />
+         <Stack.Navigator
+            screenOptions={{ cardStyle: { backgroundColor: 'white' }, headerShown: false }}
+         >
+            <Stack.Screen name="login" component={LoginView} />
+            <Stack.Screen name="signup" component={SignupView} />
+         </Stack.Navigator>
+      </NavigationContainer>
+   );
 }
 
 export default AuthFlowNavigator;

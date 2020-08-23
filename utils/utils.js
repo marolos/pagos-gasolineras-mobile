@@ -29,6 +29,6 @@ export function passwordValidator(pass1, pass2) {
 }
 
 export function randomInt(nmax) {
-  const max = nmax || 10000;
+  const max = nmax || 100000;
   return Math.floor(Math.random() * max);
 }

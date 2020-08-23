@@ -11,23 +11,23 @@ import { theme } from '../utils/constants';
 const Drawer = createDrawerNavigator();
 
 function AppDrawerNavigator(props) {
-  React.useEffect(() => {
-    SplashScreen.hide();
-  }, []);
-  return (
-    <NavigationContainer theme={theme}>
-      <StatusBar hidden={false} backgroundColor="black" />
-      <Drawer.Navigator>
-        <Drawer.Screen
-          name="home"
-          component={HomeNavigator}
-          options={{ drawerLabel: () => null }}
-        />
-        <Drawer.Screen name="profile" component={ProfileView} />
-        <Drawer.Screen name="payment" component={PaymentMethodsView} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
+   React.useEffect(() => {
+      SplashScreen.hide();
+   }, []);
+   return (
+      <NavigationContainer theme={theme}>
+         <StatusBar hidden={false} backgroundColor="black" />
+         <Drawer.Navigator>
+            <Drawer.Screen
+               name="home"
+               component={HomeNavigator}
+               options={{ drawerLabel: () => null }}
+            />
+            <Drawer.Screen name="profile" component={ProfileView} />
+            <Drawer.Screen name="payment" component={PaymentMethodsView} />
+         </Drawer.Navigator>
+      </NavigationContainer>
+   );
 }
 
 export default AppDrawerNavigator;

@@ -50,10 +50,10 @@ class SignupView extends React.Component {
     }
 
     const data = {
-      email: information.email,
-      first_name: information.first_name,
-      last_name: information.last_name,
-      password: information.password1,
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      password: password1,
     };
 
     this.props.dispatch(
@@ -104,7 +104,8 @@ class SignupView extends React.Component {
                   this.setState((state) => ({
                     information: { ...state.information, first_name: text },
                   }))
-                }
+					 }
+					 style={tailwind('my-1')}
                 validate={(text) => text.length > 0}
               />
               <BasicInput
@@ -114,6 +115,7 @@ class SignupView extends React.Component {
                     information: { ...state.information, last_name: text },
                   }))
                 }
+					 style={tailwind('my-1')}
                 validate={(text) => text.length > 0}
               />
               <BasicInput
@@ -123,6 +125,7 @@ class SignupView extends React.Component {
                     information: { ...state.information, email: text },
                   }))
                 }
+					 style={tailwind('my-1')}
                 validate={(text) => EMAIL_REGEX.test(text)}
               />
               <PasswordInput

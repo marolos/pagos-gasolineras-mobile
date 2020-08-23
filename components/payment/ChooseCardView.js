@@ -50,7 +50,7 @@ export default function ChooseCardView(props) {
 
 function GoAddCardButton({ navigation }) {
   return (
-    <Ripple rippleColor="#718096" onPress={navigation.goBack}>
+    <Ripple rippleColor="#718096" onPress={navigation.push('addCard')}>
       <View
         style={[
           tailwind(
