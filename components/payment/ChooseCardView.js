@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { fakeFetch, cards } from '../../utils/mocks';
 import CardItem from './CardItem';
 import tailwind from 'tailwind-rn';
@@ -7,7 +7,6 @@ import { typefaces, shadowStyle } from '../../utils/styles';
 import Line from '../shared/Line';
 import ArrowRightIcon from '../icons/ArrowRightIcon';
 import Ripple from 'react-native-material-ripple';
-import { FULL_HIGHT } from '../../utils/constants';
 import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 

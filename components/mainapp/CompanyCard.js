@@ -7,7 +7,7 @@ import { logos } from '../../utils/mocks';
 
 function CompanyCard({ index, name, balance, logo, onPress }) {
   return (
-      <TouchableOpacity onPress={onPress} style={tailwind('m-2')} activeOpacity={0.5}>
+      <TouchableOpacity onPress={onPress} style={tailwind('m-2')} activeOpacity={0.5} delayPressIn={10} >
         <View
           style={[
             tailwind('bg-white w-24 rounded-md items-center py-2 px-3 border border-gray-300'),

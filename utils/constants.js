@@ -23,3 +23,8 @@ export const ADD_VALUE_STEP = 10.0;
 
 export const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export const PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,20}$/;
+
+
+export const VISA_REGEX = /^[4]/
+export const MASTERCARD_REGEX = /^[5][1-5]/
+export const AMEX_REGEX = /^3[47]/

@@ -16,13 +16,13 @@ export const typefaces = StyleSheet.create({
 });
 
 export const shadowStyle = {
-   shadowColor: '#000',
-   shadowOffset: {
-      width: 0,
-      height: 2,
-   },
-   shadowOpacity: 0.23,
-   shadowRadius: 2.62,
-
-   elevation: 4,
+	shadowColor: "#000",
+	shadowOffset: {
+		width: 0,
+		height: 12,
+	},
+	shadowOpacity: 0.58,
+	shadowRadius: 16.00,
+	
+	elevation: 30,
 };

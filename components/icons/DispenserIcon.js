@@ -5,7 +5,7 @@ import tailwind from 'tailwind-rn';
 
 function DispenserIcon({ focused }) {
   return (
-    <View style={tailwind(focused ? 'mt-2' : '')}>
+    <View>
       <Svg width={25} height={25} viewBox="0 0 30 30" fill="none">
         <G opacity={focused ? 1 : 0.4} fill="#000">
           <Path d="M14.674 3.913H6.848a.978.978 0 00-.978.978v3.913c0 .54.438.978.978.978h7.826c.54 0 .978-.438.978-.978V4.891a.978.978 0 00-.978-.978zm-.978 3.913h-5.87V5.869h5.87v1.957z" />
