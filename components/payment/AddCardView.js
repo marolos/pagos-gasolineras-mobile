@@ -6,27 +6,55 @@ import NextIcon from '../icons/NextIcon';
 import { typefaces } from '../../utils/styles';
 import { formatExpiryDate } from '../../utils/utils';
 import CardNumberInput from '../shared/CardNumberInput';
+import CheckBox from '../shared/CheckBox';
+import { connect } from 'react-redux';
 
-function AddCardView(props) {
+const initialState = {
+   cardNumber: '',
+   cvv: '',
+   expiry: '',
+   name: '',
+   save: false,
+};
+const reducer = (state, action) => {
+   switch (action.type) {
+      case 'card_number':
+         return { ...state, cardNumber: action.value };
+      case 'expiry':
+         return { ...state, expiry: action.value };
+      case 'cvv':
+         return { ...state, cvv: action.value };
+      case 'name':
+         return { ...state, name: action.value };
+      case 'save':
+         return { ...state, save: action.value };
+   }
+};
+
+function AddCardView({ navigation, route, user }) {
+   const [state, dispatch] = React.useReducer(reducer, initialState);
+   function onNext() {
+      console.log(':::  AddCardView  :::', state, user, route.params);
+   }
    return (
       <View style={[{ flex: 1 }, tailwind('p-8')]}>
          <View>
-            <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>
-               Nombre del titular de la tarjeta:
-            </Text>
+            <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>Nombre del titular:</Text>
             <CustomInput
                maxLength={100}
                containerStyle={tailwind('w-full')}
                inputStyle={tailwind('w-64')}
                placeholder="Ingresar nombre"
-               onChange={() => {}}
+               onChange={(text) => dispatch({ type: 'name', value: text })}
             />
          </View>
          <View style={tailwind('mt-4')}>
             <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>
                Tarjeta de credito o debito:
             </Text>
-            <CardNumberInput />
+            <CardNumberInput
+               onChange={(text) => dispatch({ type: 'card_number', value: text })}
+            />
          </View>
          <View style={tailwind('flex flex-row justify-between mt-4')}>
             <View style={tailwind('w-2/5')}>
@@ -37,6 +65,7 @@ function AddCardView(props) {
                   inputStyle={tailwind('w-12')}
                   placeholder="cvv"
                   keyboardType="numeric"
+                  onChange={(text) => dispatch({ type: 'cvv', value: text })}
                />
             </View>
             <View style={tailwind('w-1/2')}>
@@ -44,22 +73,31 @@ function AddCardView(props) {
                <CustomInput
                   maxLength={5}
                   containerStyle={tailwind('w-full')}
-                  onChange={() => {}}
                   format={(currentText, text) => formatExpiryDate(currentText, text)}
                   inputStyle={tailwind('w-20')}
                   placeholder="mm/aa"
                   keyboardType="numeric"
+                  onChange={(text) => dispatch({ type: 'expiry', value: text })}
                />
             </View>
          </View>
-
+         <View style={tailwind('flex flex-row justify-end mt-12')}>
+            <Text style={[tailwind('mr-2'), typefaces.pm]}>Guardar la tarjeta</Text>
+            <CheckBox
+               onChange={(value) => dispatch({ type: 'save', value: value })}
+               defaultValue={state.save}
+            />
+         </View>
          <View style={tailwind('absolute bottom-0 right-0')}>
             <LoadingButton
                icon={<NextIcon />}
                iconPos={'right'}
                text="continuar"
                style={tailwind('w-48 self-end mr-6 mb-6')}
-               onPress={() => props.navigation.goBack()}
+               onPress={() => {
+                  onNext();
+                  navigation.goBack();
+               }}
             />
          </View>
       </View>
@@ -103,4 +141,4 @@ function CustomInput({
    );
 }
 
-export default AddCardView;
+export default connect((state) => ({ user: state.user.data }))(AddCardView);

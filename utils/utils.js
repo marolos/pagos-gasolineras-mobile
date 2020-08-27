@@ -17,7 +17,7 @@ export function formatExpiryDate(currentText, text) {
    if (currentText.length > text.length) {
       if (text.slice(-1) === '/') return text.slice(0, 1);
       return text;
-	}
+   }
 
    const value = parseInt(text);
    if (text.length === 1) {
@@ -53,3 +53,18 @@ export function randomInt(nmax) {
    const max = nmax || 100000;
    return Math.floor(Math.random() * max);
 }
+
+
+export const makeCancelable = (promise, resolve, reject) => {
+   let hasCanceled_ = false;
+
+   promise
+      .then((val) => (hasCanceled_ ? reject({ isCanceled: true }) : resolve(val)))
+      .catch((error) => (hasCanceled_ ? reject({ isCanceled: true }) : reject(error)));
+
+   return {
+      cancel() {
+         hasCanceled_ = true;
+      },
+   };
+};

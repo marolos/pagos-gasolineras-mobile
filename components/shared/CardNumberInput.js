@@ -8,8 +8,11 @@ import { getCardLogo } from '../payment/CardItem';
 
 function CardNumberInput({ onChange }) {
    const [text, setText] = React.useState('');
-   const [editing, setEditing] = React.useState(false);
-   const [hasError, setHasError] = React.useState(false);
+	const [editing, setEditing] = React.useState(false);
+	React.useEffect(()=> {
+		if(onChange)
+			onChange(text)
+	}, [text])
    return (
       <View
          style={[

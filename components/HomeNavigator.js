@@ -14,6 +14,7 @@ import AddCardView from './payment/AddCardView';
 const Stack = createStackNavigator();
 
 function HomeNavigator(props) {
+
    return (
       <Stack.Navigator
          screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}

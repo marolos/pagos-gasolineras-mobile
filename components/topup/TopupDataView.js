@@ -8,74 +8,84 @@ import ArrowRightIcon from '../icons/ArrowRightIcon';
 import { typefaces } from '../../utils/styles';
 import AddSubInput from '../shared/AddSubInput';
 
-export default function TopupDataView(props) {
-  return (
-    <View style={{flex: 1}}>
-      <View style={tailwind('p-6')}>
-        <Text style={[tailwind('text-base mb-2'), typefaces.pm]}>Facturacion:</Text>
-        <View>
-          <GoEditButton navigation={props.navigation} />
-        </View>
+export default function TopupDataView({ route, navigation }) {
+   const [amount, setAmount] = React.useState(0);
+   function onChangeAmount(amount) {
+      setAmount(amount);
+	}
+	
+   return (
+      <View style={{ flex: 1 }}>
+         <View style={tailwind('p-6')}>
+            <Text style={[tailwind('text-base mb-2'), typefaces.pm]}>Facturacion:</Text>
+            <View>
+               <GoEditButton navigation={navigation} />
+            </View>
+         </View>
+         <Line style={tailwind('w-full bg-gray-300 my-2')} />
+         <View style={tailwind('p-6')}>
+            <View>
+               <Text style={[tailwind('text-base'), typefaces.pm]}>Empresa:</Text>
+            </View>
+            <View>
+               <Text style={[tailwind('text-base mb-2'), typefaces.pm]}>
+                  Cantidad en dolares:
+               </Text>
+               <AddSubInput onChange={onChangeAmount} />
+            </View>
+         </View>
+         <View style={tailwind('p-6')}>
+            <Resume amount={amount} />
+         </View>
+         <View style={tailwind('absolute bottom-0 right-0')}>
+            <LoadingButton
+               icon={<NextIcon />}
+               iconPos={'right'}
+               text="continuar"
+               style={tailwind('w-48 self-end mr-6 mb-6')}
+               onPress={() =>
+                  navigation.push('chooseCard', { company: route.params, amount: amount })
+               }
+            />
+         </View>
       </View>
-      <Line style={tailwind('w-full bg-gray-300 my-2')} />
-      <View style={tailwind('p-6')}>
-        <View>
-          <Text style={[tailwind('text-base'), typefaces.pm]}>Empresa:</Text>
-        </View>
-        <View>
-          <Text style={[tailwind('text-base mb-2'), typefaces.pm]}>Cantidad en dolares:</Text>
-          <AddSubInput />
-        </View>
-      </View>
-      <View style={tailwind('p-6')}>
-        <Resume />
-      </View>
-      <View style={tailwind('absolute bottom-0 right-0')}>
-        <LoadingButton
-          icon={<NextIcon />}
-          iconPos={'right'}
-          text="continuar"
-          style={tailwind('w-48 self-end mr-6 mb-6')}
-          onPress={() => props.navigation.push('chooseCard')}
-        />
-      </View>
-    </View>
-  );
-}
-
-function GoEditButton({ navigation }) {
-  return (
-    <TouchableOpacity delayPressIn={0} activeOpacity={0.6} onPress={navigation.goBack}>
-      <View
-        style={tailwind(
-          'border rounded-lg border-gray-400 flex flex-row justify-between px-6 py-4',
-        )}
-      >
-        <Text style={[typefaces.pm]}>{'Manuela canizares'}</Text>
-        <View style={tailwind('flex flex-row items-center')}>
-          <Text style={[typefaces.pm, tailwind('mr-4 ')]}>editar</Text>
-          <ArrowRightIcon />
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+   );
 }
 
 function Resume(props) {
-  return (
-    <View>
+   const [values, setValues] = React.useState({});
+   return (
       <View>
-        <Text style={[tailwind('text-base'), typefaces.pm]}>Subtotal:</Text>
+         <View>
+            <Text style={[tailwind('text-base'), typefaces.pm]}>Subtotal:</Text>
+         </View>
+         <View>
+            <Text style={[tailwind('text-base'), typefaces.pm]}>IVA:</Text>
+         </View>
+         <View>
+            <Text style={[tailwind('text-base'), typefaces.pm]}>Comision:</Text>
+         </View>
+         <View>
+            <Text style={[tailwind('text-base'), typefaces.pm]}>Total a pagar:</Text>
+         </View>
       </View>
-      <View>
-        <Text style={[tailwind('text-base'), typefaces.pm]}>IVA:</Text>
-      </View>
-      <View>
-        <Text style={[tailwind('text-base'), typefaces.pm]}>Comision:</Text>
-      </View>
-      <View>
-        <Text style={[tailwind('text-base'), typefaces.pm]}>Total a pagar:</Text>
-      </View>
-    </View>
-  );
+   );
+}
+
+function GoEditButton({ navigation }) {
+   return (
+      <TouchableOpacity delayPressIn={0} activeOpacity={0.6} onPress={navigation.goBack}>
+         <View
+            style={tailwind(
+               'border rounded-lg border-gray-400 flex flex-row justify-between px-6 py-4',
+            )}
+         >
+            <Text style={[typefaces.pm]}>{'Manuela canizares'}</Text>
+            <View style={tailwind('flex flex-row items-center')}>
+               <Text style={[typefaces.pm, tailwind('mr-4 ')]}>editar</Text>
+               <ArrowRightIcon />
+            </View>
+         </View>
+      </TouchableOpacity>
+   );
 }

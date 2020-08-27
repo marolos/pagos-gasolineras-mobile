@@ -9,27 +9,38 @@ import NextIcon from '../icons/NextIcon';
 import VehiclesIdInput from './VehiclesIdInput';
 import FetchClient from '../../utils/FetchClient';
 import { FULL_WIDTH, FULL_HIGHT } from '../../utils/constants';
+import { makeCancelable } from '../../utils/utils';
 
-export default function BillingDataView(props) {
-   const [state, dispatch] = React.useReducer(reducer, initialState);
+export default function BillingDataView({route, navigation}) {
+	const [state, dispatch] = React.useReducer(reducer, initialState);
 
    React.useEffect(() => {
-      FetchClient.get('/users/billing/data/')
-         .then((data) => {
+      const request = makeCancelable(
+         FetchClient.get('/users/billing/data/'),
+         (data) => {
+            actualData = data;
             dispatch({
                type: 'form',
                value: data,
             });
-         })
-         .catch((err) => {})
-         .finally(() => dispatch({ type: 'end_loading_data' }));
+            dispatch({ type: 'end_loading_data' });
+         },
+         (err) => {},
+      );
+      return function cleanup() {
+         request.cancel();
+      };
    }, []);
 
    function next() {
+      if (state.callsToForm < 1) {
+         navigation.push('topupData', route.params);
+         return;
+      }
       dispatch({ type: 'loading' });
       FetchClient.put('/users/billing/data/', state.form)
          .then((data) => {
-            props.navigation.push('topupData');
+            navigation.push('topupData', route.params);
          })
          .catch((err) => console.log(err))
          .finally(() => dispatch({ type: 'end_loading' }));
@@ -133,7 +144,7 @@ export default function BillingDataView(props) {
             </View>
             <VehiclesIdInput
                items={state.form.vehicles_ids}
-               loading={state.loading_data}
+               loading={state.loadingData}
                onChange={(items) =>
                   dispatch({
                      type: 'form',
@@ -152,7 +163,7 @@ export default function BillingDataView(props) {
                loading={state.loading}
             />
          </View>
-         {state.loading_data && (
+         {state.loadingData && (
             <View
                style={[
                   tailwind('absolute bg-gray-800 bg-opacity-50 flex justify-center'),
@@ -173,7 +184,8 @@ export default function BillingDataView(props) {
 
 const initialState = {
    loading: false,
-   loading_data: true,
+   loadingData: true,
+   callsToForm: 0,
    form: {
       first_name: '',
       last_name: '',
@@ -185,6 +197,8 @@ const initialState = {
    },
 };
 
+let actualData = {};
+
 const reducer = (state, action) => {
    switch (action.type) {
       case 'loading':
@@ -192,12 +206,42 @@ const reducer = (state, action) => {
       case 'end_loading':
          return { ...state, loading: false };
       case 'loading_data':
-         return { ...state, loading_data: true };
+         return { ...state, loadingData: true };
       case 'end_loading_data':
-         return { ...state, loading_data: false };
+         return { ...state, loadingData: false };
       case 'form':
-         return { ...state, form: action.value };
+         return {
+            ...state,
+            form: action.value,
+            callsToForm: equal(actualData, action.value) ? 0 : state.callsToForm + 1,
+         };
       default:
          return state;
    }
+};
+
+const equal = (actualValue, newValue) => {
+   return (
+      actualValue.first_name == newValue.first_name &&
+      actualValue.last_name == newValue.last_name &&
+      actualValue.cedula == newValue.cedula &&
+      actualValue.city == newValue.city &&
+      actualValue.address == newValue.address &&
+      actualValue.phone_number == newValue.phone_number &&
+      equalVehiclesIds(actualValue.vehicles_ids, newValue.vehicles_ids)
+   );
+};
+
+const equalVehiclesIds = (actualValues, newValues) => {
+   if (actualValues.length !== newValues.length) return false;
+   actualValues.forEach((value) => {
+      const result = newValues.find((e) => e.number == value.number);
+      if (!result) return false;
+   });
+   newValues.forEach((value) => {
+      const result = actualValues.find((e) => e.number == value.number);
+      if (!result) return false;
+   });
+
+   return true;
 };

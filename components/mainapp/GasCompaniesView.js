@@ -4,19 +4,32 @@ import { connect } from 'react-redux';
 import { logout } from '../../redux/auth/actions';
 import AdsPaginator from './AdsPaginator';
 import tailwind from 'tailwind-rn';
-import { companies } from '../../utils/mocks';
 import CompanyCard from './CompanyCard';
 import { typefaces } from '../../utils/styles';
 import CollapseModalOptions from './CollapseModalOptions';
 import Line from '../shared/Line';
 import { DummyGrid } from '../shared/DummyGrid';
+import FetchClient from '../../utils/FetchClient';
+import { makeCancelable } from '../../utils/utils';
 
 function GasCompaniesView(props) {
    const [state, setState] = React.useState({
-      selectedCompany: {},
+      selectedCompany: null,
       modalVisible: false,
-      companies: companies,
+      companies: [],
+      loading: true,
    });
+
+   React.useEffect(() => {
+      const req = makeCancelable(
+         FetchClient.get('/users/balances/'),
+         (res) => {
+            setState({ ...state, companies: res.balances, loading: false });
+         },
+         (err) => setState({ ...state, companies: [], loading: false }),
+      );
+      return () => req.cancel();
+   }, []);
 
    function onPressCompany(item) {
       setState((state) => ({
@@ -37,18 +50,21 @@ function GasCompaniesView(props) {
          </View>
          <View style={tailwind('items-center')}>
             <DummyGrid
-               data={companies}
+               loading={state.loading}
+               data={state.companies}
                GridItemComponent={CompanyCard}
                ncol={3}
                onItemPress={(company) => onPressCompany(company)}
             />
          </View>
-         <CollapseModalOptions
-            visible={state.modalVisible}
-            company={state.selectedCompany}
-            closeCollapse={() => setState((state) => ({ ...state, modalVisible: false }))}
-         />
-         <View style={tailwind('mt-40')}>
+         {state.companies.length > 0 && state.selectedCompany && (
+            <CollapseModalOptions
+               visible={state.modalVisible}
+               company={state.selectedCompany}
+               closeCollapse={() => setState((state) => ({ ...state, modalVisible: false }))}
+            />
+         )}
+         <View style={{ marginTop: 430 }}>
             <Button title="logout" onPress={() => props.dispatch(logout())} />
          </View>
       </ScrollView>

@@ -9,6 +9,12 @@ import { ADD_VALUE_STEP } from '../../utils/constants';
 export default function AddSubInput({ onChange }) {
    const [state, dispatch] = React.useReducer(reducer, initialState);
 
+   React.useEffect(() => {
+      if (onChange) {
+         onChange(state.count);
+      }
+   }, [state]);
+
    return (
       <View style={tailwind('flex flex-row justify-evenly items-center')}>
          <TouchableOpacity

@@ -36,6 +36,21 @@ export const logos = [
    require('../assets/images/repsol.png'),
 ];
 
+export const getLogoByPath = (path) => {
+	switch(path){
+		case 'pdv.png':
+			return logos[0]
+		case 'shell.png':
+			return logos[1]
+		case 'terpel.png':
+			return logos[2]
+		case 'primax.png':
+			return logos[3]
+		case 'repsol.png':
+			return logos[4]
+	}
+};
+
 export const vehiclesIds = [
    { id: 0, user_id: 0, number: 'abc123', alias: 'carro azul' },
    { id: 1, user_id: 1, number: 'def452' },

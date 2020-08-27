@@ -1,6 +1,7 @@
 import { REST_API_URL } from './constants';
 
-class FetchClient {
+
+class FetchClientClass {
    baseURL = REST_API_URL;
    headers = {
       'Content-Type': 'application/json',
@@ -9,11 +10,11 @@ class FetchClient {
 
    setAuthToken(token) {
       this.headers['Authorization'] = `Bearer ${token}`;
-	}
-	
-	removeAuthToken(){
-		delete this.headers['Authorization']
-	}
+   }
+
+   removeAuthToken() {
+      delete this.headers['Authorization'];
+   }
 
    addHeader(name, value) {
       this.headers[name] = value;
@@ -30,7 +31,6 @@ class FetchClient {
       return fetch(this.normalizeUrl(url), {
          method: 'POST',
          headers: this.headers,
-         credentials: 'include',
          body: JSON.stringify(body),
       }).then(this.handleResponse);
    }
@@ -64,4 +64,6 @@ class FetchClient {
    }
 }
 
-export default new FetchClient();
+const FetchClient = new FetchClientClass();
+
+export default FetchClient;
