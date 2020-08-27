@@ -11,7 +11,7 @@ import FetchClient from '../../utils/FetchClient';
 import { FULL_WIDTH, FULL_HIGHT } from '../../utils/constants';
 import { makeCancelable } from '../../utils/utils';
 
-export default function BillingDataView({route, navigation}) {
+export default function BillingDataView({ route, navigation }) {
 	const [state, dispatch] = React.useReducer(reducer, initialState);
 
    React.useEffect(() => {
@@ -37,6 +37,7 @@ export default function BillingDataView({route, navigation}) {
          navigation.push('topupData', route.params);
          return;
       }
+      actualData = state.form;
       dispatch({ type: 'loading' });
       FetchClient.put('/users/billing/data/', state.form)
          .then((data) => {

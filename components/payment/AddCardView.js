@@ -50,7 +50,7 @@ function AddCardView({ navigation, route, user }) {
          </View>
          <View style={tailwind('mt-4')}>
             <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>
-               Tarjeta de credito o debito:
+               Tarjeta de crédito o débito:
             </Text>
             <CardNumberInput
                onChange={(text) => dispatch({ type: 'card_number', value: text })}
@@ -69,7 +69,7 @@ function AddCardView({ navigation, route, user }) {
                />
             </View>
             <View style={tailwind('w-1/2')}>
-               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>Expiracion: </Text>
+               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>Expiración: </Text>
                <CustomInput
                   maxLength={5}
                   containerStyle={tailwind('w-full')}

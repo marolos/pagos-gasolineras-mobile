@@ -1,5 +1,4 @@
 import React from 'react';
-import tailwind from 'tailwind-rn';
 import Ripple from 'react-native-material-ripple';
 import Svg, { Path } from 'react-native-svg';
 
