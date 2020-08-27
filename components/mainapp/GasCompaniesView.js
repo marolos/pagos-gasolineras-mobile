@@ -44,10 +44,14 @@ function GasCompaniesView(props) {
          <View>
             <AdsPaginator />
          </View>
-         <View style={tailwind('mt-4 px-6')}>
-            <Text style={[tailwind('text-black text-base'), typefaces.pm]}>Gasolineras</Text>
-            <Line style={tailwind('bg-gray-400 w-full mb-2')} />
-         </View>
+         {state.companies.length > 0 && (
+            <View style={tailwind('mt-4 px-6')}>
+               <Text style={[tailwind('text-black text-base'), typefaces.pm]}>
+                  Gasolineras
+               </Text>
+               <Line style={tailwind('bg-gray-400 w-full mb-2')} />
+            </View>
+         )}
          <View style={tailwind('items-center')}>
             <DummyGrid
                loading={state.loading}
