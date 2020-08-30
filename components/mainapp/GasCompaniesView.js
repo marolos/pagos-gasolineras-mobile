@@ -46,7 +46,7 @@ function GasCompaniesView(props) {
          </View>
          {state.companies.length > 0 && (
             <View style={tailwind('mt-4 px-6')}>
-               <Text style={[tailwind('text-black text-base'), typefaces.pm]}>
+               <Text style={[tailwind('text-black text-sm'), typefaces.pm]}>
                   Gasolineras
                </Text>
                <Line style={tailwind('bg-gray-400 w-full mb-2')} />

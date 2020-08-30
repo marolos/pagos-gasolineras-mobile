@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, TouchableOpacity, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image, Text } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import { typefaces } from '../../utils/styles';
 import tailwind from 'tailwind-rn';

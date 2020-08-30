@@ -27,9 +27,7 @@ function LoginView(props) {
          authRequest(
             '/auth/local/',
             state.credentials,
-            (res) => {
-               //setLoading(false);
-            },
+            (res) => {},
             (err) => {
                console.error(':: err ::', err);
                setState((state) => ({ ...state, loading: false }));

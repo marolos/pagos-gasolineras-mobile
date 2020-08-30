@@ -28,7 +28,7 @@ function TabMenuNavigator(props) {
 
 function CustomTabBar(props) {
    return (
-      <View style={{...shadowStyle, backgroundColor: 'white'}}>
+      <View style={{ ...shadowStyle, backgroundColor: 'white' }}>
          <View style={[{ height: 2 }, tailwind('bg-gray-200')]}></View>
          <View style={tailwind('flex flex-row justify-center pb-1 pt-1')}>
             <TabButtonGasStation navigation={props.navigation} />
@@ -66,7 +66,7 @@ const TabButtonGasStation = connect(
             <DispenserIcon focused={focused} />
             <Text
                style={[
-                  tailwind('text-xs'),
+                  { fontSize: 11 },
                   focused ? tailwind('text-black') : tailwind('text-gray-500'),
                   typefaces.pm,
                ]}
@@ -89,7 +89,7 @@ const TabButtonSearch = connect(
             navigation.navigate('search');
             setActiveTab(TabOptions.SEARCH);
          }}
-         style={{ marginLeft: 15, marginRight: 5, paddingTop: 10, paddingHorizontal: 10 }}
+         style={{ marginLeft: 15, marginRight: 8, paddingTop: 10, paddingHorizontal: 10 }}
          rippleCentered={true}
          rippleSize={80}
          rippleDuration={300}
@@ -98,7 +98,7 @@ const TabButtonSearch = connect(
             <SearchIcon focused={focused} />
             <Text
                style={[
-                  tailwind('text-xs'),
+                  { fontSize: 11 },
                   focused ? tailwind('text-black') : tailwind('text-gray-500'),
                   typefaces.pm,
                ]}
@@ -130,7 +130,7 @@ const TabButtonNotifications = connect(
             <NotificationIcon focused={focused} />
             <Text
                style={[
-                  tailwind('text-xs'),
+                  { fontSize: 11 },
                   focused ? tailwind('text-black') : tailwind('text-gray-500'),
                   typefaces.pm,
                ]}

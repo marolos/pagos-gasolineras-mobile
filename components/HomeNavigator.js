@@ -10,11 +10,11 @@ import Label from './shared/Label';
 import tailwind from 'tailwind-rn';
 import ChooseCardView from './payment/ChooseCardView';
 import AddCardView from './payment/AddCardView';
+import ConfirmTopupView from './topup/ConfirmTopupView';
 
 const Stack = createStackNavigator();
 
 function HomeNavigator(props) {
-
    return (
       <Stack.Navigator
          screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
@@ -74,6 +74,19 @@ function HomeNavigator(props) {
                headerTitle: () => (
                   <Label
                      text={'Ingresar tarjeta'}
+                     style={tailwind('text-base mt-1')}
+                     focused={true}
+                  />
+               ),
+            })}
+         />
+         <Stack.Screen
+            name="confirmTopup"
+            component={ConfirmTopupView}
+            options={() => ({
+               headerTitle: () => (
+                  <Label
+                     text={'Confirmar'}
                      style={tailwind('text-base mt-1')}
                      focused={true}
                   />

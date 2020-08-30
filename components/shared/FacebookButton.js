@@ -1,41 +1,46 @@
 import React from 'react';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import tailwind from 'tailwind-rn';
+import Ripple from 'react-native-material-ripple';
 
 export default function FacebookButton({ onFacebookLogin }) {
-  async function onFacebookButtonPress() {
-    // Attempt login with permissions
-    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+   function doSignUp() {
+      setTimeout(
+         () =>
+            onFacebookButtonPress()
+               .then(onFacebookLogin)
+               .catch((e) => console.log(e.message)),
+         250,
+      );
+   }
 
-    if (result.isCancelled) {
-      throw 'User cancelled the login process';
-    }
-    const data = await AccessToken.getCurrentAccessToken();
-
-    if (!data) {
-      throw 'Something went wrong obtaining access token';
-    }
-    // Create a Firebase credential with the AccessToken
-    // const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-    // return auth().signInWithCredential(facebookCredential);
-    return data.accessToken
-  }
-
-  const styles = StyleSheet.create({
-    blue: { backgroundColor: '#3B5998' },
-  });
-
-  return (
-    <TouchableOpacity
-      style={tailwind('rounded-md items-center w-40 mt-6')}
-      onPress={() => onFacebookButtonPress().then(onFacebookLogin)}
-      delayPressIn={0}
-      activeOpacity={0.7}
-    >
-      <View style={[tailwind('rounded-md items-center w-full py-3'), styles.blue]}>
-        <Text style={tailwind('text-white text-xs')}>Iniciar con facebook</Text>
-      </View>
-    </TouchableOpacity>
-  );
+   return (
+      <Ripple style={tailwind('rounded-md items-center w-40 mt-6')} onPress={doSignUp}>
+         <View style={[tailwind('rounded-md items-center w-full py-3'), styles.blue]}>
+            <Text style={tailwind('text-white text-xs')}>Iniciar con facebook</Text>
+         </View>
+      </Ripple>
+   );
 }
+
+async function onFacebookButtonPress() {
+   try {
+      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+      if (result.isCancelled) {
+         throw new Error('User cancelled the login process');
+      }
+      const data = await AccessToken.getCurrentAccessToken();
+
+      if (!data) {
+         throw new Error('Something went wrong obtaining access token');
+      }
+      return data.accessToken;
+   } catch (e) {
+      throw new Error(e.message);
+   }
+}
+
+const styles = StyleSheet.create({
+   blue: { backgroundColor: '#3B5998' },
+});

@@ -10,6 +10,7 @@ import Ripple from 'react-native-material-ripple';
 import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 import { connect } from 'react-redux';
+import FetchClient from '../../utils/FetchClient';
 
 const initialState = {
    cards: [],
@@ -24,7 +25,9 @@ const reducer = (state, action) => {
       case 'set_cards':
          return { cards: action.value, loading: false, selectedCard: action.value[0] };
       case 'loading':
-         return { ...state, loading: action.value };
+         return { ...state, loading: true };
+      case 'end_loading':
+         return { ...state, loading: false };
       default:
          throw new Error('there are not default case');
    }
@@ -34,14 +37,17 @@ function ChooseCardView({ user, navigation, route }) {
    const [state, dispatch] = React.useReducer(reducer, initialState);
 
    React.useEffect(() => {
-      dispatch({ type: 'loading', value: true });
-      fakeFetch(cards, 1000)
-         .then((cards) => dispatch({ type: 'set_cards', value: cards }))
+      dispatch({ type: 'loading' });
+      FetchClient.get('/payment/user/card/')
+         .then((res) => dispatch({ type: 'set_cards', value: res.cards }))
          .catch((err) => {});
    }, []);
 
    function next() {
-      console.log('::  ChooseCardView ::', user, state.selectedCard, route.params);
+      navigation.push('confirmTopup', {
+         card: { ...state.selectedCard, save: true },
+         ...route.params,
+      });
    }
 
    return (
@@ -50,11 +56,13 @@ function ChooseCardView({ user, navigation, route }) {
             <Text style={[tailwind('mb-4 ml-2'), typefaces.pm]}>Tarjetas guardadas:</Text>
             <View>
                {state.loading && <ActivityIndicator animating color="black" />}
-               {state.cards.map((card) => (
+               {state.cards.map((card, index) => (
                   <CardItem
                      {...card}
-                     key={card.id.toString()}
-                     selected={state.selectedCard.id === card.id}
+                     key={index.toString()}
+                     holderName={card.holder_name}
+                     type={card.type}
+                     selected={state.selectedCard.token === card.token}
                      onPress={() => dispatch({ type: 'select', value: card })}
                   />
                ))}
@@ -63,9 +71,7 @@ function ChooseCardView({ user, navigation, route }) {
          <Line style={tailwind('bg-gray-300 w-full mt-2 mb-1')} />
          <View style={tailwind('items-center mt-12')}>
             <Ripple
-               onPress={() =>
-                  navigation.push('addCard', {...route.params })
-               }
+               onPress={() => navigation.push('addCard', { ...route.params })}
                style={tailwind('w-48 bg-white border rounded border-gray-300')}
             >
                <View style={tailwind('flex flex-row justify-between items-center px-6 py-3')}>

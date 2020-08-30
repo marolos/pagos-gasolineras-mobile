@@ -28,3 +28,6 @@ export const PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6
 export const VISA_REGEX = /^[4]/
 export const MASTERCARD_REGEX = /^[5][1-5]/
 export const AMEX_REGEX = /^3[47]/
+
+export const IVA_RATE = 12
+export const COMMISION = 0.25

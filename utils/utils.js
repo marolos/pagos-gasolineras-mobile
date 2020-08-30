@@ -1,3 +1,12 @@
+import { IVA_RATE, COMMISION } from './constants';
+
+/**
+ * Create an array with chunks of the given array with equal chunkSize
+ * ex: createChunks([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 3)
+ * 	return [[1,2,3], [4,5,6], [7,8,9], [10,11]]
+ * @param {} array the array
+ * @param {*} chunkSize the max size of each chunk
+ */
 export function createChunks(array, chunkSize) {
    const chunks = [];
    const n = array.length;
@@ -9,10 +18,25 @@ export function createChunks(array, chunkSize) {
    return chunks;
 }
 
+/**
+ * Perform the same action as the above function, but with strings
+ * ex: createStringChunks('abcdefghijk', 3)
+ * 	return ['abc', 'def', 'ghi', 'jk']
+ * @param {} string
+ * @param {*} chunkSize
+ */
 export function createStringChunks(string, chunkSize) {
    return string.replace(/\s/g, '').match(new RegExp(`.{1,${chunkSize}}`, 'g'));
 }
 
+/**
+ * Convert the text to credit card expiry date format (mm/yy).
+ * ex:
+ * 	225 -> 02/25
+ * 	1105 -> 11/05
+ * @param {} currentText
+ * @param {*} text
+ */
 export function formatExpiryDate(currentText, text) {
    if (currentText.length > text.length) {
       if (text.slice(-1) === '/') return text.slice(0, 1);
@@ -54,8 +78,18 @@ export function randomInt(nmax) {
    return Math.floor(Math.random() * max);
 }
 
-
-export const makeCancelable = (promise, resolve, reject) => {
+/**
+ * Make a promise to execute without side effects.
+ * It doesn't cancel the request at all, just don't execute the resolve
+ * function when the promise is done and the function cancel() is called.
+ * It's usefull when you have need to perform a react state update when the promise ends
+ * but sometimes you need to unmount the component. This way if you can use the cancel() as a cleanup function
+ * on componentWillUnmout() or if you are using react hooks you can use it on the cleanup function on your React.useEffect() function
+ * @param {} promise the promise to execute
+ * @param {*} resolve the resolve function to the promise
+ * @param {*} reject the function to handle errors.
+ */
+export function makeCancelable(promise, resolve, reject) {
    let hasCanceled_ = false;
 
    promise
@@ -67,4 +101,46 @@ export const makeCancelable = (promise, resolve, reject) => {
          hasCanceled_ = true;
       },
    };
-};
+}
+
+/**
+ * Compare the actual Billing data of a user with the new value if it has changed.
+ * This function is just for that specific case.
+ * @param {*} actualValue
+ * @param {*} newValue
+ */
+export function equalForm(actualValue, newValue) {
+   return (
+      actualValue.first_name == newValue.first_name &&
+      actualValue.last_name == newValue.last_name &&
+      actualValue.cedula == newValue.cedula &&
+      actualValue.city == newValue.city &&
+      actualValue.address == newValue.address &&
+      actualValue.phone_number == newValue.phone_number &&
+      equalVehiclesIds(actualValue.vehicles_ids, newValue.vehicles_ids)
+   );
+}
+
+export function equalVehiclesIds(actualValues, newValues) {
+   if (actualValues.length !== newValues.length) return false;
+   actualValues.forEach((value) => {
+      const result = newValues.find((e) => e.number == value.number);
+      if (!result) return false;
+   });
+   newValues.forEach((value) => {
+      const result = actualValues.find((e) => e.number == value.number);
+      if (!result) return false;
+   });
+
+   return true;
+}
+
+export function getOrderByAmount(amount) {
+   const x = amount / (100 + IVA_RATE);
+
+   return {
+      vat: (IVA_RATE * x).toFixed(2),
+      taxable_amount: (100 * x).toFixed(2),
+      amount: amount + COMMISION,
+   };
+}

@@ -5,10 +5,13 @@ import tailwind from 'tailwind-rn';
 import visaLogo from '../../assets/images/visa.png';
 import mastercardLogo from '../../assets/images/mastercard.png';
 import amexLogo from '../../assets/images/amex.png';
-import { shadowStyle, typefaces } from '../../utils/styles';
+import dinersLogo from '../../assets/images/diners.png';
+import discoverLogo from '../../assets/images/discover.png';
+import maestroLogo from '../../assets/images/maestro.png';
+import { typefaces } from '../../utils/styles';
 import RadioIcon from '../icons/RadioIcon';
 
-export default function CardItem({ alias, type, onPress, selected }) {
+export default function CardItem({ holderName, type, onPress, selected }) {
    return (
       <Ripple
          rippleColor="#718096"
@@ -22,7 +25,7 @@ export default function CardItem({ alias, type, onPress, selected }) {
       >
          <View style={tailwind('flex flex-row items-center')}>
             <Image source={getCardLogo(type)} style={{ width: 30, resizeMode: 'contain' }} />
-            <Text style={[tailwind('ml-3 mt-1'), typefaces.pm]}>{alias}</Text>
+            <Text style={[tailwind('ml-3 mt-1'), typefaces.pm]}>{holderName}</Text>
          </View>
          <View style={tailwind('mr-1 mt-1 items-center')}>
             <RadioIcon selected={selected} />
@@ -33,12 +36,18 @@ export default function CardItem({ alias, type, onPress, selected }) {
 
 export function getCardLogo(type) {
    switch (type.toLowerCase()) {
-      case 'visa':
+      case 'vi':
          return visaLogo;
-      case 'mastercard':
+      case 'mc':
          return mastercardLogo;
-      case 'amex':
+      case 'ax':
          return amexLogo;
+      case 'di':
+         return dinersLogo;
+      case 'dc':
+         return discoverLogo;
+      case 'ms':
+         return maestroLogo;
       default:
          return visaLogo;
    }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, Text } from 'react-native';
+import { View, TextInput, Text, ScrollView } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import tailwind from 'tailwind-rn';
 import NextIcon from '../icons/NextIcon';
@@ -8,13 +8,15 @@ import { formatExpiryDate } from '../../utils/utils';
 import CardNumberInput from '../shared/CardNumberInput';
 import CheckBox from '../shared/CheckBox';
 import { connect } from 'react-redux';
-
+import FetchClient from '../../utils/FetchClient';
+import { FULL_HIGHT } from '../../utils/constants';
+import Toast from 'react-native-simple-toast';
 const initialState = {
    cardNumber: '',
    cvv: '',
    expiry: '',
    name: '',
-   save: false,
+   save: true,
 };
 const reducer = (state, action) => {
    switch (action.type) {
@@ -22,86 +24,117 @@ const reducer = (state, action) => {
          return { ...state, cardNumber: action.value };
       case 'expiry':
          return { ...state, expiry: action.value };
-      case 'cvv':
-         return { ...state, cvv: action.value };
+      case 'cvc':
+         return { ...state, cvc: action.value };
       case 'name':
          return { ...state, name: action.value };
       case 'save':
          return { ...state, save: action.value };
+      case 'loading':
+         return { ...state, loading: true };
+      case 'end_loading':
+         return { ...state, loading: false };
    }
 };
 
 function AddCardView({ navigation, route, user }) {
    const [state, dispatch] = React.useReducer(reducer, initialState);
-   function onNext() {
-      console.log(':::  AddCardView  :::', state, user, route.params);
+   function next() {
+      dispatch({ type: 'loading' });
+      FetchClient.post('/payment/user/card/', getCardObject(state))
+         .then((res) => {
+				console.log('saved card:::', res)
+            dispatch({ type: 'end_loading' });
+            navigation.navigate('confirmTopup', {
+               card: { ...res, save: state.save },
+               ...route.params,
+            });
+         })
+         .catch((err) => {
+				console.log('on add', err);
+				Toast.show('No se pudo verificar la tarjeta, revise los campo.')
+            dispatch({ type: 'end_loading' });
+         });
    }
    return (
-      <View style={[{ flex: 1 }, tailwind('p-8')]}>
-         <View>
-            <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>Nombre del titular:</Text>
-            <CustomInput
-               maxLength={100}
-               containerStyle={tailwind('w-full')}
-               inputStyle={tailwind('w-64')}
-               placeholder="Ingresar nombre"
-               onChange={(text) => dispatch({ type: 'name', value: text })}
-            />
-         </View>
-         <View style={tailwind('mt-4')}>
-            <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>
-               Tarjeta de crédito o débito:
-            </Text>
-            <CardNumberInput
-               onChange={(text) => dispatch({ type: 'card_number', value: text })}
-            />
-         </View>
-         <View style={tailwind('flex flex-row justify-between mt-4')}>
-            <View style={tailwind('w-2/5')}>
-               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>CVV: </Text>
+      <ScrollView>
+         <View style={{ flex: 1, height: FULL_HIGHT - 36, padding: 24 }}>
+            <View>
+               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>
+                  Nombre del titular:
+               </Text>
                <CustomInput
-                  maxLength={3}
+                  maxLength={100}
                   containerStyle={tailwind('w-full')}
-                  inputStyle={tailwind('w-12')}
-                  placeholder="cvv"
-                  keyboardType="numeric"
-                  onChange={(text) => dispatch({ type: 'cvv', value: text })}
+                  inputStyle={tailwind('w-64')}
+                  placeholder="Ingresar nombre"
+                  onChange={(text) => dispatch({ type: 'name', value: text })}
                />
             </View>
-            <View style={tailwind('w-1/2')}>
-               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>Expiración: </Text>
-               <CustomInput
-                  maxLength={5}
-                  containerStyle={tailwind('w-full')}
-                  format={(currentText, text) => formatExpiryDate(currentText, text)}
-                  inputStyle={tailwind('w-20')}
-                  placeholder="mm/aa"
-                  keyboardType="numeric"
-                  onChange={(text) => dispatch({ type: 'expiry', value: text })}
+            <View style={tailwind('mt-4')}>
+               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>
+                  Tarjeta de crédito o débito:
+               </Text>
+               <CardNumberInput
+                  onChange={(text) => dispatch({ type: 'card_number', value: text })}
+               />
+            </View>
+            <View style={tailwind('flex flex-row justify-between mt-4')}>
+               <View style={tailwind('w-2/5')}>
+                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>CVC: </Text>
+                  <CustomInput
+                     maxLength={3}
+                     containerStyle={tailwind('w-full')}
+                     inputStyle={tailwind('w-12')}
+                     placeholder="cvc"
+                     keyboardType="numeric"
+                     onChange={(text) => dispatch({ type: 'cvc', value: text })}
+                  />
+               </View>
+               <View style={tailwind('w-1/2')}>
+                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>Expiración: </Text>
+                  <CustomInput
+                     maxLength={5}
+                     containerStyle={tailwind('w-full')}
+                     format={(currentText, text) => formatExpiryDate(currentText, text)}
+                     inputStyle={tailwind('w-20')}
+                     placeholder="mm/aa"
+                     keyboardType="numeric"
+                     onChange={(text) => dispatch({ type: 'expiry', value: text })}
+                  />
+               </View>
+            </View>
+            <View style={tailwind('flex flex-row justify-end mt-12')}>
+               <Text style={[tailwind('mr-2'), typefaces.pm]}>Guardar la tarjeta</Text>
+               <CheckBox
+                  onChange={(value) => dispatch({ type: 'save', value: value })}
+                  defaultValue={state.save}
+               />
+            </View>
+            <View style={tailwind('absolute bottom-0 right-0')}>
+               <LoadingButton
+                  icon={<NextIcon />}
+                  iconPos={'right'}
+                  text="continuar"
+                  style={tailwind('w-48 self-end mr-6 mb-6')}
+                  onPress={next}
+                  loading={state.loading}
                />
             </View>
          </View>
-         <View style={tailwind('flex flex-row justify-end mt-12')}>
-            <Text style={[tailwind('mr-2'), typefaces.pm]}>Guardar la tarjeta</Text>
-            <CheckBox
-               onChange={(value) => dispatch({ type: 'save', value: value })}
-               defaultValue={state.save}
-            />
-         </View>
-         <View style={tailwind('absolute bottom-0 right-0')}>
-            <LoadingButton
-               icon={<NextIcon />}
-               iconPos={'right'}
-               text="continuar"
-               style={tailwind('w-48 self-end mr-6 mb-6')}
-               onPress={() => {
-                  onNext();
-                  navigation.goBack();
-               }}
-            />
-         </View>
-      </View>
+      </ScrollView>
    );
+}
+
+function getCardObject(state) {
+   const expiry = state.expiry.split('/');
+   return {
+      number: state.cardNumber.replace(/\s/g, ''),
+      cvc: state.cvc,
+      expiry_month: parseInt(expiry[0]),
+      expiry_year: 2000 + parseInt(expiry[1]),
+      holder_name: state.name,
+   };
 }
 
 function CustomInput({

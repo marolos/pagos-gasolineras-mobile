@@ -8,7 +8,7 @@ export default function RadioIcon({ selected }) {
             <G data-name="radio-button-on">
                <Path
                   d="M10 0a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16z"
-                  fill="#000"
+                  fill={selected? "#000": "#333"}
                   fillOpacity={0.8}
                />
                {selected && (

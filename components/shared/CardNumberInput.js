@@ -5,19 +5,19 @@ import CardIcon from '../icons/CardIcon';
 import { createStringChunks } from '../../utils/utils';
 import { VISA_REGEX, MASTERCARD_REGEX, AMEX_REGEX } from '../../utils/constants';
 import { getCardLogo } from '../payment/CardItem';
+import CardColorIcon from '../icons/CardColorIcon';
 
 function CardNumberInput({ onChange }) {
    const [text, setText] = React.useState('');
-	const [editing, setEditing] = React.useState(false);
-	React.useEffect(()=> {
-		if(onChange)
-			onChange(text)
-	}, [text])
+   const [editing, setEditing] = React.useState(false);
+   React.useEffect(() => {
+      if (onChange) onChange(text);
+   }, [text]);
    return (
       <View
          style={[
             tailwind('flex flex-row items-center'),
-            tailwind('rounded-md border-2 border-gray-200 pl-5 w-full'),
+            tailwind('rounded-md border-2 border-gray-200 pl-4 w-full'),
             editing ? tailwind('bg-white border-2 border-gray-600') : tailwind('bg-gray-200'),
          ]}
       >
@@ -41,16 +41,15 @@ function CardNumberInput({ onChange }) {
 
 const imgStyle = { width: 30, resizeMode: 'contain' };
 function getCardProviderLogo(text) {
-   if (!text || text.length === 0) return <CardIcon />;
+   if (!text || text.length === 0) return <CardColorIcon />;
    const copyText = text.replace(/\s/g, '');
-   if (VISA_REGEX.test(copyText))
-      return <Image style={imgStyle} source={getCardLogo('visa')} />;
+   if (VISA_REGEX.test(copyText)) return <Image style={imgStyle} source={getCardLogo('vi')} />;
    if (MASTERCARD_REGEX.test(copyText))
-      return <Image style={imgStyle} source={getCardLogo('mastercard')} />;
+      return <Image style={imgStyle} source={getCardLogo('mc')} />;
    if (AMEX_REGEX.test(copyText))
-      return <Image style={{ width: 30, height: 18 }} source={getCardLogo('amex')} />;
+      return <Image style={{ width: 30, height: 18 }} source={getCardLogo('ax')} />;
 
-   return <CardIcon />;
+   return <CardColorIcon />;
 }
 
 export default CardNumberInput;

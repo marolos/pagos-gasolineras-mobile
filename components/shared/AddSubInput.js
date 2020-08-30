@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
 import AddIcon from '../icons/AddIcon';
 import SubstractIcon from '../icons/SubstractIcon';
 import { ADD_VALUE_STEP } from '../../utils/constants';
+import Ripple from 'react-native-material-ripple';
 
 export default function AddSubInput({ onChange }) {
    const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -17,15 +18,11 @@ export default function AddSubInput({ onChange }) {
 
    return (
       <View style={tailwind('flex flex-row justify-evenly items-center')}>
-         <TouchableOpacity
-            delayPressIn={0}
-            activeOpacity={0.5}
-            onPress={() => dispatch({ type: 'substract' })}
-         >
+         <Ripple onPress={() => dispatch({ type: 'substract' })} rippleCentered>
             <View>
                <SubstractIcon width={45} height={45} />
             </View>
-         </TouchableOpacity>
+         </Ripple>
          <View
             style={[
                tailwind(
@@ -44,22 +41,18 @@ export default function AddSubInput({ onChange }) {
                onChangeText={(text) => dispatch({ type: 'text', value: text })}
             />
          </View>
-         <TouchableOpacity
-            delayPressIn={0}
-            activeOpacity={0.5}
-            onPress={() => dispatch({ type: 'add' })}
-         >
-            <View>
+         <Ripple onPress={() => dispatch({ type: 'add' })} rippleCentered>
+            <View style={tailwind('rounded-full')}>
                <AddIcon width={45} height={45} />
             </View>
-         </TouchableOpacity>
+         </Ripple>
       </View>
    );
 }
 
 const initialState = {
-   count: 50.0,
-   text: '50',
+   count: 20.0,
+   text: '20',
    hasError: false,
 };
 
@@ -71,7 +64,7 @@ const reducer = (state, action) => {
          return { ...state, count: newCount, text: newCount.toString() };
       case 'substract':
          newCount = state.count - ADD_VALUE_STEP;
-         newCount = newCount >= 0 ? newCount : 0.0;
+         newCount = newCount >= 10 ? newCount : 10.0;
          return { ...state, count: newCount, text: newCount.toString() };
       case 'text':
          const newText = action.value.replace(/[\-\,\s]/, '');

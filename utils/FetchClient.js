@@ -1,6 +1,5 @@
 import { REST_API_URL } from './constants';
 
-
 class FetchClientClass {
    baseURL = REST_API_URL;
    headers = {
@@ -24,7 +23,9 @@ class FetchClientClass {
       return fetch(this.normalizeUrl(url, params), {
          method: 'GET',
          headers: this.headers,
-      }).then(this.handleResponse);
+      })
+         .then(this.handleResponse)
+         .catch((err) => Promise.reject(err));
    }
 
    post(url, body) {
@@ -32,7 +33,9 @@ class FetchClientClass {
          method: 'POST',
          headers: this.headers,
          body: JSON.stringify(body),
-      }).then(this.handleResponse);
+      })
+         .then(this.handleResponse)
+         .catch((err) => Promise.reject(err));
    }
 
    put(url, body) {
@@ -40,18 +43,22 @@ class FetchClientClass {
          method: 'PUT',
          headers: this.headers,
          body: JSON.stringify(body),
-      }).then(this.handleResponse);
+      })
+         .then(this.handleResponse)
+         .catch((err) => Promise.reject(err));
    }
 
-   delete(url) {
-      return fetch(this.normalizeUrl(url), {
-         method: 'DELETE',
-      }).then(this.handleResponse);
+   delete(url, params) {
+      return fetch(this.normalizeUrl(url, params), {
+			method: 'DELETE',
+			headers: this.headers
+      })
+         .then(this.handleResponse)
+         .catch((err) => Promise.reject(err));
    }
 
    handleResponse(response) {
       if (!response.ok) {
-         console.log(response.json());
          return Promise.reject(response);
       }
       return response.json();
