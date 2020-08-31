@@ -59,10 +59,9 @@ class ConfirmTopupView extends React.Component {
 
             <View style={tailwind('mt-12')}>
                <Resume
-                  amount={50}
+                  amount={amount}
                   showAmount
                   useGreen={false}
-                  extra={{ label: 'Pago', value: 'Visa' }}
                />
             </View>
 
