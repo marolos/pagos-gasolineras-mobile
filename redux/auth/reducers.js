@@ -8,7 +8,7 @@ const userInitialState = {
 export const user = (state = userInitialState, action) => {
    switch (action.type) {
       case 'LOGIN':
-         return { loggedIn: true, data: action.userData };
+         return { loggedIn: true, data: action.data };
       case 'LOGOUT':
 			FetchClient.removeAuthToken()
          return userInitialState;

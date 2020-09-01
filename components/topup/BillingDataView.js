@@ -9,7 +9,8 @@ import NextIcon from '../icons/NextIcon';
 import VehiclesIdInput from './VehiclesIdInput';
 import FetchClient from '../../utils/FetchClient';
 import { FULL_WIDTH, FULL_HIGHT } from '../../utils/constants';
-import { makeCancelable, equalForm } from '../../utils/utils';
+import { makeCancelable, equalForm, validForm } from '../../utils/utils';
+import SimpleToast from 'react-native-simple-toast';
 
 class BillingDataView extends React.Component {
    constructor(props) {
@@ -44,7 +45,12 @@ class BillingDataView extends React.Component {
 
    sendData = () => {
       const { navigation, route } = this.props;
-      const { actualData, form } = this.state;
+		const { actualData, form } = this.state;
+		
+		if(!validForm(form)){
+			SimpleToast.show('Debe completar todos los campos')
+			return
+		}
       if (equalForm(actualData, form)) {
          navigation.push('topupData', route.params);
          return;

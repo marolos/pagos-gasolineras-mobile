@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Keyboard } from 'react-native';
 import Modal from 'react-native-modal';
 import LoadingButton from '../shared/LoadingButton';
 import tailwind from 'tailwind-rn';
@@ -10,6 +10,7 @@ import UserLoginIcon from '../icons/UserLoginIcon';
 import PasswordLoginIcon from '../icons/PasswordLoginIcon';
 import FacebookButton from '../shared/FacebookButton';
 import { authRequest } from '../../redux/auth/actions';
+import SimpleToast from 'react-native-simple-toast';
 
 function LoginView(props) {
    const [state, setState] = React.useState({
@@ -22,6 +23,7 @@ function LoginView(props) {
    });
 
    function onLogin() {
+		Keyboard.dismiss()
       setState((state) => ({ ...state, loading: true }));
       props.dispatch(
          authRequest(
@@ -29,7 +31,9 @@ function LoginView(props) {
             state.credentials,
             (res) => {},
             (err) => {
-               console.error(':: err ::', err);
+               if (err.status === 401 || err.status === 403)
+                  SimpleToast.show('Datos incorrectos.');
+               else SimpleToast.show('Error al iniciar sesión.');
                setState((state) => ({ ...state, loading: false }));
             },
          ),
@@ -44,8 +48,8 @@ function LoginView(props) {
             { token: user_access_token },
             (res) => {},
             (err) => {
-               console.log(err);
                setState((state) => ({ ...state, showModal: false }));
+               SimpleToast.show('Error al iniciar sesión.');
             },
          ),
       );

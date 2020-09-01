@@ -13,6 +13,7 @@ import BasicInput from '../shared/BasicInput';
 import PasswordInput from './PasswordInput';
 import Toast from 'react-native-simple-toast';
 import Ripple from 'react-native-material-ripple';
+import SimpleToast from 'react-native-simple-toast';
 
 class SignupView extends React.Component {
    constructor(props) {
@@ -63,7 +64,10 @@ class SignupView extends React.Component {
             data,
             (res) => {},
             (err) => {
-               console.log(err);
+					if(err.status === 409)
+						SimpleToast.show('Usuario ya existe.')
+					else
+               	SimpleToast.show('Error al registrar el usuario')
                this.setState({ loading: false });
             },
          ),
@@ -139,7 +143,7 @@ class SignupView extends React.Component {
                         validate={(text) => PASSWORD_REGEX.test(text)}
                      />
                      <PasswordInput
-                        placeholder="Contraseña"
+                        placeholder="Confirmar contraseña"
                         onEndEditing={(text) =>
                            this.setState((state) => ({
                               information: { ...state.information, password2: text },

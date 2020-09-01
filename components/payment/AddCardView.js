@@ -10,7 +10,8 @@ import CheckBox from '../shared/CheckBox';
 import { connect } from 'react-redux';
 import FetchClient from '../../utils/FetchClient';
 import { FULL_HIGHT } from '../../utils/constants';
-import Toast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-simple-toast';
+
 const initialState = {
    cardNumber: '',
    cvv: '',
@@ -43,7 +44,7 @@ function AddCardView({ navigation, route, user }) {
       dispatch({ type: 'loading' });
       FetchClient.post('/payment/user/card/', getCardObject(state))
          .then((res) => {
-				console.log('saved card:::', res)
+            console.log('saved card:::', res);
             dispatch({ type: 'end_loading' });
             navigation.navigate('confirmTopup', {
                card: { ...res, save: state.save },
@@ -51,8 +52,7 @@ function AddCardView({ navigation, route, user }) {
             });
          })
          .catch((err) => {
-				console.log('on add', err);
-				Toast.show('No se pudo verificar la tarjeta, revise los campo.')
+            SimpleToast.show('Datos incorrectos o tarjeta ya registrada.');
             dispatch({ type: 'end_loading' });
          });
    }

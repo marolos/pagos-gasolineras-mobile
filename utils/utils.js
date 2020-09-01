@@ -135,6 +135,18 @@ export function equalVehiclesIds(actualValues, newValues) {
    return true;
 }
 
+export function validForm(form) {
+   return (
+      form.first_name &&
+      form.last_name &&
+      form.cedula &&
+      form.city &&
+      form.address &&
+      form.phone_number &&
+      form.vehicles_ids.length > 0
+   );
+}
+
 export function getOrderByAmount(amount) {
    const x = amount / (100 + IVA_RATE);
 

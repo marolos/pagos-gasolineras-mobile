@@ -11,8 +11,9 @@ import { FULL_HIGHT, IVA_RATE, COMMISION } from '../../utils/constants';
 import Ripple from 'react-native-material-ripple';
 import { makeCancelable } from '../../utils/utils';
 import FetchClient from '../../utils/FetchClient';
+import { connect } from 'react-redux';
 
-export default function TopupDataView({ route, navigation }) {
+function TopupDataView({ route, navigation, user }) {
    const [amount, setAmount] = React.useState(0);
    const [hasCards, setHasCards] = React.useState(false);
    const [loaded, setLoaded] = React.useState(false);
@@ -53,7 +54,9 @@ export default function TopupDataView({ route, navigation }) {
                            'border rounded-lg border-gray-400 flex flex-row justify-between px-6 py-4',
                         )}
                      >
-                        <Text style={[typefaces.pm]}>{'Manuela canizares'}</Text>
+                        <Text style={[typefaces.pm]}>
+                           {user.first_name} {user.last_name}
+                        </Text>
                         <View style={tailwind('flex flex-row items-center')}>
                            <Text style={[typefaces.pm, tailwind('mr-4 ')]}>editar</Text>
                            <ArrowRightIcon />
@@ -97,8 +100,6 @@ export default function TopupDataView({ route, navigation }) {
    );
 }
 
-const IVA = 0.12;
-const COMISION = 0.25;
 
 export function Resume({ amount, showAmount = false, useGreen = true, extra = null }) {
    const [values, setValues] = React.useState({ subtotal: 0, iva: 0, total: 0 });
@@ -107,7 +108,7 @@ export function Resume({ amount, showAmount = false, useGreen = true, extra = nu
       setValues({
          iva: (IVA_RATE * fraction).toFixed(2),
          subtotal: (100 * fraction).toFixed(2),
-         total: amount + COMISION,
+         total: amount + COMMISION,
       });
    }, [amount]);
    return (
@@ -124,9 +125,7 @@ export function Resume({ amount, showAmount = false, useGreen = true, extra = nu
          </View>
          <View style={tailwind('flex flex-row justify-between w-56')}>
             <Text style={[tailwind('text-base'), typefaces.pm]}>IVA (12%):</Text>
-            <Text style={[tailwind('text-base'), typefaces.pr]}>
-               $ {values.iva}
-            </Text>
+            <Text style={[tailwind('text-base'), typefaces.pr]}>$ {values.iva}</Text>
          </View>
          <View style={tailwind('flex flex-row justify-between w-56')}>
             <Text style={[tailwind('text-base'), typefaces.pm]}>Comision:</Text>
@@ -153,3 +152,5 @@ export function Resume({ amount, showAmount = false, useGreen = true, extra = nu
       </View>
    );
 }
+
+export default connect((state) => ({ user: state.user.data }))(TopupDataView);

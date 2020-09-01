@@ -6,7 +6,7 @@ import FetchClient from '../../utils/FetchClient';
  */
 export const login = (userData) => ({
    type: 'LOGIN',
-   userData,
+   data: userData,
 });
 
 export const logout = () => ({
@@ -21,8 +21,8 @@ export const authRequest = (url, form, onSuccess, onError) => (dispatch) => {
       .then((data) => {
          setGenericPassword('token', data.token)
             .then((succes) => {
-               FetchClient.setAuthToken(data.token);
-               dispatch(login({ userData: data.user }));
+					FetchClient.setAuthToken(data.token);
+               dispatch(login(data.user));
                onSuccess(data);
             })
             .catch((error) => {
