@@ -23,7 +23,9 @@ export const ADS_MAX_HEIGHT = 200;
 export const ADD_VALUE_STEP = 10.0;
 
 export const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-export const PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,20}$/;
+export const PASSWORD_REGEX = /^.{6,20}$/;
+export const CEDULA_REGEX = /[0-9]{8,13}/
+export const CHAR_REGEX = /[a-zA-Z@!#$\+%^&\*(\)\;\:\.\<\>\\\/\-\_]/
 
 
 export const VISA_REGEX = /^[4]/

@@ -4,18 +4,38 @@ import tailwind from 'tailwind-rn';
 import AddIcon from '../icons/AddIcon';
 import VehicleIdItem from './VehicleIdItem';
 import AddVehicleIdItemModal from './AddVehicleIdItemModal';
+import SimpleToast from 'react-native-simple-toast';
+import Ripple from 'react-native-material-ripple';
 
-export default function VehiclesIdInput({ items, onChange, loading }) {
+export default function VehiclesIdInput({ defaultValue = [], onChange, loading }) {
    const [showModal, setShowModal] = React.useState(false);
 
-   const onAdd = React.useCallback((item) => {
-      onChange([...items, item]);
-      setShowModal(false);
-   });
+   function onAdd(item) {
+      if (!item.number) {
+         SimpleToast.showWithGravity(
+            'Debe escribir un numero de placa',
+            SimpleToast.LONG,
+            SimpleToast.CENTER,
+         );
+         return;
+      }
 
-   const onDelete = (number) => {
-      onChange(items.filter((item) => item.number !== number));
-   };
+      const exist = defaultValue.find((i) => i.number === item.number);
+      if (exist) {
+         SimpleToast.showWithGravity(
+            'Ya ha agregado ese número de placa',
+            SimpleToast.LONG,
+            SimpleToast.CENTER,
+         );
+         return;
+      }
+      onChange([...defaultValue, item]);
+      setShowModal(false);
+   }
+
+   function onDelete(number) {
+      onChange(defaultValue.filter((item) => item.number !== number));
+   }
 
    return (
       <View style={tailwind('w-full items-center')}>
@@ -24,31 +44,34 @@ export default function VehiclesIdInput({ items, onChange, loading }) {
             <View
                style={[
                   tailwind('flex flex-row flex-wrap border-2 border-gray-600 rounded-md w-56'),
+                  defaultValue.length === 0 ? tailwind('border-red-400') : {},
                   { minHeight: 10 },
                ]}
             >
                {loading && <ActivityIndicator animating size="small" color="black" />}
                {!loading &&
-                  items.map((item) => (
+                  defaultValue.map((item) => (
                      <VehicleIdItem
                         key={item.number}
-                        {...item}
+                        number={item.number}
+                        alias={item.alias}
                         onDelete={() => onDelete(item.number)}
                      />
                   ))}
             </View>
-            <TouchableOpacity
-               activeOpacity={0.8}
-               delayPressIn={0}
-               onPress={() => setShowModal(true)}
+            <Ripple
+               onPress={() => setTimeout(() => setShowModal(true), 100)}
+               rippleDuration={250}
+               style={tailwind('ml-4 flex justify-center items-center')}
+               rippleCentered
             >
-               <View style={tailwind('ml-4 mt-1')}>
+               <View style={tailwind('flex justify-center items-center')}>
                   <AddIcon />
                </View>
-            </TouchableOpacity>
+            </Ripple>
          </View>
          <AddVehicleIdItemModal
-            onAdd={onAdd}
+            onAdd={(item) => onAdd(item)}
             onCancel={() => setShowModal(false)}
             visible={showModal}
             close={() => setShowModal(false)}

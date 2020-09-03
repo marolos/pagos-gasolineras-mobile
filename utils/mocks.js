@@ -54,3 +54,12 @@ export const cards = [
    { id: 0, alias: 'débito - MANUELA CAÑISAREZ', type: 'visa' },
    { id: 1, alias: 'crédito - MANUELA CAÑISAREZ', type: 'mastercard' },
 ];
+
+export const cities = [
+   { name: 'Guayaquil' },
+   { name: 'Quito' },
+   { name: 'Cuenca' },
+   { name: 'Ambato' },
+   { name: 'Manta' },
+];
+

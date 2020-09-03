@@ -1,4 +1,5 @@
-import { IVA_RATE, COMMISION } from './constants';
+import { IVA_RATE, COMMISION, CEDULA_REGEX, CHAR_REGEX } from './constants';
+import { cities } from './mocks';
 
 /**
  * Create an array with chunks of the given array with equal chunkSize
@@ -73,8 +74,8 @@ export function passwordValidator(pass1, pass2) {
    return status;
 }
 
-export function randomInt(nmax) {
-   const max = nmax || 100000;
+export function randomInt() {
+   const max = 10000000;
    return Math.floor(Math.random() * max);
 }
 
@@ -136,15 +137,30 @@ export function equalVehiclesIds(actualValues, newValues) {
 }
 
 export function validForm(form) {
-   return (
-      form.first_name &&
-      form.last_name &&
-      form.cedula &&
-      form.city &&
-      form.address &&
-      form.phone_number &&
-      form.vehicles_ids.length > 0
-   );
+   if (
+      !(
+         form.first_name &&
+         form.last_name &&
+         form.cedula &&
+         form.city &&
+         form.address &&
+         form.phone_number &&
+         form.vehicles_ids.length > 0
+      )
+   ) {
+      return { valid: false, message: 'Debe completar todos los campos' };
+   }
+
+   if (!CEDULA_REGEX.test(form.cedula) || CHAR_REGEX.test(form.cedula)) {
+      return { valid: false, message: 'Ingrese un número válido de cédula' };
+   }
+   if (CHAR_REGEX.test(form.phone_number)) {
+      return { valid: false, message: 'Ingrese un número válido de teléfono' };
+   }
+   if (!cities.find((city) => city.name.toLowerCase() === form.city.toLowerCase())) {
+      return { valid: false, message: 'Ingrese una ciudad válida.' };
+   }
+   return { valid: true };
 }
 
 export function getOrderByAmount(amount) {

@@ -6,6 +6,7 @@ import { typefaces } from '../../utils/styles';
 export default function BasicInput({
    placeholder,
    onEndEditing,
+   onChange,
    validate,
    editable = true,
    defaultValue,
@@ -29,9 +30,8 @@ export default function BasicInput({
                typefaces.pm,
             ]}
             onChangeText={(text) => {
-               if (validate) {
-                  setHasError(!validate(text));
-               }
+               if (validate) setHasError(!validate(text));
+               if (onChange) onChange(text);
             }}
             onFocus={(e) => setEditing(true)}
             onEndEditing={(e) => {

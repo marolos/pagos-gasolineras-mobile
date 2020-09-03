@@ -27,6 +27,8 @@ function TopupDataView({ route, navigation, user }) {
             setLoaded(true);
          },
          (err) => {
+            console.log('reject::::', err);
+            if (err.isCanceled) return;
             setLoaded(true);
          },
       );
@@ -99,7 +101,6 @@ function TopupDataView({ route, navigation, user }) {
       </ScrollView>
    );
 }
-
 
 export function Resume({ amount, showAmount = false, useGreen = true, extra = null }) {
    const [values, setValues] = React.useState({ subtotal: 0, iva: 0, total: 0 });

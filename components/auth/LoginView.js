@@ -11,11 +11,13 @@ import PasswordLoginIcon from '../icons/PasswordLoginIcon';
 import FacebookButton from '../shared/FacebookButton';
 import { authRequest } from '../../redux/auth/actions';
 import SimpleToast from 'react-native-simple-toast';
+import { EMAIL_REGEX } from '../../utils/constants';
 
 function LoginView(props) {
    const [state, setState] = React.useState({
       loading: false,
       showModal: false,
+      hasEmailError: false,
       credentials: {
          identifier: '',
          password: '',
@@ -23,8 +25,19 @@ function LoginView(props) {
    });
 
    function onLogin() {
-		Keyboard.dismiss()
+      Keyboard.dismiss();
       setState((state) => ({ ...state, loading: true }));
+      const { identifier, password } = state.credentials;
+      if (!identifier || !password) {
+         SimpleToast.show('Ingrese sus credenciales.');
+         setState((state) => ({ ...state, loading: false }));
+         return;
+      }
+      if (!EMAIL_REGEX.test(identifier)) {
+         SimpleToast.show('Ingrese un correo válido.');
+         setState((state) => ({ ...state, loading: false }));
+         return;
+      }
       props.dispatch(
          authRequest(
             '/auth/local/',
@@ -65,14 +78,19 @@ function LoginView(props) {
             <View style={tailwind('flex flex-row')}>
                <UserLoginIcon style={tailwind('mt-5')} width={16} height={20} />
                <TextInput
-                  style={[tailwind('bg-gray-200 rounded-md w-64 m-2 pl-5'), typefaces.pm]}
-                  placeholder="email, cédula o código"
-                  onChangeText={(text) =>
+                  style={[
+                     tailwind('bg-gray-200 rounded-md w-64 m-2 pl-5'),
+                     state.hasEmailError ? tailwind('border-2 border-red-400') : {},
+                     typefaces.pm,
+                  ]}
+                  placeholder="email"
+                  onChangeText={(text) => {
                      setState((state) => ({
                         ...state,
                         credentials: { ...state.credentials, identifier: text },
-                     }))
-                  }
+                        hasEmailError: !EMAIL_REGEX.test(text),
+                     }));
+                  }}
                />
             </View>
             <View style={tailwind('flex flex-row')}>

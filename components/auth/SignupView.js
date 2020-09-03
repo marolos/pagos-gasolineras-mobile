@@ -11,7 +11,6 @@ import { authRequest } from '../../redux/auth/actions';
 import { passwordValidator } from '../../utils/utils';
 import BasicInput from '../shared/BasicInput';
 import PasswordInput from './PasswordInput';
-import Toast from 'react-native-simple-toast';
 import Ripple from 'react-native-material-ripple';
 import SimpleToast from 'react-native-simple-toast';
 
@@ -38,18 +37,24 @@ class SignupView extends React.Component {
          information: { first_name, last_name, email, password1, password2 },
       } = this.state;
 
-      if (!first_name && !last_name && !email) {
-         Toast.show('Por favor llene todos los campos.');
+      if (!first_name || !last_name || !email || !password1) {
+         SimpleToast.show('Por favor llene todos los campos.');
          this.setState({ loading: false });
          return;
       }
 
       const passValid = passwordValidator(password1, password2);
       if (!passValid.isValid) {
-         Toast.show(passValid.message);
+         SimpleToast.show(passValid.message);
          this.setState({ loading: false });
          return;
-      }
+		}
+		
+		if(!EMAIL_REGEX.test(email)){
+			SimpleToast.show('Ingrese un correo válido');
+         this.setState({ loading: false });
+         return;
+		}
 
       const data = {
          email: email,
@@ -97,7 +102,7 @@ class SignupView extends React.Component {
                <View
                   style={[
                      tailwind(
-                        'absolute bg-white items-center rounded border-2 border-gray-200 px-6 py-8',
+                        'absolute bg-white items-center rounded-md border-2 border-gray-200 px-6 py-8',
                      ),
                      styles.card,
                   ]}
@@ -139,7 +144,8 @@ class SignupView extends React.Component {
                            this.setState((state) => ({
                               information: { ...state.information, password1: text },
                            }))
-                        }
+								}
+								style={tailwind('my-1')}
                         validate={(text) => PASSWORD_REGEX.test(text)}
                      />
                      <PasswordInput
@@ -148,7 +154,8 @@ class SignupView extends React.Component {
                            this.setState((state) => ({
                               information: { ...state.information, password2: text },
                            }))
-                        }
+								}
+								style={tailwind('mt-1')}
                         validate={(text) => PASSWORD_REGEX.test(text)}
                      />
                   </View>
@@ -167,7 +174,7 @@ class SignupView extends React.Component {
 }
 
 const styles = StyleSheet.create({
-   card: { top: 150 },
+   card: { top: 140 },
 });
 
 export default connect()(SignupView);

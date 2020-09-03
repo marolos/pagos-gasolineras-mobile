@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Keyboard } from 'react-native';
 import BasicInput from '../shared/BasicInput';
 import Button from '../shared/Button';
 import Modal from 'react-native-modal';
@@ -27,12 +27,14 @@ export default function AddVehicleIdItemModal({ onAdd, onCancel, visible, close 
             <BasicInput
                placeholder="Numero"
                style={tailwind('w-56 mt-2 mb-1')}
+               onChange={(text) => setItem({ ...item, number: text })}
                onEndEditing={(text) => setItem({ ...item, number: text })}
                validate={(text) => text && text.length > 1}
             />
             <BasicInput
                placeholder="Alias (opcional)"
                style={tailwind('w-56 mt-1 mb-2')}
+               onChange={(text) => setItem({ ...item, alias: text })}
                onEndEditing={(text) => setItem({ ...item, alias: text })}
             />
             <View style={tailwind('w-full flex flex-row justify-evenly mt-4')}>
@@ -44,7 +46,10 @@ export default function AddVehicleIdItemModal({ onAdd, onCancel, visible, close 
                />
                <Button
                   text="agregar"
-                  onPress={() => onAdd({ ...item, id: randomInt() })}
+                  onPress={() => {
+							Keyboard.dismiss()
+                     onAdd({ ...item, id: randomInt() });
+                  }}
                   style={tailwind('w-2/5')}
                />
             </View>

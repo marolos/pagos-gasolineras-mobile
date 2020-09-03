@@ -21,7 +21,6 @@ class ConfirmTopupView extends React.Component {
    accept = () => {
       this.setState({ showModal: true, sending: true });
       const { amount, card, company } = this.props.route.params;
-      console.log('');
 
       FetchClient.post('/payment/card/debit/', {
          card: { token: card.token },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, FlatList, Keyboard } from 'react-native';
 import InfoIcon from '../icons/InfoIcon';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
@@ -8,9 +8,10 @@ import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 import VehiclesIdInput from './VehiclesIdInput';
 import FetchClient from '../../utils/FetchClient';
-import { FULL_WIDTH, FULL_HIGHT } from '../../utils/constants';
+import { FULL_WIDTH, FULL_HIGHT, CEDULA_REGEX, CHAR_REGEX } from '../../utils/constants';
 import { makeCancelable, equalForm, validForm } from '../../utils/utils';
 import SimpleToast from 'react-native-simple-toast';
+import CitySelect from './CitySelect';
 
 class BillingDataView extends React.Component {
    constructor(props) {
@@ -34,41 +35,65 @@ class BillingDataView extends React.Component {
    componentDidMount() {
       this.request = makeCancelable(
          FetchClient.get('/users/billing/data/'),
-         (data) => this.setState({ actualData: data, form: data, loadingData: false }),
-         (err) => this.setState({ loadingData: false }),
+         (data) => {
+            this.setState({ actualData: data, form: data, loadingData: false });
+         },
+         (err) => {
+            if (err.isCanceled) return;
+            this.setState({ loadingData: false });
+         },
       );
    }
 
    componentWillUnmount() {
-      this.request.cancel();
+      if (this.request) this.request.cancel();
+      if (this.saveRequest) this.saveRequest.cancel();
    }
 
    sendData = () => {
+      Keyboard.dismiss();
+      if (this.state.loading) return;
       const { navigation, route } = this.props;
-		const { actualData, form } = this.state;
-		
-		if(!validForm(form)){
-			SimpleToast.show('Debe completar todos los campos')
-			return
-		}
+      const { actualData, form } = this.state;
+
+      const evalResult = validForm(form);
+      if (!evalResult.valid) {
+         SimpleToast.show(evalResult.message);
+         return;
+      }
       if (equalForm(actualData, form)) {
          navigation.push('topupData', route.params);
          return;
       }
-      this.setState({ actualData: this.state.form, loading: true });
-      FetchClient.put('/users/billing/data/', this.state.form)
-         .then((data) => {
-            this.setState({ loading: false }, () => {
+
+      this.setState({ loading: true });
+
+      this.saveRequest = makeCancelable(
+         FetchClient.put('/users/billing/data/', this.state.form),
+         (data) => {
+            this.setState({ loading: false, actualData: this.state.form }, () => {
                navigation.push('topupData', route.params);
             });
-         })
-         .catch((err) => console.log(err));
+         },
+         (err) => {
+            if (err.isCanceled) return;
+            this.setState(
+               {
+                  loading: false,
+                  actualData: this.state.actualData,
+                  form: this.state.actualData,
+               },
+               () => navigation.push('topupData', route.params),
+            );
+         },
+      );
    };
 
    render() {
       const { form } = this.state;
       return (
-         <ScrollView keyboardShouldPersistTaps="never">
+         <ScrollView keyboardShouldPersistTaps="handled">
+            <FlatList />
             <View style={tailwind('px-5 py-4')}>
                <Message />
             </View>
@@ -100,7 +125,9 @@ class BillingDataView extends React.Component {
                   <BasicInput
                      defaultValue={form.cedula}
                      placeholder="Cedula o pasaporte"
-                     validate={(text) => text.length > 0}
+                     validate={(text) =>
+                        text.length > 0 && !CHAR_REGEX.test(text) && CEDULA_REGEX.test(text)
+                     }
                      onEndEditing={(text) =>
                         this.setState(({ form }) => ({ form: { ...form, cedula: text } }))
                      }
@@ -108,11 +135,9 @@ class BillingDataView extends React.Component {
                </View>
                <View style={tailwind('w-64 my-2')}>
                   <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Ciudad:</Text>
-                  <BasicInput
+                  <CitySelect
                      defaultValue={form.city}
-                     placeholder="Ciudad"
-                     validate={(text) => text.length > 0}
-                     onEndEditing={(text) =>
+                     onChange={(text) =>
                         this.setState(({ form }) => ({ form: { ...form, city: text } }))
                      }
                   />
@@ -133,7 +158,7 @@ class BillingDataView extends React.Component {
                   <BasicInput
                      defaultValue={form.phone_number}
                      placeholder="n° de telefono"
-                     validate={(text) => text.length > 0}
+                     validate={(text) => text.length > 0 && !CHAR_REGEX.test(text)}
                      onEndEditing={(text) =>
                         this.setState(({ form }) => ({
                            form: { ...form, phone_number: text },
@@ -142,7 +167,7 @@ class BillingDataView extends React.Component {
                   />
                </View>
                <VehiclesIdInput
-                  items={form.vehicles_ids}
+                  defaultValue={form.vehicles_ids}
                   loading={this.state.loadingData}
                   onChange={(items) =>
                      this.setState(({ form }) => ({ form: { ...form, vehicles_ids: items } }))

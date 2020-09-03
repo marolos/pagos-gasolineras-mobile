@@ -3,7 +3,7 @@ import { View, TextInput } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
 
-export default function PasswordInput({ placeholder, onEndEditing, validate }) {
+export default function PasswordInput({ placeholder, onEndEditing, validate, style }) {
    const [hasErrors, setHasError] = React.useState(false);
    const [editing, setEditing] = React.useState(false);
    return (
@@ -16,7 +16,8 @@ export default function PasswordInput({ placeholder, onEndEditing, validate }) {
                   ? tailwind('bg-white border-2 border-gray-600')
                   : tailwind('bg-gray-200'),
                hasErrors ? tailwind('bg-white border-2 border-red-400') : {},
-               typefaces.pm,
+					typefaces.pm,
+					style? style: {}
             ]}
             onChangeText={(text) => {
                if (validate) {
