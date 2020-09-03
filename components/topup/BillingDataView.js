@@ -77,14 +77,18 @@ class BillingDataView extends React.Component {
          },
          (err) => {
             if (err.isCanceled) return;
-            this.setState(
-               {
+            if (err.status === 455) {
+               SimpleToast.show('Una de las placas ya fué registrada.');
+               this.setState({
                   loading: false,
-                  actualData: this.state.actualData,
-                  form: this.state.actualData,
-               },
-               () => navigation.push('topupData', route.params),
-            );
+               });
+               return;
+            }
+            this.setState({
+               loading: false,
+               actualData: this.state.actualData,
+               form: this.state.actualData,
+            });
          },
       );
    };
