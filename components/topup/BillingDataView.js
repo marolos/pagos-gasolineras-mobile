@@ -56,16 +56,15 @@ class BillingDataView extends React.Component {
       const { navigation, route } = this.props;
       const { actualData, form } = this.state;
 
-      const evalResult = validForm(form);
-      if (!evalResult.valid) {
-         SimpleToast.show(evalResult.message);
+      const { valid, message } = validForm(form);
+      if (!valid) {
+         SimpleToast.show(message);
          return;
       }
       if (equalForm(actualData, form)) {
          navigation.push('topupData', route.params);
          return;
       }
-
       this.setState({ loading: true });
 
       this.saveRequest = makeCancelable(
@@ -78,7 +77,9 @@ class BillingDataView extends React.Component {
          (err) => {
             if (err.isCanceled) return;
             if (err.status === 455) {
-               SimpleToast.show('Una de las placas ya fué registrada.');
+               err.json().then((e) => {
+                  SimpleToast.show('Ya existe otro registro con la placa: ' + e.error);
+               });
                this.setState({
                   loading: false,
                });
@@ -108,7 +109,7 @@ class BillingDataView extends React.Component {
                      defaultValue={form.first_name}
                      placeholder="Nombres"
                      validate={(text) => text.length > 0}
-                     onEndEditing={(text) =>
+                     onChange={(text) =>
                         this.setState(({ form }) => ({ form: { ...form, first_name: text } }))
                      }
                   />
@@ -119,20 +120,22 @@ class BillingDataView extends React.Component {
                      defaultValue={form.last_name}
                      placeholder="Apellidos"
                      validate={(text) => text.length > 0}
-                     onEndEditing={(text) =>
+                     onChange={(text) =>
                         this.setState(({ form }) => ({ form: { ...form, last_name: text } }))
                      }
                   />
                </View>
                <View style={tailwind('w-64 my-2')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Identificacion:</Text>
+                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Cédula:</Text>
                   <BasicInput
                      defaultValue={form.cedula}
                      placeholder="Cedula o pasaporte"
+                     maxLength={10}
+                     keyboardType="numeric"
                      validate={(text) =>
                         text.length > 0 && !CHAR_REGEX.test(text) && CEDULA_REGEX.test(text)
                      }
-                     onEndEditing={(text) =>
+                     onChange={(text) =>
                         this.setState(({ form }) => ({ form: { ...form, cedula: text } }))
                      }
                   />
@@ -152,7 +155,7 @@ class BillingDataView extends React.Component {
                      defaultValue={form.address}
                      placeholder="Direccion domiciliaria"
                      validate={(text) => text.length > 0}
-                     onEndEditing={(text) =>
+                     onChange={(text) =>
                         this.setState(({ form }) => ({ form: { ...form, address: text } }))
                      }
                   />
@@ -161,9 +164,11 @@ class BillingDataView extends React.Component {
                   <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Telefono:</Text>
                   <BasicInput
                      defaultValue={form.phone_number}
-                     placeholder="n° de telefono"
+                     placeholder="n° de teléfono"
                      validate={(text) => text.length > 0 && !CHAR_REGEX.test(text)}
-                     onEndEditing={(text) =>
+                     maxLength={10}
+                     keyboardType="numeric"
+                     onChange={(text) =>
                         this.setState(({ form }) => ({
                            form: { ...form, phone_number: text },
                         }))

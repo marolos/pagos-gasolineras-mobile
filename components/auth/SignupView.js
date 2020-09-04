@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image, Text, Keyboard } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import { typefaces } from '../../utils/styles';
 import tailwind from 'tailwind-rn';
@@ -31,7 +31,8 @@ class SignupView extends React.Component {
    }
 
    onRegister = () => {
-      this.setState({ loading: true });
+      if (this.state.loading) return;
+      Keyboard.dismiss();
 
       const {
          information: { first_name, last_name, email, password1, password2 },
@@ -48,14 +49,15 @@ class SignupView extends React.Component {
          SimpleToast.show(passValid.message);
          this.setState({ loading: false });
          return;
-		}
-		
-		if(!EMAIL_REGEX.test(email)){
-			SimpleToast.show('Ingrese un correo válido');
+      }
+
+      if (!EMAIL_REGEX.test(email)) {
+         SimpleToast.show('Ingrese un correo válido');
          this.setState({ loading: false });
          return;
-		}
+      }
 
+      this.setState({ loading: true });
       const data = {
          email: email,
          first_name: first_name,
@@ -69,10 +71,8 @@ class SignupView extends React.Component {
             data,
             (res) => {},
             (err) => {
-					if(err.status === 409)
-						SimpleToast.show('Usuario ya existe.')
-					else
-               	SimpleToast.show('Error al registrar el usuario')
+               if (err.status === 409) SimpleToast.show('Usuario ya existe.');
+               else SimpleToast.show('Error al registrar el usuario');
                this.setState({ loading: false });
             },
          ),
@@ -81,7 +81,7 @@ class SignupView extends React.Component {
 
    render() {
       return (
-         <ScrollView>
+         <ScrollView keyboardShouldPersistTaps="handled">
             <View style={[tailwind('items-center'), { height: FULL_HIGHT }]}>
                <View style={tailwind('relative')}>
                   <Image
@@ -91,8 +91,8 @@ class SignupView extends React.Component {
                   <View style={[tailwind('absolute'), { top: 25, left: 25 }]}>
                      <Ripple
                         onPress={() => this.props.navigation.goBack()}
-								style={tailwind('rounded-full p-2 w-12 h-12 items-center')}
-								rippleCentered={true}
+                        style={tailwind('rounded-full p-2 w-12 h-12 items-center')}
+                        rippleCentered={true}
                      >
                         <BackIcon />
                      </Ripple>
@@ -110,7 +110,7 @@ class SignupView extends React.Component {
                   <View>
                      <BasicInput
                         placeholder="Nombres"
-                        onEndEditing={(text) =>
+                        onChange={(text) =>
                            this.setState((state) => ({
                               information: { ...state.information, first_name: text },
                            }))
@@ -120,7 +120,7 @@ class SignupView extends React.Component {
                      />
                      <BasicInput
                         placeholder="Apellidos"
-                        onEndEditing={(text) =>
+                        onChange={(text) =>
                            this.setState((state) => ({
                               information: { ...state.information, last_name: text },
                            }))
@@ -130,7 +130,7 @@ class SignupView extends React.Component {
                      />
                      <BasicInput
                         placeholder="Correo"
-                        onEndEditing={(text) =>
+                        onChange={(text) =>
                            this.setState((state) => ({
                               information: { ...state.information, email: text },
                            }))
@@ -140,22 +140,22 @@ class SignupView extends React.Component {
                      />
                      <PasswordInput
                         placeholder="Contraseña"
-                        onEndEditing={(text) =>
+                        onChange={(text) =>
                            this.setState((state) => ({
                               information: { ...state.information, password1: text },
                            }))
-								}
-								style={tailwind('my-1')}
+                        }
+                        style={tailwind('my-1')}
                         validate={(text) => PASSWORD_REGEX.test(text)}
                      />
                      <PasswordInput
                         placeholder="Confirmar contraseña"
-                        onEndEditing={(text) =>
+                        onChange={(text) =>
                            this.setState((state) => ({
                               information: { ...state.information, password2: text },
                            }))
-								}
-								style={tailwind('mt-1')}
+                        }
+                        style={tailwind('mt-1')}
                         validate={(text) => PASSWORD_REGEX.test(text)}
                      />
                   </View>

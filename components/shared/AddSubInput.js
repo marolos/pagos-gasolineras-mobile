@@ -4,7 +4,7 @@ import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
 import AddIcon from '../icons/AddIcon';
 import SubstractIcon from '../icons/SubstractIcon';
-import { ADD_VALUE_STEP } from '../../utils/constants';
+import { ADD_VALUE_STEP, FLOAT_FIXED_2 } from '../../utils/constants';
 import Ripple from 'react-native-material-ripple';
 
 export default function AddSubInput({ onChange }) {
@@ -12,9 +12,10 @@ export default function AddSubInput({ onChange }) {
 
    React.useEffect(() => {
       if (onChange) {
-         onChange(state.count);
+         console.log(state);
+         onChange(state.count || 0);
       }
-   }, [state]);
+   }, [state.count]);
 
    return (
       <View style={tailwind('flex flex-row justify-evenly items-center')}>
@@ -25,16 +26,14 @@ export default function AddSubInput({ onChange }) {
          </Ripple>
          <View
             style={[
-               tailwind(
-                  'border-2 border-gray-600 rounded w-32 h-12 flex flex-row items-center',
-               ),
+               tailwind('border-2 border-gray-600 rounded w-32 h-12 flex flex-row items-center'),
                state.hasError ? tailwind('border-red-400') : {},
             ]}
          >
             <Text style={[tailwind('text-gray-600 ml-4'), typefaces.pm]}>$</Text>
             <TextInput
                value={state.text}
-               defaultValue={initialState.text}
+               defaultValue={state.text}
                style={[tailwind('text-gray-900 w-20')]}
                placeholder="10.00"
                keyboardType="numeric"
@@ -50,6 +49,8 @@ export default function AddSubInput({ onChange }) {
    );
 }
 
+const MIN_AMOUNT = 10.0;
+
 const initialState = {
    count: 20.0,
    text: '20',
@@ -64,12 +65,14 @@ const reducer = (state, action) => {
          return { ...state, count: newCount, text: newCount.toString() };
       case 'substract':
          newCount = state.count - ADD_VALUE_STEP;
-         newCount = newCount >= 10 ? newCount : 10.0;
+         newCount = newCount >= MIN_AMOUNT ? newCount : MIN_AMOUNT;
          return { ...state, count: newCount, text: newCount.toString() };
       case 'text':
          const newText = action.value.replace(/[\-\,\s]/, '');
-         const hasError = newText.length === 0;
-         return { text: newText, count: parseFloat(newText) || 0.0, hasError: hasError };
+         const matches = newText.match(FLOAT_FIXED_2);
+      	newCount = parseFloat(matches[0]);
+         const hasError = !newText.length || matches[0][matches[0].length-1] === '.';
+         return { text: matches[0], count: newCount || 0, hasError: hasError };
       case 'hasError':
          return { ...state, hasError: action.value };
       default:

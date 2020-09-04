@@ -29,12 +29,12 @@ function LoginView(props) {
       setState((state) => ({ ...state, loading: true }));
       const { identifier, password } = state.credentials;
       if (!identifier || !password) {
-         SimpleToast.show('Ingrese sus credenciales.');
+         SimpleToast.showWithGravity('Ingrese sus credenciales.', 1500, SimpleToast.CENTER);
          setState((state) => ({ ...state, loading: false }));
          return;
       }
       if (!EMAIL_REGEX.test(identifier)) {
-         SimpleToast.show('Ingrese un correo válido.');
+         SimpleToast.showWithGravity('Ingrese un correo válido.', 1500, SimpleToast.CENTER);
          setState((state) => ({ ...state, loading: false }));
          return;
       }

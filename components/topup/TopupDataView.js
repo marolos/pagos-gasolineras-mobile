@@ -12,6 +12,7 @@ import Ripple from 'react-native-material-ripple';
 import { makeCancelable } from '../../utils/utils';
 import FetchClient from '../../utils/FetchClient';
 import { connect } from 'react-redux';
+import SimpleToast from 'react-native-simple-toast';
 
 function TopupDataView({ route, navigation, user }) {
    const [amount, setAmount] = React.useState(0);
@@ -36,6 +37,15 @@ function TopupDataView({ route, navigation, user }) {
    }, []);
 
    function next() {
+      console.log('12341234:::', amount);
+      if (amount < 10) {
+         SimpleToast.showWithGravity(
+            'Ingrese una cantidad mayor o igual a $10',
+            SimpleToast.LONG,
+            SimpleToast.CENTER,
+         );
+         return;
+      }
       const params = { company: route.params, amount: amount };
       if (hasCards) {
          navigation.push('chooseCard', params);
@@ -91,7 +101,7 @@ function TopupDataView({ route, navigation, user }) {
                      iconPos={'right'}
                      text="continuar"
                      style={tailwind('w-48 self-end mr-6 mb-6')}
-                     onPress={next}
+                     onPress={() => next()}
                   />
                ) : (
                   <ActivityIndicator animating color="black" />

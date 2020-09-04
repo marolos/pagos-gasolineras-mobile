@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import tailwind from 'tailwind-rn';
 import AddIcon from '../icons/AddIcon';
 import VehicleIdItem from './VehicleIdItem';

@@ -1,4 +1,4 @@
-import { setGenericPassword } from 'react-native-keychain';
+import { setGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import FetchClient from '../../utils/FetchClient';
 
 /**
@@ -21,7 +21,7 @@ export const authRequest = (url, form, onSuccess, onError) => (dispatch) => {
       .then((data) => {
          setGenericPassword('token', data.token)
             .then((succes) => {
-					FetchClient.setAuthToken(data.token);
+               FetchClient.setAuthToken(data.token);
                dispatch(login(data.user));
                onSuccess(data);
             })
@@ -31,6 +31,17 @@ export const authRequest = (url, form, onSuccess, onError) => (dispatch) => {
       })
       .catch((error) => {
          onError(error);
+         dispatch(logout());
+      });
+};
+
+export const logoutAction = () => (dispatch) => {
+   return resetGenericPassword()
+      .then((succes) => {
+         dispatch(logout());
+      })
+      .catch((error) => {
+         console.error('Error deleting the token', error.message);
          dispatch(logout());
       });
 };
