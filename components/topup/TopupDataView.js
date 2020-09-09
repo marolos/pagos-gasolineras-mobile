@@ -112,7 +112,7 @@ function TopupDataView({ route, navigation, user }) {
    );
 }
 
-export function Resume({ amount, showAmount = false, useGreen = true, extra = null }) {
+export function Resume({ amount, showAmount=false, useGreen=true, extra=null }) {
    const [values, setValues] = React.useState({ subtotal: 0, iva: 0, total: 0 });
    React.useEffect(() => {
       const fraction = amount / (100 + IVA_RATE);

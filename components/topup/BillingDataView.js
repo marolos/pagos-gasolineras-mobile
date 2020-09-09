@@ -126,10 +126,10 @@ class BillingDataView extends React.Component {
                   />
                </View>
                <View style={tailwind('w-64 my-2')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Cédula:</Text>
+                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>N° de documento:</Text>
                   <BasicInput
                      defaultValue={form.cedula}
-                     placeholder="Cedula o pasaporte"
+                     placeholder="Cédula o pasaporte"
                      maxLength={10}
                      keyboardType="numeric"
                      validate={(text) =>

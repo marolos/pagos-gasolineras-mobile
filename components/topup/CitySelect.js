@@ -1,7 +1,7 @@
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
 import { cities } from '../../utils/mocks';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, ScrollView } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { typefaces, shadowStyle } from '../../utils/styles';
 
@@ -40,7 +40,7 @@ export default function CitySelect({ onChange, defaultValue, editable = true }) 
          {show && (
             <View
                style={[
-                  tailwind('absolute bg-white w-40 pl-4'),
+                  tailwind('absolute bg-white w-40 pl-4 py-2'),
                   { top: 60, left: 94, zIndex: 20 },
                   shadowStyle,
                ]}
@@ -53,9 +53,9 @@ export default function CitySelect({ onChange, defaultValue, editable = true }) 
                         setShow(false);
                         setHasErrors(false);
                      }}
-                     style={tailwind('p-2')}
+                     style={tailwind('p-1')}
                   >
-                     <Text style={[tailwind('text-base'), typefaces.pr]}>{city.name}</Text>
+                     <Text style={[tailwind('text-sm'), typefaces.pr]}>{city.name}</Text>
                   </Ripple>
                ))}
             </View>

@@ -12,7 +12,6 @@ export default function AddSubInput({ onChange }) {
 
    React.useEffect(() => {
       if (onChange) {
-         console.log(state);
          onChange(state.count || 0);
       }
    }, [state.count]);

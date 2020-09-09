@@ -15,7 +15,11 @@ import SimpleToast from 'react-native-simple-toast';
 class ConfirmTopupView extends React.Component {
    constructor(props) {
       super(props);
-      this.state = { showModal: false, sending: false };
+      this.state = {
+         showModal: false,
+         sending: false,
+         showConfirmCancel: false,
+      };
    }
 
    accept = () => {
@@ -45,7 +49,9 @@ class ConfirmTopupView extends React.Component {
    };
 
    cancel = () => {
-      this.props.navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] });
+      this.setState({ showConfirmCancel: false }, () =>
+         setTimeout(() => this.props.navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] }), 250),
+      );
    };
 
    render() {
@@ -57,12 +63,21 @@ class ConfirmTopupView extends React.Component {
             </View>
 
             <View style={tailwind('mt-12')}>
-               <Resume
-                  amount={amount}
-                  showAmount
-                  useGreen={false}
-               />
+               <Resume amount={amount} useGreen={false} showAmount />
             </View>
+
+            <Modal
+               isVisible={this.state.showConfirmCancel}
+               animationIn="fadeIn"
+               animationOut="fadeOut"
+               backdropTransitionOutTiming={0}
+               style={tailwind('flex items-center')}
+            >
+               <ConfirmCancel
+                  onCancel={this.cancel}
+                  onContinue={() => this.setState({ showConfirmCancel: false })}
+               />
+            </Modal>
 
             <Modal
                isVisible={this.state.showModal}
@@ -84,7 +99,11 @@ class ConfirmTopupView extends React.Component {
             </Modal>
 
             <View style={tailwind('absolute bottom-0 right-0 mb-8 mr-8 flex flex-row')}>
-               <Button text={'cancelar'} onPress={this.cancel} primary={false} />
+               <Button
+                  text={'cancelar'}
+                  onPress={() => this.setState({ showConfirmCancel: true })}
+                  primary={false}
+               />
                <Button text={'recargar'} onPress={this.accept} style={tailwind('ml-4')} />
             </View>
          </View>
@@ -127,13 +146,33 @@ function Done({ amount, company, navigation }) {
    );
 }
 
+function ConfirmCancel({ onCancel, onContinue }) {
+   return (
+      <View style={tailwind('w-full bg-white rounded-lg')}>
+         <View style={tailwind('p-6 rounded-md')}>
+            <View style={tailwind('flex flex-row')}>
+               <InfoIcon />
+               <Text style={[tailwind('text-base ml-4'), typefaces.psb]}>
+                  ¿Desea cancelar la recarga?
+               </Text>
+            </View>
+            <View style={tailwind('flex flex-row justify-evenly mt-8')}>
+               <Button
+                  text={'cancelar'}
+                  primary={false}
+                  onPress={onCancel}
+                  style={{ width: 100 }}
+               />
+               <Button text={'continuar'} onPress={onContinue} />
+            </View>
+         </View>
+      </View>
+   );
+}
+
 function Message() {
    return (
-      <View
-         style={tailwind(
-            'flex flex-row bg-green-200 items-center rounded-lg px-5 py-3 w-full',
-         )}
-      >
+      <View style={tailwind('flex flex-row bg-green-200 items-center rounded-lg px-5 py-3 w-full')}>
          <InfoIcon fill={'#38a169'} />
          <Text style={[tailwind('text-green-700 text-sm ml-3'), typefaces.pm]}>
             Confirmar datos de recarga
