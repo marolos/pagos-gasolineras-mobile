@@ -8,9 +8,9 @@ import InfoIcon from '../icons/InfoIcon';
 import Button from '../shared/Button';
 import Modal from 'react-native-modal';
 import CheckRoundedIcon from '../icons/CheckRoundedIcon';
-import FetchClient from '../../utils/FetchClient';
 import { getOrderByAmount } from '../../utils/utils';
 import SimpleToast from 'react-native-simple-toast';
+import Fetch from '../../utils/Fetch';
 
 class ConfirmTopupView extends React.Component {
    constructor(props) {
@@ -26,7 +26,7 @@ class ConfirmTopupView extends React.Component {
       this.setState({ showModal: true, sending: true });
       const { amount, card, company } = this.props.route.params;
 
-      FetchClient.post('/payment/card/debit/', {
+      Fetch.post('/payment/card/debit/', {
          card: { token: card.token },
          order: { ...getOrderByAmount(amount), total: amount },
          company: company,
@@ -34,7 +34,7 @@ class ConfirmTopupView extends React.Component {
          .then((res) => {
             console.log(res);
             if (!card.save) {
-               FetchClient.delete('/payment/user/card/', card)
+               Fetch.delete('/payment/user/card/', card)
                   .then((res) => console.log(res))
                   .catch((err) => console.log('on delete::::', err))
                   .finally(() => this.setState({ sending: false }));

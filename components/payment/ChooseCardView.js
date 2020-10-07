@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-import { fakeFetch, cards } from '../../utils/mocks';
 import CardItem from './CardItem';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
@@ -10,7 +9,7 @@ import Ripple from 'react-native-material-ripple';
 import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 import { connect } from 'react-redux';
-import FetchClient from '../../utils/FetchClient';
+import Fetch from '../../utils/Fetch';
 
 const initialState = {
    cards: [],
@@ -38,8 +37,8 @@ function ChooseCardView({ user, navigation, route }) {
 
    React.useEffect(() => {
       dispatch({ type: 'loading' });
-      FetchClient.get('/payment/user/card/')
-         .then((res) => dispatch({ type: 'set_cards', value: res.cards }))
+      Fetch.get('/payment/user/card/')
+         .then((res) => dispatch({ type: 'set_cards', value: res.body.cards }))
          .catch((err) => {});
    }, []);
 
@@ -86,7 +85,7 @@ function ChooseCardView({ user, navigation, route }) {
                icon={<NextIcon />}
                iconPos={'right'}
                text="continuar"
-               style={tailwind('w-48 self-end mr-6 mb-6')}
+               style={tailwind('w-48 self-end mr-6 mb-12')}
                onPress={next}
             />
          </View>

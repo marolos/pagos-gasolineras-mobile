@@ -7,11 +7,11 @@ import BasicInput from '../shared/BasicInput';
 import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 import VehiclesIdInput from './VehiclesIdInput';
-import FetchClient from '../../utils/FetchClient';
 import { FULL_WIDTH, FULL_HIGHT, CEDULA_REGEX, CHAR_REGEX } from '../../utils/constants';
 import { makeCancelable, equalForm, validForm } from '../../utils/utils';
 import SimpleToast from 'react-native-simple-toast';
 import CitySelect from './CitySelect';
+import Fetch from '../../utils/Fetch';
 
 class BillingDataView extends React.Component {
    constructor(props) {
@@ -34,9 +34,9 @@ class BillingDataView extends React.Component {
 
    componentDidMount() {
       this.request = makeCancelable(
-         FetchClient.get('/users/billing/data/'),
-         (data) => {
-            this.setState({ actualData: data, form: data, loadingData: false });
+         Fetch.get('/users/billing/data/'),
+         (res) => {
+            this.setState({ actualData: res.body, form: res.body, loadingData: false });
          },
          (err) => {
             if (err.isCanceled) return;
@@ -68,8 +68,8 @@ class BillingDataView extends React.Component {
       this.setState({ loading: true });
 
       this.saveRequest = makeCancelable(
-         FetchClient.put('/users/billing/data/', this.state.form),
-         (data) => {
+         Fetch.put('/users/billing/data/', this.state.form),
+         (res) => {
             this.setState({ loading: false, actualData: this.state.form }, () => {
                navigation.push('topupData', route.params);
             });
@@ -77,9 +77,7 @@ class BillingDataView extends React.Component {
          (err) => {
             if (err.isCanceled) return;
             if (err.status === 455) {
-               err.json().then((e) => {
-                  SimpleToast.show('Ya existe otro registro con la placa: ' + e.error);
-               });
+               SimpleToast.show('Ya existe otro registro con la placa: ' + err.body.error);
                this.setState({
                   loading: false,
                });

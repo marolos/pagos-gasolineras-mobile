@@ -40,6 +40,7 @@ function CardNumberInput({ onChange }) {
 }
 
 const imgStyle = { width: 30, resizeMode: 'contain' };
+
 function getCardProviderLogo(text) {
    if (!text || text.length === 0) return <CardColorIcon />;
    const copyText = text.replace(/\s/g, '');

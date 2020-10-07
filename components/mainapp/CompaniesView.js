@@ -9,10 +9,10 @@ import { typefaces } from '../../utils/styles';
 import CollapseModalOptions from './CollapseModalOptions';
 import Line from '../shared/Line';
 import { DummyGrid } from '../shared/DummyGrid';
-import FetchClient from '../../utils/FetchClient';
 import { makeCancelable } from '../../utils/utils';
+import Fetch from '../../utils/Fetch';
 
-function GasCompaniesView(props) {
+function CompaniesView(props) {
    const [state, setState] = React.useState({
       selectedCompany: null,
       modalVisible: false,
@@ -22,9 +22,9 @@ function GasCompaniesView(props) {
 
    React.useEffect(() => {
       const req = makeCancelable(
-         FetchClient.get('/users/balances/'),
+         Fetch.get('/users/balances/'),
          (res) => {
-            setState({ ...state, companies: res.balances, loading: false });
+            setState({ ...state, companies: res.body.balances, loading: false });
          },
          (err) => {
             if (err.isCanceled) return;
@@ -76,4 +76,4 @@ function GasCompaniesView(props) {
    );
 }
 
-export default connect()(GasCompaniesView);
+export default connect()(CompaniesView);

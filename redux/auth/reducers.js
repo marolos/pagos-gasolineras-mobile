@@ -1,4 +1,4 @@
-import FetchClient from "../../utils/FetchClient";
+import Fetch from "../../utils/Fetch";
 
 const userInitialState = {
    loggedIn: false,
@@ -10,7 +10,7 @@ export const user = (state = userInitialState, action) => {
       case 'LOGIN':
          return { loggedIn: true, data: action.data };
       case 'LOGOUT':
-			FetchClient.removeAuthToken()
+			Fetch.removeAuthToken()
          return userInitialState;
       default:
          return state;

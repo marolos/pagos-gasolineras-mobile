@@ -1,7 +1,7 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, StatusBar } from 'react-native';
 
-export const REST_API_URL = 'https://fuelpay.azurewebsites.net';
-//export const REST_API_URL = 'http://localhost:8000';
+//export const REST_API_URL = 'https://fuelpay.azurewebsites.net';
+export const REST_API_URL = 'http://localhost:8000';
 export const ENCRYPTOR_KEY = 'MIIEowIBAAKA2LCcVqUelTOc6TwslUAm8vxnoCAQEt3hhlv8FjvjmZGqJ';
 console.log('::url::', REST_API_URL);
 export const theme = {
@@ -18,6 +18,13 @@ export const theme = {
 
 export const FULL_WIDTH = Dimensions.get('window').width;
 export const FULL_HIGHT = Dimensions.get('window').height;
+
+
+console.log(
+	Dimensions.get('screen').height, 
+	Dimensions.get('window').height, 
+	StatusBar.currentHeight
+)
 export const ADS_MAX_HEIGHT = 200;
 
 export const ADD_VALUE_STEP = 10.0;

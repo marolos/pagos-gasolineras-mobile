@@ -8,9 +8,9 @@ import { formatExpiryDate } from '../../utils/utils';
 import CardNumberInput from '../shared/CardNumberInput';
 import CheckBox from '../shared/CheckBox';
 import { connect } from 'react-redux';
-import FetchClient from '../../utils/FetchClient';
 import { FULL_HIGHT } from '../../utils/constants';
 import SimpleToast from 'react-native-simple-toast';
+import Fetch from '../../utils/Fetch';
 
 const initialState = {
    cardNumber: '',
@@ -19,6 +19,7 @@ const initialState = {
    name: '',
    save: true,
 };
+
 const reducer = (state, action) => {
    switch (action.type) {
       case 'card_number':
@@ -42,12 +43,12 @@ function AddCardView({ navigation, route, user }) {
    const [state, dispatch] = React.useReducer(reducer, initialState);
    function next() {
       dispatch({ type: 'loading' });
-      FetchClient.post('/payment/user/card/', getCardObject(state))
+      Fetch.post('/payment/user/card/', getCardObject(state))
          .then((res) => {
-            console.log('saved card:::', res);
+            console.log('saved card:::', res.body);
             dispatch({ type: 'end_loading' });
             navigation.navigate('confirmTopup', {
-               card: { ...res, save: state.save },
+               card: { ...res.body, save: state.save },
                ...route.params,
             });
          })
@@ -57,12 +58,10 @@ function AddCardView({ navigation, route, user }) {
          });
    }
    return (
-      <ScrollView>
-         <View style={{ flex: 1, height: FULL_HIGHT - 36, padding: 24 }}>
+      <ScrollView keyboardShouldPersistTaps="handled">
+         <View style={{ position: 'relative', flex: 1, height: FULL_HIGHT - 40, padding: 24 }}>
             <View>
-               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>
-                  Nombre del titular:
-               </Text>
+               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>Nombre del titular:</Text>
                <CustomInput
                   maxLength={100}
                   containerStyle={tailwind('w-full')}
@@ -116,7 +115,7 @@ function AddCardView({ navigation, route, user }) {
                   icon={<NextIcon />}
                   iconPos={'right'}
                   text="continuar"
-                  style={tailwind('w-48 self-end mr-6 mb-6')}
+                  style={tailwind('w-48 self-end mr-6 mb-12')}
                   onPress={next}
                   loading={state.loading}
                />

@@ -1,5 +1,5 @@
 import { setGenericPassword, resetGenericPassword } from 'react-native-keychain';
-import FetchClient from '../../utils/FetchClient';
+import Fetch from '../../utils/Fetch';
 
 /**
  * Simple actions creator
@@ -17,19 +17,21 @@ export const logout = () => ({
  * ASYNC actions creator
  */
 export const authRequest = (url, form, onSuccess, onError) => (dispatch) => {
-   return FetchClient.post(url, form)
-      .then((data) => {
-         setGenericPassword('token', data.token)
+   return Fetch.post(url, form)
+      .then(({body}) => {
+			console.log(body)
+         setGenericPassword('token', body.token)
             .then((succes) => {
-               FetchClient.setAuthToken(data.token);
-               dispatch(login(data.user));
-               onSuccess(data);
+               Fetch.setAuthToken(body.token);
+               dispatch(login(body.user));
+               onSuccess(body);
             })
             .catch((error) => {
                console.error('Error saving the token', error.message);
             });
       })
       .catch((error) => {
+			console.log(error)
          onError(error);
          dispatch(logout());
       });

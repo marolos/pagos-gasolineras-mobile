@@ -10,9 +10,9 @@ import AddSubInput from '../shared/AddSubInput';
 import { FULL_HIGHT, IVA_RATE, COMMISION } from '../../utils/constants';
 import Ripple from 'react-native-material-ripple';
 import { makeCancelable } from '../../utils/utils';
-import FetchClient from '../../utils/FetchClient';
 import { connect } from 'react-redux';
 import SimpleToast from 'react-native-simple-toast';
+import Fetch from '../../utils/Fetch';
 
 function TopupDataView({ route, navigation, user }) {
    const [amount, setAmount] = React.useState(0);
@@ -22,9 +22,9 @@ function TopupDataView({ route, navigation, user }) {
    React.useEffect(() => {
       setLoaded(false);
       const request = makeCancelable(
-         FetchClient.get('/payment/user/card/'),
-         (cards) => {
-            setHasCards(cards.result_size !== 0);
+         Fetch.get('/payment/user/card/'),
+         ({body}) => {
+            setHasCards(body.cards.result_size !== 0);
             setLoaded(true);
          },
          (err) => {
@@ -37,7 +37,6 @@ function TopupDataView({ route, navigation, user }) {
    }, []);
 
    function next() {
-      console.log('12341234:::', amount);
       if (amount < 10) {
          SimpleToast.showWithGravity(
             'Ingrese una cantidad mayor o igual a $10',
@@ -56,7 +55,7 @@ function TopupDataView({ route, navigation, user }) {
 
    return (
       <ScrollView>
-         <View style={{ flex: 1, height: FULL_HIGHT - 35 }}>
+         <View style={{ flex: 1, height: FULL_HIGHT - 40 }}>
             <View style={tailwind('p-6')}>
                <Text style={[tailwind('text-base mb-2'), typefaces.pm]}>Facturacion:</Text>
                <View>
@@ -100,7 +99,7 @@ function TopupDataView({ route, navigation, user }) {
                      icon={<NextIcon />}
                      iconPos={'right'}
                      text="continuar"
-                     style={tailwind('w-48 self-end mr-6 mb-6')}
+                     style={tailwind('w-48 self-end mr-6 mb-12')}
                      onPress={() => next()}
                   />
                ) : (

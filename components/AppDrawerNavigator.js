@@ -8,8 +8,8 @@ import HomeNavigator from './HomeNavigator';
 import SplashScreen from 'react-native-splash-screen';
 import { theme, FULL_HIGHT } from '../utils/constants';
 import { getGenericPassword, resetGenericPassword } from 'react-native-keychain';
-import FetchClient from '../utils/FetchClient';
 import tailwind from 'tailwind-rn';
+import Fetch from '../utils/Fetch';
 
 const Drawer = createDrawerNavigator();
 
@@ -19,11 +19,11 @@ function AppDrawerNavigator(props) {
       SplashScreen.hide();
       getGenericPassword()
          .then((credentials) => {
-            FetchClient.setAuthToken(credentials.password);
+            Fetch.setAuthToken(credentials.password);
             setLoaded(true);
          })
          .catch((error) => {
-            FetchClient.setAuthToken('');
+            Fetch.removeAuthToken()
             resetGenericPassword()
                .then(() => {})
                .catch((err) => {});

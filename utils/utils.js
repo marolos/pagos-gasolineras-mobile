@@ -56,22 +56,24 @@ export function formatExpiryDate(currentText, text) {
    return text;
 }
 
+const passwordStatus = {
+	message: '',
+	isValid: false,
+};
+
 export function passwordValidator(pass1, pass2) {
-   const status = {
-      message: '',
-      isValid: false,
-   };
+   
    if (pass1.length < 8) {
-      status.message =
-         'La contraseña debe tener al menos 8 caracteres, un numero, y un caracter especial';
-      return status;
+      passwordStatus.message =
+         'La contraseña debe tener al menos 8 caracteres, un número, y un caracter especial';
+      return passwordStatus;
    }
    if (pass1 != pass2) {
-      status.message = 'Las contraseñas no coinciden';
-      return status;
+      passwordStatus.message = 'Las contraseñas no coinciden';
+      return passwordStatus;
    }
-   status.isValid = true;
-   return status;
+   passwordStatus.isValid = true;
+   return passwordStatus;
 }
 
 export function randomInt() {
@@ -80,12 +82,12 @@ export function randomInt() {
 }
 
 /**
- * Make a promise to execute without side effects.
- * It doesn't cancel the request at all, just don't execute the resolve
- * function when the promise is done and the function cancel() is called.
- * It's usefull when you have need to perform a react state update when the promise ends
- * but sometimes you need to unmount the component. This way if you can use the cancel() as a cleanup function
- * on componentWillUnmout() or if you are using react hooks you can use it on the cleanup function on your React.useEffect() function
+ * Allow to execute a promise without side effects.
+ * It doesn't cancel the request at all, just don't execute the resolve function
+ * when the promise is done and the function cancel() is called.
+ * It's usefull when you need to perform a react state update when the promise ends
+ * but sometimes you need to unmount the component. This way, you can use the cancel() function as a cleanup 
+ * on componentWillUnmout() or on the cleanup function on your React.useEffect()
  * @param {} promise the promise to execute
  * @param {*} resolve the resolve function to the promise
  * @param {*} reject the function to handle errors.

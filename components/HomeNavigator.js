@@ -11,21 +11,10 @@ import tailwind from 'tailwind-rn';
 import ChooseCardView from './payment/ChooseCardView';
 import AddCardView from './payment/AddCardView';
 import ConfirmTopupView from './topup/ConfirmTopupView';
-import FetchClient from '../utils/FetchClient';
-import { logoutAction } from '../redux/auth/actions';
-import SimpleToast from 'react-native-simple-toast';
 
 const Stack = createStackNavigator();
 
 function HomeNavigator({ dispatch }) {
-   React.useEffect(() => {
-      FetchClient.get('/auth/check/')
-         .then((res) => {})
-         .catch((err) => {
-            SimpleToast.show('Su sesión ha expirado.', 2000);
-            dispatch(logoutAction());
-         });
-   }, []);
    return (
       <Stack.Navigator
          screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}

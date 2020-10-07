@@ -1,24 +1,28 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { connect } from 'react-redux';
 import { typefaces } from '../../utils/styles';
+import HamburguerIcon from '../icons/HamburguerIcon';
+import Ripple from 'react-native-material-ripple';
 
 export function CustomHeaderLeft(props) {
-  return (
-    <View style={[tailwind('flex flex-row items-center')]}>
-      <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.openDrawer()}>
-        <View style={tailwind('w-8 h-8 bg-blue-900 rounded-full m-3 ml-4')}></View>
-      </TouchableOpacity>
-    </View>
-  );
+   return (
+      <Ripple
+         style={[tailwind('flex flex-row items-center ml-2')]}
+			onPress={() => props.navigation.openDrawer()}
+			rippleCentered
+      >
+         <View style={{padding: 10, justifyContent: 'center'}}>
+            <HamburguerIcon />
+         </View>
+      </Ripple>
+   );
 }
 
 const mapStateToProps = (state) => ({
-  activeTab: state.activeTab,
+   activeTab: state.activeTab,
 });
 export const CustomHeaderTitle = connect(mapStateToProps)((props) => {
-  return (
-    <Text style={[tailwind('text-base mt-2'), typefaces.pm]}>{props.activeTab.label}</Text>
-  );
+   return <Text style={[tailwind('text-base mt-2'), typefaces.pm]}>{props.activeTab.label}</Text>;
 });
