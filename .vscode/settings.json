@@ -1,7 +1,8 @@
 {
   "files.exclude": {
     "node_modules/": true,
-    ".vscode/": false
+    ".vscode/": false,
+    ".git/": false,
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",

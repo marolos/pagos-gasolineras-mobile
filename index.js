@@ -6,6 +6,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { getStore, getPersistor } from './redux/store';
 
+
 const Loading = () => (
   <View>
     <ActivityIndicator />
@@ -21,4 +22,4 @@ const AppWrapper = () => (
   </ReduxProvider>
 );
 
-AppRegistry.registerComponent(appName, () => AppWrapper);
+AppRegistry.registerComponent(appName, AppWrapper);
