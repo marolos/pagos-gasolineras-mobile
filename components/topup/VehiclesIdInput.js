@@ -11,24 +11,8 @@ export default function VehiclesIdInput({ defaultValue = [], onChange, loading }
    const [showModal, setShowModal] = React.useState(false);
 
    function onAdd(item) {
-      if (!item.number) {
-         SimpleToast.showWithGravity(
-            'Debe escribir un numero de placa',
-            SimpleToast.LONG,
-            SimpleToast.CENTER,
-         );
-         return;
-      }
-
-      const exist = defaultValue.find((i) => i.number === item.number);
-      if (exist) {
-         SimpleToast.showWithGravity(
-            'Ya ha agregado ese número de placa',
-            SimpleToast.LONG,
-            SimpleToast.CENTER,
-         );
-         return;
-      }
+      const valid = validate(item, defaultValue);
+      if (!valid) return;
       onChange([...defaultValue, item]);
       setShowModal(false);
    }
@@ -78,4 +62,29 @@ export default function VehiclesIdInput({ defaultValue = [], onChange, loading }
          />
       </View>
    );
+}
+
+function validate(item, items) {
+   if (!item.number) {
+      SimpleToast.showWithGravity(
+         'Debe escribir un numero de placa',
+         SimpleToast.LONG,
+         SimpleToast.CENTER,
+      );
+      return false;
+   }
+
+   const exist = items.find(
+      (i) => i.number.trim().toLowerCase() === item.number.trim().toLowerCase(),
+   );
+   if (exist) {
+      SimpleToast.showWithGravity(
+         'Número de placa duplicado',
+         SimpleToast.LONG,
+         SimpleToast.CENTER,
+      );
+      return false;
+   }
+
+   return true;
 }

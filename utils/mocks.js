@@ -11,7 +11,6 @@ export const itemsMocks = [
       href:
          'https://scontent.fgye1-1.fna.fbcdn.net/v/t1.0-9/55437916_2720174384682962_608810549056110592_o.jpg?_nc_cat=100&_nc_sid=2c4854&_nc_eui2=AeG4-oqKWaJX4SiX9FORAHnMKEOwGkE1M48oQ7AaQTUzj3H1Z4kGn06Cni99u50v3vcPvg5Klw6mn4lfoN2MXKhP&_nc_ohc=Yjr5K3dW1E4AX9NsVE9&_nc_ht=scontent.fgye1-1.fna&oh=9b7d276c2bea56de3ad130e56167dc2a&oe=5F7F82A5',
    },
-   
    {
       href:
          'https://scontent.fgye1-1.fna.fbcdn.net/v/t1.0-9/54257948_2702709499762784_5745833426414469120_o.jpg?_nc_cat=108&_nc_sid=2c4854&_nc_eui2=AeHlhYaotjazcPPh4ADz4UyAAsD_pwaKr6cCwP-nBoqvp7eygmhDo7T_WwKDJ1qjmj5qMwoik1et-wFoqhGBSktS&_nc_ohc=E8WgWh251PwAX-XFTXl&_nc_ht=scontent.fgye1-1.fna&oh=94872f23d5e7da1a1da16d061ac91ed1&oe=5F7D4AC6',

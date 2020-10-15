@@ -31,8 +31,8 @@ class SignupView extends React.Component {
    }
 
    onRegister = () => {
-      if (this.state.loading) return;
       Keyboard.dismiss();
+      if (this.state.loading) return;
 
       const {
          information: { first_name, last_name, email, password1, password2 },
@@ -44,15 +44,15 @@ class SignupView extends React.Component {
          return;
       }
 
-      const passValid = passwordValidator(password1, password2);
-      if (!passValid.isValid) {
-         SimpleToast.show(passValid.message);
+      if (!EMAIL_REGEX.test(email)) {
+         SimpleToast.show('Ingrese un correo válido');
          this.setState({ loading: false });
          return;
       }
 
-      if (!EMAIL_REGEX.test(email)) {
-         SimpleToast.show('Ingrese un correo válido');
+      const passValid = passwordValidator(password1, password2);
+      if (!passValid.isValid) {
+         SimpleToast.show(passValid.message);
          this.setState({ loading: false });
          return;
       }

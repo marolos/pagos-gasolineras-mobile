@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function CardColorIcon(props) {
@@ -13,4 +13,4 @@ function CardColorIcon(props) {
    );
 }
 
-export default CardColorIcon;
+export default memo(CardColorIcon);

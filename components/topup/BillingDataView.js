@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, Text, ScrollView, ActivityIndicator, FlatList, Keyboard } from 'react-native';
+import {
+   View,
+   Text,
+   ScrollView,
+   ActivityIndicator,
+   FlatList,
+   Keyboard,
+   StyleSheet,
+} from 'react-native';
 import InfoIcon from '../icons/InfoIcon';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
@@ -101,8 +109,8 @@ class BillingDataView extends React.Component {
                <Message />
             </View>
             <View style={tailwind('items-center')}>
-               <View style={tailwind('w-64 my-2')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Nombres:</Text>
+               <View style={styles.input.container}>
+                  <Text style={styles.input.text}>Nombres:</Text>
                   <BasicInput
                      defaultValue={form.first_name}
                      placeholder="Nombres"
@@ -112,8 +120,8 @@ class BillingDataView extends React.Component {
                      }
                   />
                </View>
-               <View style={tailwind('w-64 my-2')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Apellidos:</Text>
+               <View style={styles.input.container}>
+                  <Text style={styles.input.text}>Apellidos:</Text>
                   <BasicInput
                      defaultValue={form.last_name}
                      placeholder="Apellidos"
@@ -123,8 +131,8 @@ class BillingDataView extends React.Component {
                      }
                   />
                </View>
-               <View style={tailwind('w-64 my-2')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>N° de documento:</Text>
+               <View style={styles.input.container}>
+                  <Text style={styles.input.text}>N° de documento:</Text>
                   <BasicInput
                      defaultValue={form.cedula}
                      placeholder="Cédula o pasaporte"
@@ -138,8 +146,8 @@ class BillingDataView extends React.Component {
                      }
                   />
                </View>
-               <View style={tailwind('w-64 my-2')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Ciudad:</Text>
+               <View style={styles.input.container}>
+                  <Text style={styles.input.text}>Ciudad:</Text>
                   <CitySelect
                      defaultValue={form.city}
                      onChange={(text) =>
@@ -147,8 +155,8 @@ class BillingDataView extends React.Component {
                      }
                   />
                </View>
-               <View style={tailwind('w-64 my-2')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Direccion:</Text>
+               <View style={styles.input.container}>
+                  <Text style={styles.input.text}>Direccion:</Text>
                   <BasicInput
                      defaultValue={form.address}
                      placeholder="Direccion domiciliaria"
@@ -158,8 +166,8 @@ class BillingDataView extends React.Component {
                      }
                   />
                </View>
-               <View style={tailwind('w-64 my-2')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pr]}>Telefono:</Text>
+               <View style={styles.input.container}>
+                  <Text style={styles.input.text}>Telefono:</Text>
                   <BasicInput
                      defaultValue={form.phone_number}
                      placeholder="n° de teléfono"
@@ -181,7 +189,7 @@ class BillingDataView extends React.Component {
                   }
                />
             </View>
-            <View style={tailwind('flex flex-row justify-end pr-6 mt-12 mb-4')}>
+            <View style={styles.button.container}>
                <LoadingButton
                   icon={<NextIcon />}
                   iconPos={'right'}
@@ -199,9 +207,9 @@ class BillingDataView extends React.Component {
 
 function Message() {
    return (
-      <View style={tailwind('flex flex-row bg-orange-200 items-center rounded-md px-4 py-2')}>
+      <View style={styles.view}>
          <InfoIcon fill={'#975a16'} />
-         <Text style={[tailwind('text-yellow-800 text-xs ml-3'), typefaces.pr]}>
+         <Text style={styles.message.text}>
             Por favor verifica o completa tus datos de facturación
          </Text>
       </View>
@@ -210,12 +218,7 @@ function Message() {
 
 function Spinner() {
    return (
-      <View
-         style={[
-            tailwind('absolute bg-gray-800 bg-opacity-50 flex justify-center'),
-            { width: FULL_WIDTH, height: FULL_HIGHT },
-         ]}
-      >
+      <View style={styles.spiner.view}>
          <ActivityIndicator
             animating={true}
             color="black"
@@ -224,6 +227,26 @@ function Spinner() {
          />
       </View>
    );
+}
+
+const styles = {
+   spiner: {
+      view: [
+         tailwind('absolute bg-gray-800 bg-opacity-50 flex justify-center'),
+         { width: FULL_WIDTH, height: FULL_HIGHT },
+      ],
+   },
+   message: {
+      view: tailwind('flex flex-row bg-orange-200 items-center rounded-md px-4 py-2'),
+      text: [tailwind('text-yellow-800 text-xs ml-3'), typefaces.pr],
+	},
+	input: {
+		container: tailwind('w-64 my-2'),
+		text: [tailwind('ml-2 text-sm'), typefaces.pr]
+	},
+	button: {
+		container: tailwind('flex flex-row justify-end pr-6 mt-12 mb-4')
+	}
 }
 
 export default BillingDataView;

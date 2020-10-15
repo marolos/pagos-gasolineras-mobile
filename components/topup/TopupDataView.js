@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 import tailwind from 'tailwind-rn';
@@ -23,7 +23,7 @@ function TopupDataView({ route, navigation, user }) {
       setLoaded(false);
       const request = makeCancelable(
          Fetch.get('/payment/user/card/'),
-         ({body}) => {
+         ({ body }) => {
             setHasCards(body.cards.result_size !== 0);
             setLoaded(true);
          },
@@ -55,42 +55,36 @@ function TopupDataView({ route, navigation, user }) {
 
    return (
       <ScrollView>
-         <View style={{ flex: 1, height: FULL_HIGHT - 40 }}>
-            <View style={tailwind('p-6')}>
-               <Text style={[tailwind('text-base mb-2'), typefaces.pm]}>Facturacion:</Text>
+         <View style={styles.main}>
+            <View style={styles.billing.container}>
+               <Text style={styles.billing.text}>Facturacion:</Text>
                <View>
                   <Ripple onPress={navigation.goBack}>
-                     <View
-                        style={tailwind(
-                           'border rounded-lg border-gray-400 flex flex-row justify-between px-6 py-4',
-                        )}
-                     >
+                     <View style={styles.billing.buttonContainer}>
                         <Text style={[typefaces.pm]}>
                            {user.first_name} {user.last_name}
                         </Text>
-                        <View style={tailwind('flex flex-row items-center')}>
-                           <Text style={[typefaces.pm, tailwind('mr-4 ')]}>editar</Text>
+                        <View style={styles.billing.arrowContainer}>
+                           <Text style={styles.billing.arrowText}>editar</Text>
                            <ArrowRightIcon />
                         </View>
                      </View>
                   </Ripple>
                </View>
             </View>
-            <Line style={tailwind('w-full bg-gray-300 my-2')} />
-            <View style={tailwind('p-6')}>
+            <Line style={styles.line} />
+            <View style={styles.billing.container}>
                <View>
                   <Text style={[tailwind('text-base'), typefaces.pm]}>
                      Empresa: {route.params.business_name}
                   </Text>
                </View>
                <View>
-                  <Text style={[tailwind('text-base mb-2'), typefaces.pm]}>
-                     Cantidad en dolares:
-                  </Text>
+                  <Text style={styles.billing.text}>Cantidad en dolares:</Text>
                   <AddSubInput onChange={(amount) => setAmount(amount)} />
                </View>
             </View>
-            <View style={tailwind('p-6')}>
+            <View style={styles.billing.container}>
                <Resume amount={amount} />
             </View>
             <View style={tailwind('absolute bottom-0 right-0')}>
@@ -111,7 +105,7 @@ function TopupDataView({ route, navigation, user }) {
    );
 }
 
-export function Resume({ amount, showAmount=false, useGreen=true, extra=null }) {
+export function Resume({ amount, showAmount = false, useGreen = true, extra = null }) {
    const [values, setValues] = React.useState({ subtotal: 0, iva: 0, total: 0 });
    React.useEffect(() => {
       const fraction = amount / (100 + IVA_RATE);
@@ -124,43 +118,59 @@ export function Resume({ amount, showAmount=false, useGreen=true, extra=null }) 
    return (
       <View>
          {showAmount && (
-            <View style={tailwind('flex flex-row justify-between w-56')}>
-               <Text style={[tailwind('text-base'), typefaces.pm]}>Cantidad:</Text>
-               <Text style={[tailwind('text-base'), typefaces.pr]}>$ {amount}</Text>
+            <View style={styles.section.container}>
+               <Text style={styles.section.textm}>Cantidad:</Text>
+               <Text style={styles.section.textr}>$ {amount}</Text>
             </View>
          )}
-         <View style={tailwind('flex flex-row justify-between w-56')}>
-            <Text style={[tailwind('text-base'), typefaces.pm]}>Subtotal:</Text>
-            <Text style={[tailwind('text-base'), typefaces.pr]}>$ {values.subtotal}</Text>
+         <View style={styles.section.container}>
+            <Text style={styles.section.textm}>Subtotal:</Text>
+            <Text style={styles.section.textr}>$ {values.subtotal}</Text>
          </View>
-         <View style={tailwind('flex flex-row justify-between w-56')}>
-            <Text style={[tailwind('text-base'), typefaces.pm]}>IVA (12%):</Text>
-            <Text style={[tailwind('text-base'), typefaces.pr]}>$ {values.iva}</Text>
+         <View style={styles.section.container}>
+            <Text style={styles.section.textm}>IVA (12%):</Text>
+            <Text style={styles.section.textr}>$ {values.iva}</Text>
          </View>
-         <View style={tailwind('flex flex-row justify-between w-56')}>
-            <Text style={[tailwind('text-base'), typefaces.pm]}>Comision:</Text>
-            <Text style={[tailwind('text-base'), typefaces.pr]}>$ 0.25</Text>
+         <View style={styles.section.container}>
+            <Text style={styles.section.textm}>Comision:</Text>
+            <Text style={styles.section.textr}>$ 0.25</Text>
          </View>
-         <View style={tailwind('flex flex-row justify-between w-56')}>
-            <Text style={[tailwind('text-base'), typefaces.pm]}>Total a pagar:</Text>
-            <Text
-               style={[
-                  tailwind('text-base'),
-                  useGreen ? tailwind('text-green-600') : tailwind('text-black'),
-                  useGreen ? typefaces.psb : typefaces.pb,
-               ]}
-            >
-               $ {values.total}
-            </Text>
+         <View style={styles.section.container}>
+            <Text style={styles.section.textr}>Total a pagar:</Text>
+            <Text style={styles.section.total(useGreen)}>$ {values.total}</Text>
          </View>
          {extra && (
-            <View style={tailwind('flex flex-row justify-between w-56')}>
-               <Text style={[tailwind('text-base'), typefaces.pm]}>{extra.label}:</Text>
-               <Text style={[tailwind('text-base'), typefaces.pr]}>{extra.value}</Text>
+            <View style={styles.section.container}>
+               <Text style={styles.section.textm}>{extra.label}:</Text>
+               <Text style={styles.section.textr}>{extra.value}</Text>
             </View>
          )}
       </View>
    );
+}
+
+const styles = {
+   main: { flex: 1, height: FULL_HIGHT - 40 },
+   billing: {
+      container: tailwind('p-6'),
+      text: [tailwind('text-base mb-2'), typefaces.pm],
+      buttonContainer: tailwind(
+         'border rounded-lg border-gray-400 flex flex-row justify-between px-6 py-4',
+      ),
+      arrowContainer: tailwind('flex flex-row items-center'),
+      arrowText: [typefaces.pm, tailwind('mr-4 ')],
+   },
+   line: tailwind('w-full bg-gray-300 my-2'),
+   section: {
+      container: tailwind('flex flex-row justify-between w-56'),
+      textm: [tailwind('text-base'), typefaces.pm],
+      textr: [tailwind('text-base'), typefaces.pr],
+      total: (useGreen) => [
+         tailwind('text-base'),
+         useGreen ? tailwind('text-green-600') : tailwind('text-black'),
+         useGreen ? typefaces.psb : typefaces.pb,
+      ],
+   },
 }
 
 export default connect((state) => ({ user: state.user.data }))(TopupDataView);

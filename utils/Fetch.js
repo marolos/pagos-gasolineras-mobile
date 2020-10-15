@@ -29,10 +29,10 @@ class FetchClass {
    };
 
    /**
-    *
-    * @param {Function} fn handle que fetch response status
+    * @param {Object: {fn: Function, alias: String}} interceptor
+    * fn: Function - handle que fetch response status
     * it allows to handle status like 401 (Unauthorized) to perform a logout action
-    * @param {String} alias identifier for the interceptor
+    * alias: String - identifier for the interceptor
     */
    addInterceptor = (interceptor) => {
       this.interceptors.push(interceptor);

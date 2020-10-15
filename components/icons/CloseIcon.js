@@ -1,5 +1,5 @@
-import React from "react"
-import Svg, { G, Path, Defs, ClipPath } from "react-native-svg"
+import React, { memo } from "react"
+import Svg, { G, Path } from "react-native-svg"
 
 function CloseIcon(props) {
   return (
@@ -14,4 +14,4 @@ function CloseIcon(props) {
   )
 }
 
-export default CloseIcon
+export default memo(CloseIcon)

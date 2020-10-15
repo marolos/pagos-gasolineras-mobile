@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function HamburguerIcon({ color = '#000000' }) {
@@ -17,4 +17,4 @@ function HamburguerIcon({ color = '#000000' }) {
    );
 }
 
-export default HamburguerIcon;
+export default memo(HamburguerIcon);

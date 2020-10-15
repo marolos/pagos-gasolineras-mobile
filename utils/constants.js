@@ -19,12 +19,6 @@ export const theme = {
 export const FULL_WIDTH = Dimensions.get('window').width;
 export const FULL_HIGHT = Dimensions.get('window').height;
 
-
-console.log(
-	Dimensions.get('screen').height, 
-	Dimensions.get('window').height, 
-	StatusBar.currentHeight
-)
 export const ADS_MAX_HEIGHT = 200;
 
 export const ADD_VALUE_STEP = 10.0;

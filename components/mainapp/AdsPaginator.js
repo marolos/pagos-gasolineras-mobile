@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import React, { memo } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Swiper from 'react-native-swiper';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, ADS_MAX_HEIGHT } from '../../utils/constants';
@@ -27,7 +28,7 @@ function AdsPaginator(props) {
    }, []);
 
    return (
-      <View style={{ width: FULL_WIDTH, height: ADS_MAX_HEIGHT }}>
+      <View style={styles.main}>
          <Swiper
             key={state.items.length}
             showsButtons={false}
@@ -39,9 +40,9 @@ function AdsPaginator(props) {
             paginationStyle={{ bottom: 10 }}
          >
             {state.loading ? (
-               <View style={loadingContainerStyles.container}>
+               <View style={styles.container}>
                   <ActivityIndicator
-                     style={tailwind('flex flex-row justify-center items-center')}
+                     style={styles.loader}
                      animating={state.loading}
                      size="small"
                      color="#000"
@@ -55,25 +56,23 @@ function AdsPaginator(props) {
    );
 }
 
-function AdsItem({ href, onPress }) {
+function AdsItem({ href }) {
    return (
       <View>
-         <Image
+         <FastImage
+            style={styles.image}
             source={{ uri: href }}
-            style={[{ width: FULL_WIDTH, height: ADS_MAX_HEIGHT, resizeMode: 'stretch' }]}
+            resizeMode={FastImage.resizeMode.stretch}
          />
       </View>
    );
 }
 
-const Dot = () => (
-   <View
-      style={tailwind('w-2 h-2 m-1 bg-white bg-opacity-25 border border-white rounded-full')}
-   ></View>
-);
-const ActiveDot = () => <View style={tailwind('w-2 h-2 m-1 bg-white rounded-full')}></View>;
+const Dot = memo(() => <View style={styles.dot}></View>);
+const ActiveDot = memo(() => <View style={styles.activeDot}></View>);
 
-const loadingContainerStyles = StyleSheet.create({
+const styles = {
+   main: { width: FULL_WIDTH, height: ADS_MAX_HEIGHT },
    container: {
       flex: 1,
       justifyContent: 'center',
@@ -81,6 +80,10 @@ const loadingContainerStyles = StyleSheet.create({
       justifyContent: 'space-around',
       padding: 10,
    },
-});
+   dot: tailwind('w-2 h-2 m-1 bg-white bg-opacity-25 border border-white rounded-full'),
+   activeDot: tailwind('w-2 h-2 m-1 bg-white rounded-full'),
+   image: { width: FULL_WIDTH, height: ADS_MAX_HEIGHT },
+   loader: tailwind('flex flex-row justify-center items-center'),
+};
 
 export default AdsPaginator;
