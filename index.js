@@ -22,4 +22,4 @@ const AppWrapper = () => (
   </ReduxProvider>
 );
 
-AppRegistry.registerComponent(appName, AppWrapper);
+AppRegistry.registerComponent(appName, ()=> AppWrapper);

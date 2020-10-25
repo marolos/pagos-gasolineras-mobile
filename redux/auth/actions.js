@@ -19,7 +19,6 @@ export const logout = () => ({
 export const authRequest = (url, form, onSuccess, onError) => (dispatch) => {
    return Fetch.post(url, form)
       .then(({body}) => {
-			console.log(body)
          setGenericPassword('token', body.token)
             .then((succes) => {
                Fetch.setAuthToken(body.token);

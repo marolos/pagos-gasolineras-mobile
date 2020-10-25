@@ -1,12 +1,12 @@
-import { IVA_RATE, COMMISION, CEDULA_REGEX, CHAR_REGEX } from './constants';
+import { IVA_RATE, COMMISION, CEDULA_REGEX, CHAR_REGEX, ALPHANUMERIC } from './constants';
 import { cities } from './mocks';
 
 /**
  * Create an array with chunks of the given array with equal chunkSize
  * ex: createChunks([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 3)
  * 	return [[1,2,3], [4,5,6], [7,8,9], [10,11]]
- * @param {} array the array
- * @param {*} chunkSize the max size of each chunk
+ * @param {Array} array the array
+ * @param {Number} chunkSize the max size of each chunk
  */
 export function createChunks(array, chunkSize) {
    const chunks = [];
@@ -23,8 +23,8 @@ export function createChunks(array, chunkSize) {
  * Perform the same action as the above function, but with strings
  * ex: createStringChunks('abcdefghijk', 3)
  * 	return ['abc', 'def', 'ghi', 'jk']
- * @param {} string
- * @param {*} chunkSize
+ * @param {String} string
+ * @param {Number} chunkSize
  */
 export function createStringChunks(string, chunkSize) {
    return string.replace(/\s/g, '').match(new RegExp(`.{1,${chunkSize}}`, 'g'));
@@ -33,10 +33,10 @@ export function createStringChunks(string, chunkSize) {
 /**
  * Convert the text to credit card expiry date format (mm/yy).
  * ex:
- * 	225 -> 02/25
- * 	1105 -> 11/05
- * @param {} currentText
- * @param {*} text
+ * 	225 --> 02/25
+ * 	1105 --> 11/05
+ * @param {String} currentText
+ * @param {String} text
  */
 export function formatExpiryDate(currentText, text) {
    if (currentText.length > text.length) {
@@ -56,19 +56,18 @@ export function formatExpiryDate(currentText, text) {
    return text;
 }
 
-const passwordStatus = {
-	message: '',
-	isValid: false,
-};
-
 export function passwordValidator(pass1, pass2) {
-   
+   const passwordStatus = {
+      message: '',
+      isValid: false,
+   };
+
    if (pass1.length < 8) {
       passwordStatus.message =
          'La contraseña debe tener al menos 8 caracteres, un número, y un caracter especial';
       return passwordStatus;
    }
-   if (pass1 != pass2) {
+   if (pass1.trim() != pass2.trim()) {
       passwordStatus.message = 'Las contraseñas no coinciden';
       return passwordStatus;
    }
@@ -76,17 +75,27 @@ export function passwordValidator(pass1, pass2) {
    return passwordStatus;
 }
 
-export function randomInt() {
-   const max = 10000000;
+export function randomInt(max = 10000000) {
    return Math.floor(Math.random() * max);
+}
+
+export function randomString(length = 6) {
+   let count = Math.floor(length);
+   if (count <= 0) return '';
+   const result = [];
+   while (count-- > 0) {
+      const index = randomInt(ALPHANUMERIC.length);
+      result.push(ALPHANUMERIC.charAt(index));
+   }
+   return result.join('');
 }
 
 /**
  * Allow to execute a promise without side effects.
  * It doesn't cancel the request at all, just don't execute the resolve function
  * when the promise is done and the function cancel() is called.
- * It's usefull when you need to perform a react state update when the promise ends
- * but sometimes you need to unmount the component. This way, you can use the cancel() function as a cleanup 
+ * It's usefull when performing an update state in the resolve function
+ * but sometimes you need to unmount the component. This way, you can use the cancel() function as a cleanup
  * on componentWillUnmout() or on the cleanup function on your React.useEffect()
  * @param {} promise the promise to execute
  * @param {*} resolve the resolve function to the promise
@@ -109,8 +118,8 @@ export function makeCancelable(promise, resolve, reject) {
 /**
  * Compare the actual Billing data of a user with the new value if it has changed.
  * This function is just for that specific case.
- * @param {*} actualValue
- * @param {*} newValue
+ * @param {Object} actualValue
+ * @param {Object} newValue
  */
 export function equalForm(actualValue, newValue) {
    return (
@@ -127,11 +136,11 @@ export function equalForm(actualValue, newValue) {
 export function equalVehiclesIds(actualValues, newValues) {
    if (actualValues.length !== newValues.length) return false;
    actualValues.forEach((value) => {
-      const result = newValues.find((e) => e.number == value.number);
+      const result = newValues.find((e) => e.number.toLowerCase() == value.number.toLowerCase());
       if (!result) return false;
    });
    newValues.forEach((value) => {
-      const result = actualValues.find((e) => e.number == value.number);
+      const result = actualValues.find((e) => e.number.toLowerCase() == value.number.toLowerCase());
       if (!result) return false;
    });
 

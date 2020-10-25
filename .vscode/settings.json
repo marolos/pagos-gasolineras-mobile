@@ -1,17 +1,23 @@
 {
-  "files.exclude": {
-    "node_modules/": true,
-    ".vscode/": false,
-    ".git/": false,
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.detectIndentation": false,
-    "editor.tabSize": 3
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.detectIndentation": false,
-    "editor.tabSize": 3
-  },
+   "files.watcherExclude": {
+      ".git/**": true,
+      "node_modules/**": true,
+      "android/": true,
+      "ios/": true
+   },
+   "files.exclude": {
+      "node_modules/": true,
+      ".vscode/": false,
+      ".git/": true,
+   },
+   "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.detectIndentation": false,
+      "editor.tabSize": 3
+   },
+   "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.detectIndentation": false,
+      "editor.tabSize": 3
+   }
 }

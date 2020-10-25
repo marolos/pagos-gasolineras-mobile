@@ -3,7 +3,7 @@ import { Dimensions, StatusBar } from 'react-native';
 //export const REST_API_URL = 'https://fuelpay.azurewebsites.net';
 export const REST_API_URL = 'http://localhost:8000';
 export const ENCRYPTOR_KEY = 'MIIEowIBAAKA2LCcVqUelTOc6TwslUAm8vxnoCAQEt3hhlv8FjvjmZGqJ';
-console.log('::url::', REST_API_URL);
+
 export const theme = {
    dark: false,
    colors: {
@@ -22,6 +22,8 @@ export const FULL_HIGHT = Dimensions.get('window').height;
 export const ADS_MAX_HEIGHT = 200;
 
 export const ADD_VALUE_STEP = 10.0;
+
+export const ALPHANUMERIC = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 export const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export const PASSWORD_REGEX = /^.{6,20}$/;
