@@ -3,7 +3,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StatusBar, View, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import ProfileNavigator from './profile/ProfileNavigator';
-import PaymentMethodsView from './payment/PaymentMethodsView';
 import HomeNavigator from './HomeNavigator';
 import SplashScreen from 'react-native-splash-screen';
 import { theme, FULL_HIGHT } from '../utils/constants';
@@ -17,13 +16,17 @@ import { typefaces } from '../utils/styles';
 import Ripple from 'react-native-material-ripple';
 import BookIcon from './icons/BookIcon';
 import CardIcon from './icons/CardIcon';
-import TransferNavigator from './transfer/TransferNavigator';
-import RecordNavigator from './records/RecordNavigator';
+import TransferNavigator from './transfer/TransfersNavigator';
+import RecordsNavigator from './records/RecordsNavigator';
+import PaymentMethodsNavigator from './payment/PaymentMethodNavigator';
+import LogoutIcon from './icons/LogoutIcon';
+import LogoutView from './auth/LogoutView';
 
 const Drawer = createDrawerNavigator();
 
 function AppDrawerNavigator(props) {
    const [loaded, setLoaded] = React.useState(false);
+
    React.useEffect(() => {
       SplashScreen.hide();
       getGenericPassword()
@@ -38,20 +41,24 @@ function AppDrawerNavigator(props) {
                .catch((err) => {});
          });
    }, []);
+
    return (
       <NavigationContainer theme={theme}>
          <StatusBar hidden={false} backgroundColor="black" />
          {loaded ? (
-            <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
+            <Drawer.Navigator
+               drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}
+            >
                <Drawer.Screen
                   name="home"
                   component={HomeNavigator}
                   options={{ drawerLabel: () => null }}
                />
                <Drawer.Screen name="profile" component={ProfileNavigator} />
-               <Drawer.Screen name="record" component={RecordNavigator} />
-               <Drawer.Screen name="payment" component={PaymentMethodsView} />
-               <Drawer.Screen name="transfer" component={TransferNavigator} />
+               <Drawer.Screen name="records" component={RecordsNavigator} />
+               <Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
+               <Drawer.Screen name="transfers" component={TransferNavigator} />
+					<Drawer.Screen name='logout' component={LogoutView}/>
             </Drawer.Navigator>
          ) : (
             <View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>
@@ -65,12 +72,7 @@ function AppDrawerNavigator(props) {
 const DrawerContent = memo(({ navigation }) => {
    return (
       <View>
-         <View style={tailwind('p-6')}>
-            <Text style={styles.title}>Manuela Cañizares</Text>
-            <Text style={styles.info}>manuela@email.com</Text>
-            <Text style={styles.info}>Id: 0912213243</Text>
-            <Text style={styles.status}>activo</Text>
-         </View>
+         <ProfileInfo />
          <Line />
          <View>
             <DrawerItem
@@ -84,14 +86,14 @@ const DrawerContent = memo(({ navigation }) => {
                icon={<BookIcon />}
                text="Historial"
                navigation={navigation}
-               navigateTo="record"
+               navigateTo="records"
             />
             <DrawerItem
                icon={<TransferIcon width={20} />}
                text="Transferencias"
                style={tailwind('pb-1')}
                navigation={navigation}
-               navigateTo="transfer"
+               navigateTo="transfers"
             />
          </View>
          <Line />
@@ -101,7 +103,7 @@ const DrawerContent = memo(({ navigation }) => {
                text="Métodos de pagos"
                style={tailwind('py-1')}
                navigation={navigation}
-               navigateTo="payment"
+               navigateTo="paymentMethods"
             />
          </View>
          <Line />
@@ -113,11 +115,22 @@ const DrawerContent = memo(({ navigation }) => {
             />
             <DrawerItemText text="Políticas de servicios" navigation={navigation} />
             <DrawerItemText text="Contácto" navigation={navigation} />
-            <DrawerItemText text="Cerrar sesión" navigation={navigation} />
+            <LogoutItem navigation={navigation} />
          </View>
       </View>
    );
 });
+
+function ProfileInfo(props) {
+   return (
+      <View style={tailwind('p-6')}>
+         <Text style={styles.title}>Manuela Cañizares</Text>
+         <Text style={styles.info}>manuela@email.com</Text>
+         <Text style={styles.info}>Id: 0912213243</Text>
+         <Text style={styles.status}>activo</Text>
+      </View>
+   );
+}
 
 function DrawerItem({ icon, text, style = {}, navigation, navigateTo }) {
    return (
@@ -140,6 +153,20 @@ function DrawerItemText({ text, style = {}, navigation }) {
    );
 }
 
+function LogoutItem({ style, navigation }) {
+   function onPress() {
+		navigation.navigate('logout', {})
+   }
+   return (
+      <Ripple style={style} onPress={onPress}>
+         <View style={tailwind('flex flex-row items-center py-2 px-3')}>
+            <Text style={[styles.itemTextText, { marginRight: 15 }]}>Cerrar Sesión</Text>
+            <LogoutIcon />
+         </View>
+      </Ripple>
+   );
+}
+
 const styles = {
    itemCont: tailwind('flex flex-row px-4 py-3'),
    itemIconCont: tailwind('w-8'),
@@ -148,6 +175,9 @@ const styles = {
    info: [tailwind('text-sm text-gray-700'), typefaces.pm],
    status: [tailwind('text-sm text-green-600'), typefaces.pm],
    itemTextText: [tailwind('text-base text-gray-700'), typefaces.pr],
+   modal: {
+      bg: {},
+   },
 };
 
 export default AppDrawerNavigator;

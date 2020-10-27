@@ -16,33 +16,35 @@ export const logout = () => ({
 /**
  * ASYNC actions creator
  */
-export const authRequest = (url, form, onSuccess, onError) => (dispatch) => {
-   return Fetch.post(url, form)
-      .then(({body}) => {
-         setGenericPassword('token', body.token)
-            .then((succes) => {
-               Fetch.setAuthToken(body.token);
-               dispatch(login(body.user));
-               onSuccess(body);
-            })
-            .catch((error) => {
-               console.error('Error saving the token', error.message);
-            });
-      })
-      .catch((error) => {
-			console.log(error)
-         onError(error);
-         dispatch(logout());
-      });
-};
+export function authRequest(url, form, onSuccess, onError) {
+   return (dispatch) =>
+      Fetch.post(url, form)
+         .then(({ body }) => {
+            setGenericPassword('token', body.token)
+               .then((succes) => {
+                  Fetch.setAuthToken(body.token);
+                  dispatch(login(body.user));
+                  onSuccess(body);
+               })
+               .catch((error) => {
+                  console.error('Error saving the token', error.message);
+               });
+         })
+         .catch((error) => {
+            console.log(error);
+            onError(error);
+            dispatch(logout());
+         });
+}
 
-export const logoutAction = () => (dispatch) => {
-   return resetGenericPassword()
-      .then((succes) => {
-         dispatch(logout());
-      })
-      .catch((error) => {
-         console.error('Error deleting the token', error.message);
-         dispatch(logout());
-      });
-};
+export function logoutAction() {
+   return (dispatch) =>
+      resetGenericPassword()
+         .then((succes) => {
+            dispatch(logout());
+         })
+         .catch((error) => {
+            console.error('Error deleting the token', error.message);
+            dispatch(logout());
+         });
+}

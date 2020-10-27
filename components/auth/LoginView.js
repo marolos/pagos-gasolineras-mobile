@@ -22,7 +22,7 @@ class LoginView extends React.Component {
          identifier: '',
          password: '',
       },
-		sent1: false
+      sent1: false,
    };
 
    onLogin = () => {
@@ -47,31 +47,31 @@ class LoginView extends React.Component {
             (err) => {
                if (err.status === 401 || err.status === 403) SimpleToast.show('Datos incorrectos.');
                else SimpleToast.show('Error al iniciar sesión.');
-               this.setState({loading: false });
+               this.setState({ loading: false });
             },
          ),
       );
    };
 
    onFacebookLogin = (user_access_token) => {
-      this.setState({showModal: true })
+      this.setState({ showModal: true });
       this.props.dispatch(
          authRequest(
             '/users/signup/facebook/',
             { token: user_access_token },
             (res) => {},
             (err) => {
-               this.setState({ showModal: false })
+               this.setState({ showModal: false });
                SimpleToast.show('Error al iniciar sesión.');
             },
          ),
       );
-	};
-	
-	onSignup = () => {
-		this.setState()
-		this.props.navigation.push('signup');
-	}
+   };
+
+   onSignup = () => {
+      this.setState();
+      this.props.navigation.push('signup');
+   };
 
    render() {
       return (
@@ -112,7 +112,11 @@ class LoginView extends React.Component {
                   />
                </View>
                <View style={tailwind('mt-8')}>
-                  <LoadingButton text="Iniciar sesión" onPress={this.onLogin} loading={this.state.loading} />
+                  <LoadingButton
+                     text="Iniciar sesión"
+                     onPress={this.onLogin}
+                     loading={this.state.loading}
+                  />
                </View>
                <View style={tailwind('mt-8')}>
                   <TextButton text="¿Olvidaste tu contraseña?" onPress={() => {}} />
@@ -134,7 +138,11 @@ class LoginView extends React.Component {
                   style={tailwind('w-full flex items-center m-0')}
                >
                   <View style={tailwind('flex flex-row w-56 h-56 rounded bg-white justify-center')}>
-                     <ActivityIndicator size="large" animating={this.state.showModal} color="black" />
+                     <ActivityIndicator
+                        size="large"
+                        animating={this.state.showModal}
+                        color="black"
+                     />
                   </View>
                </Modal>
             </View>

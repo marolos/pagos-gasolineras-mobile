@@ -1,4 +1,4 @@
-import { Dimensions, StatusBar } from 'react-native';
+import { Dimensions } from 'react-native';
 
 //export const REST_API_URL = 'https://fuelpay.azurewebsites.net';
 export const REST_API_URL = 'http://localhost:8000';

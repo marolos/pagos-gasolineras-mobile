@@ -1,7 +1,7 @@
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
 import { cities } from '../../utils/mocks';
-import { View, Text, TextInput, ScrollView } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { typefaces, shadowStyle } from '../../utils/styles';
 
@@ -30,9 +30,9 @@ export default function CitySelect({ onChange, defaultValue, editable = true }) 
                hasErrors ? tailwind('bg-white border-2 border-red-400') : {},
                typefaces.pm,
             ]}
-            onChangeText={(text) => {
-               setHasErrors(!valid(text));
-               setText(text);
+            onChangeText={(t) => {
+               setHasErrors(!valid(t));
+               setText(t);
                setShow(true);
             }}
             onFocus={(e) => setShow(true)}

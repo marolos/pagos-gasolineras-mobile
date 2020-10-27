@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import tailwind from 'tailwind-rn';
 
 export default function Line({ style = styles.line }) {
-   return <View style={[{ height: 1 }, style]}></View>;
+   return <View style={[{ height: 1 }, style]} />;
 }
 
 const styles = {

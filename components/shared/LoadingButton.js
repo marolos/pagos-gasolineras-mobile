@@ -9,7 +9,7 @@ export default function LoadingButton({ text, onPress, icon, loading, iconPos, s
       <Ripple
          onPress={onPress}
 			style={[tailwind('rounded-md items-center w-56'), style ? style : {}]}
-			rippleColor='#ffffff'
+			rippleColor="#ffffff"
 			rippleSize={500}
 			rippleDuration={600}
       >

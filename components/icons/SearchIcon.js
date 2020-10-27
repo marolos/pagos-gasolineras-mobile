@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import Svg, { G, Path } from 'react-native-svg';
 import { View } from 'react-native';
-import tailwind from 'tailwind-rn';
 
 function SearchIcon({ focused }) {
   return (

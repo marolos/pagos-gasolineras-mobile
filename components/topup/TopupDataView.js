@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 import tailwind from 'tailwind-rn';
@@ -28,7 +28,7 @@ function TopupDataView({ route, navigation, user }) {
             setLoaded(true);
          },
          (err) => {
-            console.log('reject::::', err);
+            console.error('reject::::', err);
             if (err.isCanceled) return;
             setLoaded(true);
          },
@@ -106,7 +106,8 @@ function TopupDataView({ route, navigation, user }) {
 }
 
 export function Resume({ amount, showAmount = false, useGreen = true, extra = null }) {
-   const [values, setValues] = React.useState({ subtotal: 0, iva: 0, total: 0 });
+	const [values, setValues] = React.useState({ subtotal: 0, iva: 0, total: 0 });
+	
    React.useEffect(() => {
       const fraction = amount / (100 + IVA_RATE);
       setValues({
@@ -114,7 +115,8 @@ export function Resume({ amount, showAmount = false, useGreen = true, extra = nu
          subtotal: (100 * fraction).toFixed(2),
          total: amount + COMMISION,
       });
-   }, [amount]);
+	}, [amount]);
+	
    return (
       <View>
          {showAmount && (

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, TextInput, Image } from 'react-native';
 import tailwind from 'tailwind-rn';
-import CardIcon from '../icons/CardIcon';
 import { createStringChunks } from '../../utils/utils';
 import { VISA_REGEX, MASTERCARD_REGEX, AMEX_REGEX } from '../../utils/constants';
 import { getCardLogo } from '../payment/CardItem';
@@ -27,9 +26,9 @@ function CardNumberInput({ onChange }) {
             keyboardType="numeric"
             placeholder="numero"
             maxLength={19}
-            onChangeText={(text) => {
-               if (text) setText(createStringChunks(text, 4).join(' '));
-               else setText(text);
+            onChangeText={(t) => {
+               if (t) setText(createStringChunks(t, 4).join(' '));
+               else setText(t);
             }}
             onEndEditing={(e) => setEditing(false)}
             style={[tailwind('w-56 text-base')]}
