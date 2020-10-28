@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "384402878204",
-    "firebase_url": "https://pagosagasolineras.firebaseio.com",
-    "project_id": "pagosagasolineras",
-    "storage_bucket": "pagosagasolineras.appspot.com"
+    "project_number": "678430791822",
+    "firebase_url": "https://fuelpay-7d25b.firebaseio.com",
+    "project_id": "fuelpay-7d25b",
+    "storage_bucket": "fuelpay-7d25b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:384402878204:android:ab390c2b0b8efaaceb7179",
+        "mobilesdk_app_id": "1:678430791822:android:6c03e276075b6d59d951df",
         "android_client_info": {
-          "package_name": "com.pagosgasolineras"
+          "package_name": "com.edu.espol.is.fuelpay"
         }
       },
       "oauth_client": [
         {
-          "client_id": "384402878204-facj8d0lb0vr407bbc86ivk62p7lv705.apps.googleusercontent.com",
+          "client_id": "678430791822-637qb9dbqj43ts7huovtckal9ielvirp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDJSHejBvRaFiU5DCdpJGS1GxNbBIGTk-c"
+          "current_key": "AIzaSyBqxCsAM58T1CtCHN96m62xmznalmbLXBQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "384402878204-facj8d0lb0vr407bbc86ivk62p7lv705.apps.googleusercontent.com",
+              "client_id": "678430791822-637qb9dbqj43ts7huovtckal9ielvirp.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
