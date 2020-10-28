@@ -1,5 +1,6 @@
 import { setGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import Fetch from '../../utils/Fetch';
+import { generateDeviceInfo } from '../../utils/firebase'
 
 /**
  * Simple actions creator
@@ -18,23 +19,27 @@ export const logout = () => ({
  */
 export function authRequest(url, form, onSuccess, onError) {
    return (dispatch) =>
-      Fetch.post(url, form)
-         .then(({ body }) => {
-            setGenericPassword('token', body.token)
-               .then((succes) => {
-                  Fetch.setAuthToken(body.token);
-                  dispatch(login(body.user));
-                  onSuccess(body);
-               })
-               .catch((error) => {
-                  console.error('Error saving the token', error.message);
-               });
-         })
-         .catch((error) => {
-            console.log(error);
-            onError(error);
-            dispatch(logout());
-         });
+      generateDeviceInfo().then((info) => {
+         form = {...form, device: info};
+         Fetch.post(url, form)
+            .then(({ body }) => {
+               setGenericPassword('token', body.token)
+                  .then((succes) => {
+                     Fetch.setAuthToken(body.token);
+                     dispatch(login(body.user));
+                     onSuccess(body);
+                  })
+                  .catch((error) => {
+                     console.error('Error saving the token', error.message);
+                  });
+            })
+            .catch((error) => {
+               console.log(error);
+               onError(error);
+               dispatch(logout());
+            });
+      });
+      
 }
 
 export function logoutAction() {

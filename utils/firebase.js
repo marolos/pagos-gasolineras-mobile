@@ -1,5 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
-import {Platform} from 'react-native'
+import {Platform, Alert} from 'react-native'
+
+const message = messaging();
 
 //Request permission notifications for ios devices
 export async function requestUserPermission() {
@@ -15,10 +17,25 @@ export async function requestUserPermission() {
 
 export async function generateDeviceInfo(){
    const os = Platform.OS;
-   const message = messaging();
    const token = await message.getToken();
    return {
       token: token,
       os: os
    }
+}
+
+export function manageMessages(){
+  /*  message.getInitialNotification()
+      .then(remoteMessage => {
+        console.log('Message handled in the getInitialNotification!', remoteMessage.data);
+        if (response) Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage.data));
+      });
+   message.onNotificationOpenedApp(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage.data));
+   }); */
+   const unsubscribe = message.onMessage(async remoteMessage => {
+      Alert.alert(remoteMessage.data.type, JSON.stringify(remoteMessage.data));
+    });
+   return unsubscribe;
+
 }

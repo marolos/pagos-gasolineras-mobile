@@ -6,8 +6,10 @@ import { getGenericPassword, resetGenericPassword } from 'react-native-keychain'
 import AppDrawerNavigator from './AppDrawerNavigator';
 import Fetch from '../utils/Fetch';
 import { unauthorizedInterceptor } from '../utils/interceptors';
+import {requestUserPermission, manageMessages, manageBackground} from '../utils/firebase'
 
 function App({ user, dispatch }) {
+   requestUserPermission();
    React.useEffect(() => {
       getGenericPassword()
          .then((credentials) => {
@@ -23,6 +25,7 @@ function App({ user, dispatch }) {
          });
    }, []);
 
+   React.useEffect(() => {manageMessages()}, []);
    return user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />;
 }
 
