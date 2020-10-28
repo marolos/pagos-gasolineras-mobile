@@ -5,12 +5,12 @@ import {
    HeaderBackButton,
 } from '@react-navigation/stack';
 import Label from '../shared/Label';
+import TransfersView from './TransfersView';
 import tailwind from 'tailwind-rn';
-import RecordView from './RecordView';
 
 const Stack = createStackNavigator();
 
-export default function RecordNavigator({ navigation }) {
+export default function TransfersNavigator({ navigation }) {
    return (
       <Stack.Navigator
          screenOptions={{
@@ -20,10 +20,14 @@ export default function RecordNavigator({ navigation }) {
       >
          <Stack.Screen
             name="profileView"
-            component={RecordView}
+            component={TransfersView}
             options={() => ({
                headerTitle: () => (
-                  <Label text={'Historial'} style={tailwind('text-base mt-1')} focused={true} />
+                  <Label
+                     text={'Transferencias de saldo'}
+                     style={tailwind('text-base mt-1')}
+                     focused={true}
+                  />
                ),
             })}
          />

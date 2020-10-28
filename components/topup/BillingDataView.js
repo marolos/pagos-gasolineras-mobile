@@ -6,7 +6,6 @@ import {
    ActivityIndicator,
    FlatList,
    Keyboard,
-   StyleSheet,
 } from 'react-native';
 import InfoIcon from '../icons/InfoIcon';
 import tailwind from 'tailwind-rn';
@@ -101,7 +100,7 @@ class BillingDataView extends React.Component {
    };
 
    render() {
-      const { form } = this.state;
+      const formData = this.state.form;
       return (
          <ScrollView keyboardShouldPersistTaps="handled">
             <FlatList />
@@ -112,7 +111,7 @@ class BillingDataView extends React.Component {
                <View style={styles.input.container}>
                   <Text style={styles.input.text}>Nombres:</Text>
                   <BasicInput
-                     defaultValue={form.first_name}
+                     defaultValue={formData.first_name}
                      placeholder="Nombres"
                      validate={(text) => text.length > 0}
                      onChange={(text) =>
@@ -123,7 +122,7 @@ class BillingDataView extends React.Component {
                <View style={styles.input.container}>
                   <Text style={styles.input.text}>Apellidos:</Text>
                   <BasicInput
-                     defaultValue={form.last_name}
+                     defaultValue={formData.last_name}
                      placeholder="Apellidos"
                      validate={(text) => text.length > 0}
                      onChange={(text) =>
@@ -134,7 +133,7 @@ class BillingDataView extends React.Component {
                <View style={styles.input.container}>
                   <Text style={styles.input.text}>N° de documento:</Text>
                   <BasicInput
-                     defaultValue={form.cedula}
+                     defaultValue={formData.cedula}
                      placeholder="Cédula o pasaporte"
                      maxLength={10}
                      keyboardType="numeric"
@@ -149,7 +148,7 @@ class BillingDataView extends React.Component {
                <View style={styles.input.container}>
                   <Text style={styles.input.text}>Ciudad:</Text>
                   <CitySelect
-                     defaultValue={form.city}
+                     defaultValue={formData.city}
                      onChange={(text) =>
                         this.setState(({ form }) => ({ form: { ...form, city: text } }))
                      }
@@ -158,7 +157,7 @@ class BillingDataView extends React.Component {
                <View style={styles.input.container}>
                   <Text style={styles.input.text}>Direccion:</Text>
                   <BasicInput
-                     defaultValue={form.address}
+                     defaultValue={formData.address}
                      placeholder="Direccion domiciliaria"
                      validate={(text) => text.length > 0}
                      onChange={(text) =>
@@ -169,7 +168,7 @@ class BillingDataView extends React.Component {
                <View style={styles.input.container}>
                   <Text style={styles.input.text}>Telefono:</Text>
                   <BasicInput
-                     defaultValue={form.phone_number}
+                     defaultValue={formData.phone_number}
                      placeholder="n° de teléfono"
                      validate={(text) => text.length > 0 && !CHAR_REGEX.test(text)}
                      maxLength={10}
@@ -182,7 +181,7 @@ class BillingDataView extends React.Component {
                   />
                </View>
                <VehiclesIdInput
-                  defaultValue={form.vehicles_ids}
+                  defaultValue={formData.vehicles_ids}
                   loading={this.state.loadingData}
                   onChange={(items) =>
                      this.setState(({ form }) => ({ form: { ...form, vehicles_ids: items } }))
@@ -207,7 +206,7 @@ class BillingDataView extends React.Component {
 
 function Message() {
    return (
-      <View style={styles.view}>
+      <View style={styles.message.view}>
          <InfoIcon fill={'#975a16'} />
          <Text style={styles.message.text}>
             Por favor verifica o completa tus datos de facturación
@@ -242,11 +241,11 @@ const styles = {
 	},
 	input: {
 		container: tailwind('w-64 my-2'),
-		text: [tailwind('ml-2 text-sm'), typefaces.pr]
+		text: [tailwind('ml-2 text-sm'), typefaces.pr],
 	},
 	button: {
-		container: tailwind('flex flex-row justify-end pr-6 mt-12 mb-4')
-	}
+		container: tailwind('flex flex-row justify-end pr-6 mt-12 mb-4'),
+	},
 }
 
 export default BillingDataView;

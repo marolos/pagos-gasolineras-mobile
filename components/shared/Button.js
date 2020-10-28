@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
 import Ripple from 'react-native-material-ripple';

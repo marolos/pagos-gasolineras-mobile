@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import CompaniesView from './CompaniesView';
+import BalancesView from './BalancesView';
 import SearchView from './SearchView';
 import NotificationsView from './NotificationsView';
 import { setActiveTab } from '../../redux/actions';
@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator();
 function TabMenuNavigator(props) {
    return (
       <Tab.Navigator tabBar={CustomTabBar}>
-         <Tab.Screen name="gascompanies" component={CompaniesView} />
+         <Tab.Screen name="balances" component={BalancesView} />
          <Tab.Screen name="search" component={SearchView} />
          <Tab.Screen name="notifications" component={NotificationsView} />
       </Tab.Navigator>
@@ -29,7 +29,7 @@ function TabMenuNavigator(props) {
 function CustomTabBar(props) {
    return (
       <View style={{ ...shadowStyle, backgroundColor: 'white' }}>
-         <View style={[{ height: 2 }, tailwind('bg-gray-200')]}></View>
+         <View style={[{ height: 2 }, tailwind('bg-gray-200')]} />
          <View style={tailwind('flex flex-row justify-evenly pb-1 pt-1')}>
             <TabButtonGasStation navigation={props.navigation} />
             <TabButtonSearch navigation={props.navigation} />
@@ -42,7 +42,7 @@ function CustomTabBar(props) {
 const TabButtonGasStation = ({ navigation }) => {
    return (
       <TabButton
-         navigateTo="gascompanies"
+         navigateTo="balances"
          tabOption={TabOptions.GAS}
          label="Gasolineras"
          icon={DispenserIcon}

@@ -69,8 +69,8 @@ const reducer = (state, action) => {
       case 'text':
          const newText = action.value.replace(/[\-\,\s]/, '');
          const matches = newText.match(FLOAT_FIXED_2);
-      	newCount = parseFloat(matches[0]);
-         const hasError = !newText.length || matches[0][matches[0].length-1] === '.';
+         newCount = parseFloat(matches[0]);
+         const hasError = !newText.length || matches[0][matches[0].length - 1] === '.';
          return { text: matches[0], count: newCount || 0, hasError: hasError };
       case 'hasError':
          return { ...state, hasError: action.value };

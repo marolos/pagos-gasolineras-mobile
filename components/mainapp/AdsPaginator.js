@@ -68,8 +68,8 @@ function AdsItem({ href }) {
    );
 }
 
-const Dot = memo(() => <View style={styles.dot}></View>);
-const ActiveDot = memo(() => <View style={styles.activeDot}></View>);
+const Dot = memo(() => <View style={styles.dot} />);
+const ActiveDot = memo(() => <View style={styles.activeDot} />);
 
 const styles = {
    main: { width: FULL_WIDTH, height: ADS_MAX_HEIGHT },
@@ -77,7 +77,6 @@ const styles = {
       flex: 1,
       justifyContent: 'center',
       flexDirection: 'row',
-      justifyContent: 'space-around',
       padding: 10,
    },
    dot: tailwind('w-2 h-2 m-1 bg-white bg-opacity-25 border border-white rounded-full'),

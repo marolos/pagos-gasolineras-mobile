@@ -6,7 +6,7 @@ export default function ProfileView(props) {
   return (
     <View>
       <Text>profile</Text>
-		<Button onPress={()=> props.navigation.navigate('profileView2')} title='xxx'>go</Button>
+		<Button onPress={()=> props.navigation.navigate('profileView2')} title="xxx">go</Button>
     </View>
   );
 }

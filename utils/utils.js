@@ -67,7 +67,7 @@ export function passwordValidator(pass1, pass2) {
          'La contraseña debe tener al menos 8 caracteres, un número, y un caracter especial';
       return passwordStatus;
    }
-   if (pass1.trim() != pass2.trim()) {
+   if (pass1.trim() !== pass2.trim()) {
       passwordStatus.message = 'Las contraseñas no coinciden';
       return passwordStatus;
    }
@@ -123,12 +123,12 @@ export function makeCancelable(promise, resolve, reject) {
  */
 export function equalForm(actualValue, newValue) {
    return (
-      actualValue.first_name == newValue.first_name &&
-      actualValue.last_name == newValue.last_name &&
-      actualValue.cedula == newValue.cedula &&
-      actualValue.city == newValue.city &&
-      actualValue.address == newValue.address &&
-      actualValue.phone_number == newValue.phone_number &&
+      actualValue.first_name.trim() === newValue.first_name.trim() &&
+      actualValue.last_name.trim() === newValue.last_name.trim() &&
+      actualValue.cedula.trim() === newValue.cedula.trim() &&
+      actualValue.city.trim() === newValue.city.trim() &&
+      actualValue.address.trim() === newValue.address.trim() &&
+      actualValue.phone_number.trim() === newValue.phone_number.trim() &&
       equalVehiclesIds(actualValue.vehicles_ids, newValue.vehicles_ids)
    );
 }
@@ -136,11 +136,15 @@ export function equalForm(actualValue, newValue) {
 export function equalVehiclesIds(actualValues, newValues) {
    if (actualValues.length !== newValues.length) return false;
    actualValues.forEach((value) => {
-      const result = newValues.find((e) => e.number.toLowerCase() == value.number.toLowerCase());
+      const result = newValues.find(
+         (e) => e.number.toLowerCase().trim() === value.number.toLowerCase().trim(),
+      );
       if (!result) return false;
    });
    newValues.forEach((value) => {
-      const result = actualValues.find((e) => e.number.toLowerCase() == value.number.toLowerCase());
+      const result = actualValues.find(
+         (e) => e.number.toLowerCase().trim() === value.number.toLowerCase().trim(),
+      );
       if (!result) return false;
    });
 

@@ -3,11 +3,11 @@ import { View, Text, Image } from 'react-native';
 import tailwind from 'tailwind-rn';
 import Modal from 'react-native-modal';
 import ArrowDownIcon from '../icons/ArrowDownIcon';
-import { getLogoByPath } from '../../utils/mocks';
 import { typefaces } from '../../utils/styles';
 import Button from '../shared/Button';
 import { useNavigation } from '@react-navigation/native';
 import Ripple from 'react-native-material-ripple';
+import FastImage from 'react-native-fast-image';
 
 function CollapseModalOptions({ visible, closeCollapse, company }) {
    const navigation = useNavigation();
@@ -20,35 +20,28 @@ function CollapseModalOptions({ visible, closeCollapse, company }) {
          onSwipeComplete={closeCollapse}
          onBackdropPress={closeCollapse}
          backdropTransitionOutTiming={0}
-         style={tailwind('w-full flex justify-end items-center m-0')}
+         style={styles.modal}
       >
-         <View style={tailwind('w-full h-64 bg-white rounded-t-lg')}>
+         <View style={styles.view}>
             <View style={tailwind('p-6')}>
-               <View style={tailwind('flex flex-row items-center')}>
-                  <Image
-                     source={getLogoByPath(company.company.company_logo_path)}
-                     style={{ width: 50, height: 50 }}
+               <View style={styles.title}>
+                  <FastImage
+                     source={{ uri: company.company.company_logo_path }}
+                     style={styles.image}
                   />
-                  <Text style={[tailwind('mt-2 ml-2 text-lg'), typefaces.psb]}>
-                     {company.company.business_name}
-                  </Text>
+                  <Text style={styles.titleText}>{company.company.business_name}</Text>
                </View>
-               <View style={tailwind('flex flex-row p-4')}>
-                  <Text style={[tailwind('text-lg'), typefaces.pm]}>Saldo disponible:</Text>
-                  <Text style={[tailwind('text-lg text-green-600 ml-4'), typefaces.pm]}>
-                     ${company.total}
-                  </Text>
+               <View style={styles.total}>
+                  <Text style={styles.totalText}>Saldo disponible:</Text>
+                  <Text style={styles.totalValue}>${company.total}</Text>
                </View>
-               <View style={tailwind('flex flex-row justify-evenly mt-6')}>
+               <View style={styles.options}>
                   <Button
                      text={'recargar'}
                      primary={false}
                      onPress={() => {
                         closeCollapse();
-                        setTimeout(
-                           () => navigation.navigate('billingData', company.company),
-                           400,
-                        );
+                        setTimeout(() => navigation.navigate('billingData', company.company), 400);
                      }}
                   />
                   <Button
@@ -71,5 +64,17 @@ function CollapseModalOptions({ visible, closeCollapse, company }) {
       </Modal>
    );
 }
+
+const styles = {
+   modal: tailwind('w-full flex justify-end items-center m-0'),
+   view: tailwind('w-full h-64 bg-white rounded-t-lg'),
+   title: tailwind('flex flex-row items-center'),
+   titleText: [tailwind('mt-2 ml-2 text-lg'), typefaces.psb],
+   image: { width: 50, height: 50 },
+   total: tailwind('flex flex-row p-4'),
+   totalText: [tailwind('text-lg'), typefaces.pm],
+   totalValue: [tailwind('text-lg text-green-600 ml-4'), typefaces.pm],
+   options: tailwind('flex flex-row justify-evenly mt-6'),
+};
 
 export default CollapseModalOptions;

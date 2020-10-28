@@ -17,7 +17,7 @@ export default function PasswordInput({ placeholder, onChange, validate, style }
                   : tailwind('bg-gray-200'),
                hasErrors ? tailwind('bg-white border-2 border-red-400') : {},
 					typefaces.pm,
-					style? style: {}
+					style ? style : {},
             ]}
             onChangeText={(text) => {
                if (validate) {
