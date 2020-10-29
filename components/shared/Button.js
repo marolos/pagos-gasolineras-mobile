@@ -7,19 +7,14 @@ export default function Button({ text, onPress, primary = true, style = {}, text
    return (
       <Ripple
          onPress={onPress}
-         style={[tailwind('w-32'), style]}
+         style={[styles.ripple, style]}
          rippleColor={primary ? 'white' : 'black'}
       >
-         <View
-            style={[
-               tailwind('border rounded-md items-center w-full py-2'),
-               primary ? tailwind('bg-black') : tailwind('bg-white border-black'),
-            ]}
-         >
+         <View style={[styles.view, primary ? styles.viewPrimary : styles.viewNoPrimary]}>
             <Text
                style={[
                   typefaces.pm,
-                  primary ? tailwind('text-white') : tailwind('text-black'),
+                  primary ? styles.textPrimary : styles.textNoPrimary,
                   textStyle,
                ]}
             >
@@ -29,3 +24,12 @@ export default function Button({ text, onPress, primary = true, style = {}, text
       </Ripple>
    );
 }
+
+const styles = {
+   ripple: tailwind('w-32'),
+   view: tailwind('border rounded-md items-center w-full py-2'),
+   viewPrimary: tailwind('bg-black'),
+   viewNoPrimary: tailwind('bg-white border-black'),
+   textPrimary: tailwind('text-white'),
+   textNoPrimary: tailwind('text-black'),
+};

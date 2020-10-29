@@ -61,7 +61,7 @@ class BillingDataView extends React.Component {
       Keyboard.dismiss();
       if (this.state.loading) return;
       const { navigation, route } = this.props;
-      const { actualData, form } = this.state;
+		const { actualData, form } = this.state;
 
       const { valid, message } = validForm(form);
       if (!valid) {

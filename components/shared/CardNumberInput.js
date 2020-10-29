@@ -13,39 +13,40 @@ function CardNumberInput({ onChange }) {
       if (onChange) onChange(text);
    }, [text]);
    return (
-      <View
-         style={[
-            tailwind('flex flex-row items-center'),
-            tailwind('rounded-md border-2 border-gray-200 pl-4 w-full'),
-            editing ? tailwind('bg-white border-2 border-gray-600') : tailwind('bg-gray-200'),
-         ]}
-      >
-         <View style={tailwind('mr-2 w-8')}>{getCardProviderLogo(text)}</View>
+      <View style={[styles.view, editing ? styles.editing : styles.noEdit]}>
+         <View style={styles.icon}>{getCardProviderLogo(text)}</View>
          <TextInput
             value={text}
             keyboardType="numeric"
-            placeholder="numero"
+            placeholder="número"
             maxLength={19}
             onChangeText={(t) => {
                if (t) setText(createStringChunks(t, 4).join(' '));
                else setText(t);
             }}
             onEndEditing={(e) => setEditing(false)}
-            style={[tailwind('w-56 text-base')]}
+            style={styles.input}
             onFocus={(e) => setEditing(true)}
          />
       </View>
    );
 }
 
-const imgStyle = { width: 30, resizeMode: 'contain' };
+const styles = {
+   img: { width: 30, resizeMode: 'contain' },
+   view: tailwind('flex flex-row items-center rounded-md border-2 border-gray-200 pl-4 w-full'),
+   editing: tailwind('bg-white border-2 border-gray-600'),
+   noEdit: tailwind('bg-gray-200'),
+   icon: tailwind('mr-2 w-8'),
+   input: [tailwind('w-56 text-base')],
+};
 
 function getCardProviderLogo(text) {
    if (!text || text.length === 0) return <CardColorIcon />;
    const copyText = text.replace(/\s/g, '');
-   if (VISA_REGEX.test(copyText)) return <Image style={imgStyle} source={getCardLogo('vi')} />;
+   if (VISA_REGEX.test(copyText)) return <Image style={styles.img} source={getCardLogo('vi')} />;
    if (MASTERCARD_REGEX.test(copyText))
-      return <Image style={imgStyle} source={getCardLogo('mc')} />;
+      return <Image style={styles.img} source={getCardLogo('mc')} />;
    if (AMEX_REGEX.test(copyText))
       return <Image style={{ width: 30, height: 18 }} source={getCardLogo('ax')} />;
 

@@ -123,12 +123,12 @@ export function makeCancelable(promise, resolve, reject) {
  */
 export function equalForm(actualValue, newValue) {
    return (
-      actualValue.first_name.trim() === newValue.first_name.trim() &&
-      actualValue.last_name.trim() === newValue.last_name.trim() &&
-      actualValue.cedula.trim() === newValue.cedula.trim() &&
-      actualValue.city.trim() === newValue.city.trim() &&
-      actualValue.address.trim() === newValue.address.trim() &&
-      actualValue.phone_number.trim() === newValue.phone_number.trim() &&
+      actualValue.first_name === newValue.first_name.trim() &&
+      actualValue.last_name === newValue.last_name.trim() &&
+      actualValue.cedula === newValue.cedula.trim() &&
+      actualValue.city === newValue.city.trim() &&
+      actualValue.address === newValue.address.trim() &&
+      actualValue.phone_number === newValue.phone_number.trim() &&
       equalVehiclesIds(actualValue.vehicles_ids, newValue.vehicles_ids)
    );
 }

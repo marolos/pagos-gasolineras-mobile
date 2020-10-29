@@ -16,18 +16,13 @@ export default function CardItem({ holderName, type, onPress, selected }) {
       <Ripple
          rippleColor="#718096"
          onPress={onPress}
-         style={[
-            tailwind(
-               'flex flex-row justify-between items-center bg-white border rounded-lg mb-3 px-3 h-12',
-            ),
-            selected ? tailwind('border-gray-400') : tailwind('border-gray-200'),
-         ]}
+         style={[styles.ripple, selected ? styles.selected : styles.selected]}
       >
-         <View style={tailwind('flex flex-row items-center')}>
-            <Image source={getCardLogo(type)} style={{ width: 30, resizeMode: 'contain' }} />
-            <Text style={[tailwind('ml-3 mt-1'), typefaces.pm]}>{holderName}</Text>
+         <View style={styles.view}>
+            <Image source={getCardLogo(type)} style={styles.image} />
+            <Text style={styles.text}>{holderName}</Text>
          </View>
-         <View style={tailwind('mr-1 mt-1 items-center')}>
+         <View style={styles.iconView}>
             <RadioIcon selected={selected} />
          </View>
       </Ripple>
@@ -52,3 +47,15 @@ export function getCardLogo(type) {
          return visaLogo;
    }
 }
+
+const styles = {
+   ripple: tailwind(
+      'flex flex-row justify-between items-center bg-white border rounded-lg mb-3 px-3 h-12',
+   ),
+   selected: tailwind('border-gray-400'),
+   noSelected: tailwind('border-gray-200'),
+   view: tailwind('flex flex-row items-center'),
+   image: { width: 30, resizeMode: 'contain' },
+   text: [tailwind('ml-3 mt-1'), typefaces.pm],
+   iconView: tailwind('mr-1 mt-1 items-center'),
+};

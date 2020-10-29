@@ -62,7 +62,7 @@ function BalancesView(props) {
          {state.balances.length > 0 && state.selectedStation && (
             <CollapseModalOptions
                visible={state.modalVisible}
-               company={state.selectedStation}
+               station={state.selectedStation}
                closeCollapse={() => setState((value) => ({ ...value, modalVisible: false }))}
             />
          )}

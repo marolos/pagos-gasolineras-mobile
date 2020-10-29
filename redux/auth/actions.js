@@ -31,7 +31,7 @@ export function authRequest(url, form, onSuccess, onError) {
                });
          })
          .catch((error) => {
-            console.log(error);
+            console.error(error);
             onError(error);
             dispatch(logout());
          });

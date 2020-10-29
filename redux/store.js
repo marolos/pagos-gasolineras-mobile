@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 
 const encryptor = createEncryptor({
    secretKey: ENCRYPTOR_KEY,
-   onError: (error) => console.log('error on encryptor: ', error),
+   onError: (error) => console.error('error on encryptor: ', error),
 });
 
 const reducers = persistReducer(

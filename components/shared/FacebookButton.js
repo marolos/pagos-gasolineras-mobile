@@ -10,7 +10,7 @@ export default function FacebookButton({ onFacebookLogin }) {
          () =>
             onFacebookButtonPress()
                .then(onFacebookLogin)
-               .catch((e) => console.log(e.message)),
+               .catch((e) => console.error(e.message)),
          250,
       );
    }

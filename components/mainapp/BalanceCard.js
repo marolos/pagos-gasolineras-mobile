@@ -13,8 +13,8 @@ function BalanceCard({ total, company, gasStation, onPress }) {
             <View>
                <Text style={styles.name}>{gasStation.name}</Text>
                <View style={tailwind('flex flex-row')}>
-                  <Text style={styles.total0}>Saldo:</Text>
-                  <Text style={styles.total1}>${total}</Text>
+                  <Text style={styles.totalText}>Saldo:</Text>
+                  <Text style={total > 5 ? styles.total1: styles.total0}>${total}</Text>
                </View>
             </View>
          </View>
@@ -28,7 +28,8 @@ const styles = {
    image: { width: 48, height: 48, marginRight: 15 },
    line: tailwind('bg-gray-300 w-full mt-2 mb-1'),
    name: [tailwind('text-black text-base'), typefaces.psb],
-   total0: [tailwind('text-gray-700 text-xs mr-1'), typefaces.pm],
+	totalText: [tailwind('text-gray-700 text-xs mr-1'), typefaces.pm],
+	total0:  [tailwind('text-gray-600 text-xs'), typefaces.pm],
    total1: [tailwind('text-green-600 text-xs'), typefaces.pm],
 };
 

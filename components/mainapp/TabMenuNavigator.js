@@ -28,9 +28,9 @@ function TabMenuNavigator(props) {
 
 function CustomTabBar(props) {
    return (
-      <View style={{ ...shadowStyle, backgroundColor: 'white' }}>
-         <View style={[{ height: 2 }, tailwind('bg-gray-200')]} />
-         <View style={tailwind('flex flex-row justify-evenly pb-1 pt-1')}>
+      <View style={styles.bar.view}>
+         <View style={styles.bar.line} />
+         <View style={styles.bar.buttons}>
             <TabButtonGasStation navigation={props.navigation} />
             <TabButtonSearch navigation={props.navigation} />
             <TabButtonNotifications navigation={props.navigation} />
@@ -94,17 +94,17 @@ const TabButton = connect(
             navigation.navigate(navigateTo);
             setActiveTab(tabOption);
          }}
-         style={{ paddingTop: 10 }}
+         style={styles.tabButton.ripple}
          rippleCentered={true}
          rippleSize={80}
          rippleDuration={300}
       >
-         <View style={tailwind('flex items-center')}>
+         <View style={styles.tabButton.view}>
             <Icon focused={focused} />
             <Text
                style={[
                   { fontSize: 11 },
-                  focused ? tailwind('text-black') : tailwind('text-gray-500'),
+                  focused ? styles.tabButton.focused : styles.tabButton.notFocused,
                   typefaces.pm,
                ]}
             >
@@ -114,5 +114,19 @@ const TabButton = connect(
       </Ripple>
    );
 });
+
+const styles = {
+   tabButton: {
+      ripple: { paddingTop: 10 },
+      view: tailwind('flex items-center'),
+      focused: tailwind('text-black'),
+      notFocused: tailwind('text-gray-500'),
+   },
+   bar: {
+      view: { ...shadowStyle, backgroundColor: 'white' },
+      line: [{ height: 2 }, tailwind('bg-gray-200')],
+      buttons: tailwind('flex flex-row justify-evenly pb-1 pt-1'),
+   },
+};
 
 export default TabMenuNavigator;

@@ -44,8 +44,8 @@ function ChooseCardView({ user, navigation, route }) {
 
    function next() {
       navigation.push('confirmTopup', {
-         card: { ...state.selectedCard, save: true },
          ...route.params,
+         card: { ...state.selectedCard, save: true },
       });
    }
 

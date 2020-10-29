@@ -24,15 +24,15 @@ class ConfirmTopupView extends React.Component {
 
    accept = () => {
       this.setState({ showModal: true, sending: true });
-      const { amount, card, company } = this.props.route.params;
+      const { amount, card, company, gas_station } = this.props.route.params;
 
       Fetch.post('/payment/card/debit/', {
          card: { token: card.token },
          order: { ...getOrderByAmount(amount), total: amount },
-         company: company,
+         company,
+         gas_station,
       })
          .then((res) => {
-            console.log(res);
             if (!card.save) {
                Fetch.delete('/payment/user/card/', card)
                   .then((res) => console.log(res))
@@ -50,7 +50,10 @@ class ConfirmTopupView extends React.Component {
 
    cancel = () => {
       this.setState({ showConfirmCancel: false }, () =>
-         setTimeout(() => this.props.navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] }), 250),
+         setTimeout(
+            () => this.props.navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] }),
+            100,
+         ),
       );
    };
 
@@ -152,18 +155,18 @@ function ConfirmCancel({ onCancel, onContinue }) {
          <View style={tailwind('p-6 rounded-md')}>
             <View style={tailwind('flex flex-row')}>
                <InfoIcon />
-               <Text style={[tailwind('text-base ml-4'), typefaces.psb]}>
+               <Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>
                   ¿Desea cancelar la recarga?
                </Text>
             </View>
             <View style={tailwind('flex flex-row justify-evenly mt-8')}>
                <Button
-                  text={'cancelar'}
+                  text={'no'}
                   primary={false}
-                  onPress={onCancel}
+                  onPress={onContinue}
                   style={{ width: 100 }}
                />
-               <Button text={'continuar'} onPress={onContinue} />
+               <Button text={'si'} onPress={onCancel} />
             </View>
          </View>
       </View>

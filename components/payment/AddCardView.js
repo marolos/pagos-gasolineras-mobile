@@ -45,11 +45,10 @@ function AddCardView({ navigation, route, user }) {
       dispatch({ type: 'loading' });
       Fetch.post('/payment/user/card/', getCardObject(state))
          .then((res) => {
-            console.log('saved card:::', res.body);
             dispatch({ type: 'end_loading' });
             navigation.navigate('confirmTopup', {
+					...route.params,
                card: { ...res.body, save: state.save },
-               ...route.params,
             });
          })
          .catch((err) => {
@@ -59,63 +58,61 @@ function AddCardView({ navigation, route, user }) {
    }
    return (
       <ScrollView keyboardShouldPersistTaps="handled">
-         <View style={{ position: 'relative', flex: 1, height: FULL_HIGHT - 40, padding: 24 }}>
+         <View style={styles.addCard.view}>
             <View>
-               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>Nombre del titular:</Text>
+               <Text style={styles.holderText}>Nombre del titular:</Text>
                <CustomInput
                   maxLength={100}
-                  containerStyle={tailwind('w-full')}
-                  inputStyle={tailwind('w-64')}
+                  containerStyle={styles.holderInputC}
+                  inputStyle={styles.holderInputI}
                   placeholder="Ingresar nombre"
                   onChange={(text) => dispatch({ type: 'name', value: text })}
                />
             </View>
-            <View style={tailwind('mt-4')}>
-               <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>
-                  Tarjeta de crédito o débito:
-               </Text>
+            <View style={styles.number.view}>
+               <Text style={styles.number.text}>Tarjeta de crédito o débito:</Text>
                <CardNumberInput
                   onChange={(text) => dispatch({ type: 'card_number', value: text })}
                />
             </View>
-            <View style={tailwind('flex flex-row justify-between mt-4')}>
-               <View style={tailwind('w-2/5')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>CVC: </Text>
+            <View style={styles.addCard.view0}>
+               <View style={styles.cvc.view}>
+                  <Text style={styles.cvc.text}>CVC: </Text>
                   <CustomInput
                      maxLength={3}
-                     containerStyle={tailwind('w-full')}
-                     inputStyle={tailwind('w-12')}
+                     containerStyle={styles.cvc.inputC}
+                     inputStyle={styles.cvc.inputI}
                      placeholder="cvc"
                      keyboardType="numeric"
                      onChange={(text) => dispatch({ type: 'cvc', value: text })}
                   />
                </View>
-               <View style={tailwind('w-1/2')}>
-                  <Text style={[tailwind('ml-2 text-sm'), typefaces.pm]}>Expiración: </Text>
+               <View style={styles.exp.view}>
+                  <Text style={styles.exp.text}>Expiración: </Text>
                   <CustomInput
                      maxLength={5}
-                     containerStyle={tailwind('w-full')}
+                     containerStyle={styles.exp.inputC}
                      format={(currentText, text) => formatExpiryDate(currentText, text)}
-                     inputStyle={tailwind('w-20')}
+                     inputStyle={styles.exp.inputI}
                      placeholder="mm/aa"
                      keyboardType="numeric"
                      onChange={(text) => dispatch({ type: 'expiry', value: text })}
                   />
                </View>
             </View>
-            <View style={tailwind('flex flex-row justify-end mt-12')}>
-               <Text style={[tailwind('mr-2'), typefaces.pm]}>Guardar la tarjeta</Text>
+            <View style={styles.save}>
+               <Text style={styles.saveText}>Guardar la tarjeta</Text>
                <CheckBox
                   onChange={(value) => dispatch({ type: 'save', value: value })}
                   defaultValue={state.save}
                />
             </View>
-            <View style={tailwind('absolute bottom-0 right-0')}>
+            <View style={styles.nextView}>
                <LoadingButton
                   icon={<NextIcon />}
                   iconPos={'right'}
                   text="continuar"
-                  style={tailwind('w-48 self-end mr-6 mb-12')}
+                  style={styles.loadingButton}
                   onPress={next}
                   loading={state.loading}
                />
@@ -150,9 +147,9 @@ function CustomInput({
    return (
       <View
          style={[
-            tailwind('rounded-md border-2 border-gray-200 pl-4'),
+            styles.customInput.view,
+            editing ? styles.customInput.editing : styles.customInput.noEditing,
             containerStyle ? containerStyle : {},
-            editing ? tailwind('bg-white border-2 border-gray-600') : tailwind('bg-gray-200'),
          ]}
       >
          <TextInput
@@ -165,12 +162,45 @@ function CustomInput({
                if (onChange) onChange(text);
                setCurrentText(text);
             }}
-            style={[tailwind('w-12 text-base'), inputStyle ? inputStyle : {}]}
+            style={[styles.customInput.input, inputStyle ? inputStyle : {}]}
             onFocus={(e) => setEditing(true)}
             onEndEditing={(e) => setEditing(false)}
          />
       </View>
    );
 }
+
+const styles = {
+   holderText: [tailwind('ml-2 text-sm'), typefaces.pm],
+   holderInputI: tailwind('w-64'),
+   holderInputC: tailwind('w-full'),
+   number: { view: tailwind('mt-4'), text: [tailwind('ml-2 text-sm'), typefaces.pm] },
+   cvc: {
+      view: tailwind('w-2/5'),
+      text: [tailwind('ml-2 text-sm'), typefaces.pm],
+      inputI: tailwind('w-12'),
+      inputC: tailwind('w-full'),
+   },
+   exp: {
+      view: tailwind('w-1/2'),
+      text: [tailwind('ml-2 text-sm'), typefaces.pm],
+      inputI: tailwind('w-20'),
+      inputC: tailwind('w-full'),
+   },
+   addCard: {
+      view: { position: 'relative', flex: 1, height: FULL_HIGHT - 40, padding: 24 },
+      view0: tailwind('flex flex-row justify-between mt-4'),
+   },
+   customInput: {
+      view: tailwind('rounded-md border-2 border-gray-200 pl-4'),
+      editing: tailwind('bg-white border-2 border-gray-600'),
+      noEditing: tailwind('bg-gray-200'),
+      input: tailwind('w-12 text-base'),
+   },
+   save: tailwind('flex flex-row justify-end mt-12'),
+   saveText: [tailwind('mr-2'), typefaces.pm],
+   nextView: tailwind('absolute bottom-0 right-0'),
+   nextButton: tailwind('w-48 self-end mr-6 mb-12'),
+};
 
 export default connect((state) => ({ user: state.user.data }))(AddCardView);

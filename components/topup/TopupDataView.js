@@ -17,7 +17,7 @@ import Fetch from '../../utils/Fetch';
 function TopupDataView({ route, navigation, user }) {
    const [amount, setAmount] = React.useState(0);
    const [hasCards, setHasCards] = React.useState(false);
-   const [loaded, setLoaded] = React.useState(false);
+	const [loaded, setLoaded] = React.useState(false);
 
    React.useEffect(() => {
       setLoaded(false);
@@ -45,7 +45,8 @@ function TopupDataView({ route, navigation, user }) {
          );
          return;
       }
-      const params = { company: route.params, amount: amount };
+      const { gas_station, company } = route.params;
+      const params = { company, gas_station, amount };
       if (hasCards) {
          navigation.push('chooseCard', params);
       } else {
@@ -76,7 +77,7 @@ function TopupDataView({ route, navigation, user }) {
             <View style={styles.billing.container}>
                <View>
                   <Text style={[tailwind('text-base'), typefaces.pm]}>
-                     Empresa: {route.params.business_name}
+                     Gasolinera: {route.params.gas_station.name}
                   </Text>
                </View>
                <View>
@@ -106,8 +107,8 @@ function TopupDataView({ route, navigation, user }) {
 }
 
 export function Resume({ amount, showAmount = false, useGreen = true, extra = null }) {
-	const [values, setValues] = React.useState({ subtotal: 0, iva: 0, total: 0 });
-	
+   const [values, setValues] = React.useState({ subtotal: 0, iva: 0, total: 0 });
+
    React.useEffect(() => {
       const fraction = amount / (100 + IVA_RATE);
       setValues({
@@ -115,8 +116,8 @@ export function Resume({ amount, showAmount = false, useGreen = true, extra = nu
          subtotal: (100 * fraction).toFixed(2),
          total: amount + COMMISION,
       });
-	}, [amount]);
-	
+   }, [amount]);
+
    return (
       <View>
          {showAmount && (
@@ -173,6 +174,6 @@ const styles = {
          useGreen ? typefaces.psb : typefaces.pb,
       ],
    },
-}
+};
 
 export default connect((state) => ({ user: state.user.data }))(TopupDataView);

@@ -9,8 +9,9 @@ import { useNavigation } from '@react-navigation/native';
 import Ripple from 'react-native-material-ripple';
 import FastImage from 'react-native-fast-image';
 
-function CollapseModalOptions({ visible, closeCollapse, company }) {
-   const navigation = useNavigation();
+function CollapseModalOptions({ visible, closeCollapse, station }) {
+	const navigation = useNavigation();
+	
    return (
       <Modal
          isVisible={visible}
@@ -26,14 +27,14 @@ function CollapseModalOptions({ visible, closeCollapse, company }) {
             <View style={tailwind('p-6')}>
                <View style={styles.title}>
                   <FastImage
-                     source={{ uri: company.company.company_logo_path }}
+                     source={{ uri: station.company.company_logo_path }}
                      style={styles.image}
                   />
-                  <Text style={styles.titleText}>{company.company.business_name}</Text>
+                  <Text style={styles.titleText}>{station.gas_station.name}</Text>
                </View>
                <View style={styles.total}>
                   <Text style={styles.totalText}>Saldo disponible:</Text>
-                  <Text style={styles.totalValue}>${company.total}</Text>
+                  <Text style={styles.totalValue}>${station.total}</Text>
                </View>
                <View style={styles.options}>
                   <Button
@@ -41,14 +42,14 @@ function CollapseModalOptions({ visible, closeCollapse, company }) {
                      primary={false}
                      onPress={() => {
                         closeCollapse();
-                        setTimeout(() => navigation.navigate('billingData', company.company), 400);
+                        setTimeout(() => navigation.navigate('billingData', station), 400);
                      }}
                   />
                   <Button
                      text={'comprar'}
                      onPress={() => {
                         closeCollapse();
-                        setTimeout(() => navigation.navigate('buy'), 400);
+                        setTimeout(() => navigation.navigate('buy', station), 400);
                      }}
                   />
                </View>
@@ -69,10 +70,10 @@ const styles = {
    modal: tailwind('w-full flex justify-end items-center m-0'),
    view: tailwind('w-full h-64 bg-white rounded-t-lg'),
    title: tailwind('flex flex-row items-center'),
-   titleText: [tailwind('mt-2 ml-2 text-lg'), typefaces.psb],
+   titleText: [tailwind('mt-2 ml-2 text-base'), typefaces.psb],
    image: { width: 50, height: 50 },
    total: tailwind('flex flex-row p-4'),
-   totalText: [tailwind('text-lg'), typefaces.pm],
+   totalText: [tailwind('text-base'), typefaces.pm],
    totalValue: [tailwind('text-lg text-green-600 ml-4'), typefaces.pm],
    options: tailwind('flex flex-row justify-evenly mt-6'),
 };

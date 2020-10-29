@@ -22,38 +22,41 @@ export default function AddVehicleIdItemModal({ onAdd, onCancel, visible, close 
          onSwipeComplete={close}
          backdropTransitionOutTiming={0}
       >
-         <View style={tailwind('bg-white rounded-lg p-6 items-center')}>
+         <View style={styles.view}>
             <Text style={[typefaces.psb]}>Agregar nuevo numero de placa.</Text>
             <BasicInput
                placeholder="Numero"
-               style={tailwind('w-56 mt-2 mb-1')}
+               style={styles.input}
                onChange={(text) => setItem({ ...item, number: text })}
                onEndEditing={(text) => setItem({ ...item, number: text })}
                validate={(text) => text && text.length > 1}
             />
             <BasicInput
                placeholder="Alias (opcional)"
-               style={tailwind('w-56 mt-1 mb-2')}
+               style={styles.input2}
                onChange={(text) => setItem({ ...item, alias: text })}
                onEndEditing={(text) => setItem({ ...item, alias: text })}
             />
-            <View style={tailwind('w-full flex flex-row justify-evenly mt-4')}>
-               <Button
-                  text="cancelar"
-                  onPress={onCancel}
-                  style={tailwind('w-2/5')}
-                  primary={false}
-               />
+            <View style={styles.options}>
+               <Button text="cancelar" onPress={onCancel} style={styles.button} primary={false} />
                <Button
                   text="agregar"
                   onPress={() => {
-							Keyboard.dismiss()
+                     Keyboard.dismiss();
                      onAdd({ ...item, id: randomInt() });
                   }}
-                  style={tailwind('w-2/5')}
+                  style={styles.button}
                />
             </View>
          </View>
       </Modal>
    );
 }
+
+const styles = {
+   view: tailwind('bg-white rounded-lg p-6 items-center'),
+   input: tailwind('w-56 mt-2 mb-1'),
+   input2: tailwind('w-56 mt-1 mb-2'),
+   options: tailwind('w-full flex flex-row justify-evenly mt-4'),
+   button: tailwind('w-2/5'),
+};
