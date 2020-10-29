@@ -1,6 +1,5 @@
 import { setGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import Fetch from '../../utils/Fetch';
-import { generateDeviceInfo } from '../../utils/firebase'
 
 /**
  * Simple actions creator

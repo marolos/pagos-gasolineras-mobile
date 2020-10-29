@@ -1,5 +1,6 @@
 import { Alert, Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import Fetch from '../../utils/Fetch';
 
 let MessagingApp = null;
 
@@ -32,4 +33,7 @@ export async function getDeviceInfo() {
    const data = { os, token };
    console.log('datdatdatdtad::', data);
    /** Now SEND to server */
+   Fetch.post('')
+      .then((res) => {})
+      .catch((err) => {});
 }
