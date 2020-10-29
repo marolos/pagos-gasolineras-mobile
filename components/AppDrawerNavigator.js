@@ -21,6 +21,7 @@ import RecordsNavigator from './records/RecordsNavigator';
 import PaymentMethodsNavigator from './payment/PaymentMethodNavigator';
 import LogoutIcon from './icons/LogoutIcon';
 import LogoutView from './auth/LogoutView';
+import { getDeviceInfo, requestUserPermission } from './notification/firebaseConfig';
 
 const Drawer = createDrawerNavigator();
 
@@ -32,6 +33,11 @@ function AppDrawerNavigator(props) {
       getGenericPassword()
          .then((credentials) => {
             Fetch.setAuthToken(credentials.password);
+				requestUserPermission()
+					.then((enabled) => {
+               	if (enabled) getDeviceInfo();
+            	});
+            getDeviceInfo();
             setLoaded(true);
          })
          .catch((error) => {
@@ -58,7 +64,7 @@ function AppDrawerNavigator(props) {
                <Drawer.Screen name="records" component={RecordsNavigator} />
                <Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
                <Drawer.Screen name="transfers" component={TransferNavigator} />
-					<Drawer.Screen name='logout' component={LogoutView}/>
+               <Drawer.Screen name="logout" component={LogoutView} />
             </Drawer.Navigator>
          ) : (
             <View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>
@@ -155,7 +161,7 @@ function DrawerItemText({ text, style = {}, navigation }) {
 
 function LogoutItem({ style, navigation }) {
    function onPress() {
-		navigation.navigate('logout', {})
+      navigation.navigate('logout', {});
    }
    return (
       <Ripple style={style} onPress={onPress}>

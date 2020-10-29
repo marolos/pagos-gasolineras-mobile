@@ -1,5 +1,6 @@
 import { setGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import Fetch from '../../utils/Fetch';
+import { generateDeviceInfo } from '../../utils/firebase'
 
 /**
  * Simple actions creator
@@ -34,7 +35,7 @@ export function authRequest(url, form, onSuccess, onError) {
             console.error(error);
             onError(error);
             dispatch(logout());
-         });
+         });  
 }
 
 export function logoutAction() {
