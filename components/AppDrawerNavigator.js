@@ -22,6 +22,7 @@ import PaymentMethodsNavigator from './payment/PaymentMethodNavigator';
 import LogoutIcon from './icons/LogoutIcon';
 import LogoutView from './auth/LogoutView';
 import { getDeviceInfo, requestUserPermission } from './notification/firebaseConfig';
+import LoggingOutView from './auth/LoggingOutView';
 
 const Drawer = createDrawerNavigator();
 
@@ -65,6 +66,7 @@ function AppDrawerNavigator(props) {
                <Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
                <Drawer.Screen name="transfers" component={TransferNavigator} />
                <Drawer.Screen name="logout" component={LogoutView} />
+					<Drawer.Screen name="loggingOut" component={LoggingOutView}/>
             </Drawer.Navigator>
          ) : (
             <View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>

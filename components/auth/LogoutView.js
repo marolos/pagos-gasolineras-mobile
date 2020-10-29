@@ -1,15 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Modal from 'react-native-modal';
-import { useDispatch } from 'react-redux';
 import tailwind from 'tailwind-rn';
-import { logout } from '../../redux/auth/actions';
 import { FULL_HIGHT, FULL_WIDTH } from '../../utils/constants';
 import { typefaces } from '../../utils/styles';
 import Button from '../shared/Button';
 
 export default function LogoutView({ navigation }) {
-   const dispath = useDispatch();
 
    function close() {
       navigation.navigate('home');
@@ -25,7 +21,7 @@ export default function LogoutView({ navigation }) {
                   text="si"
                   style={tailwind('w-2/5')}
                   onPress={() => {
-                     dispath(logout());
+							navigation.navigate('loggingOut')
                   }}
                />
             </View>

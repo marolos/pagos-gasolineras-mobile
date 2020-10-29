@@ -7,7 +7,10 @@ let MessagingApp = null;
 export function initFirebase() {
    MessagingApp = getMessaging();
    MessagingApp.onMessage((message) => {
-      Alert.alert(remoteMessage.data.type, JSON.stringify(remoteMessage.data));
+      Alert.alert(message.data.type, JSON.stringify(message.data));
+   });
+   MessagingApp.setBackgroundMessageHandler(async (message) => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(message.data));
    });
 }
 
@@ -18,7 +21,7 @@ export function getMessaging() {
    return MessagingApp;
 }
 
-//Request permission notifications for ios devices
+// Request permission notifications for ios devices
 export async function requestUserPermission() {
    const authStatus = await getMessaging().requestPermission();
    const enabled =
@@ -30,10 +33,15 @@ export async function requestUserPermission() {
 export async function getDeviceInfo() {
    const os = Platform.OS;
    const token = await getMessaging().getToken();
-   const data = { os, token };
-   console.log('datdatdatdtad::', data);
-   /** Now SEND to server */
-   Fetch.post('')
+   const device_info = { os, token };
+   console.log('datdatdatdtad::', { device_info });
+
+   Fetch.post('/notification/user/token/', { device_info })
       .then((res) => {})
-      .catch((err) => {});
+      .catch((err) => {
+			console.log('again:::::')
+         Fetch.post('/notification/user/token/', { device_info })
+            .then((res) => {})
+            .catch((err) => {});
+      });
 }

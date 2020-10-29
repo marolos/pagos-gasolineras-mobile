@@ -1,4 +1,5 @@
 import { setGenericPassword, resetGenericPassword } from 'react-native-keychain';
+import { getMessaging } from '../../components/notification/firebaseConfig';
 import Fetch from '../../utils/Fetch';
 
 /**
@@ -34,17 +35,15 @@ export function authRequest(url, form, onSuccess, onError) {
             console.error(error);
             onError(error);
             dispatch(logout());
-         });  
+         });
 }
 
 export function logoutAction() {
    return (dispatch) =>
       resetGenericPassword()
-         .then((succes) => {
-            dispatch(logout());
-         })
+         .then((succes) => dispatch(logout()))
          .catch((error) => {
-            console.error('Error deleting the token', error.message);
+            console.error('Error deleting the jwt', error.message);
             dispatch(logout());
          });
 }
