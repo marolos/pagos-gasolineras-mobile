@@ -17,23 +17,18 @@ export default function AddSubInput({ onChange }) {
    }, [state.count]);
 
    return (
-      <View style={tailwind('flex flex-row justify-evenly items-center')}>
+      <View style={styles.view}>
          <Ripple onPress={() => dispatch({ type: 'substract' })} rippleCentered>
             <View>
                <SubstractIcon width={45} height={45} />
             </View>
          </Ripple>
-         <View
-            style={[
-               tailwind('border-2 border-gray-600 rounded w-32 h-12 flex flex-row items-center'),
-               state.hasError ? tailwind('border-red-400') : {},
-            ]}
-         >
-            <Text style={[tailwind('text-gray-600 ml-4'), typefaces.pm]}>$</Text>
+         <View style={[styles.inputView, state.hasError ? styles.error : {}]}>
+            <Text style={styles.text}>$</Text>
             <TextInput
                value={state.text}
                defaultValue={state.text}
-               style={[tailwind('text-gray-900 w-20')]}
+               style={styles.input}
                placeholder="10.00"
                keyboardType="numeric"
                onChangeText={(text) => dispatch({ type: 'text', value: text })}
@@ -48,11 +43,19 @@ export default function AddSubInput({ onChange }) {
    );
 }
 
-const MIN_AMOUNT = 10.0;
+const styles = {
+   view: tailwind('flex flex-row justify-evenly items-center'),
+   inputView: tailwind('border-2 border-gray-600 rounded w-32 h-12 flex flex-row items-center'),
+   error: tailwind('border-red-400'),
+   text: [tailwind('text-gray-600 ml-4'), typefaces.pm],
+   input: tailwind('text-gray-900 w-20'),
+};
+
+export const MIN_AMOUNT = 0.0;
 
 const initialState = {
-   count: 20.0,
-   text: '20',
+   count: 0.0,
+   text: '0',
    hasError: false,
 };
 

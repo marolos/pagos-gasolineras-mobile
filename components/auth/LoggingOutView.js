@@ -9,6 +9,7 @@ import { getMessaging } from '../notification/firebaseConfig';
 
 export default function LoggingOutView({ navigation }) {
    const dispatch = useDispatch();
+
    React.useEffect(() => {
       getMessaging()
          .getToken()
@@ -17,9 +18,14 @@ export default function LoggingOutView({ navigation }) {
                .then((res) => {})
                .catch((err) => {})
                .finally(() => dispatch(logoutAction()));
+            getMessaging()
+               .deleteToken()
+               .then(() => {})
+               .catch(() => {});
          })
          .catch((err) => dispatch(logoutAction()));
    }, []);
+
    return (
       <View style={styles.container}>
          <ActivityIndicator size="large" color="black" animating />
