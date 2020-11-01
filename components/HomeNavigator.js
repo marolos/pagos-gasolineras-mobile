@@ -1,6 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import {
+   createStackNavigator,
+   CardStyleInterpolators,
+   HeaderBackButton,
+} from '@react-navigation/stack';
 import TabMenuNavigator from './mainapp/TabMenuNavigator';
 import TopupDataView from './topup/TopupDataView';
 import BuyView from './buy/BuyView';
@@ -79,10 +83,13 @@ function HomeNavigator({ dispatch }) {
          <Stack.Screen
             name="generateCode"
             component={GenerateCodeView}
-            options={() => ({
-               headerTitle: () => (
-                  <Label text={'Comprar Combustible'} style={styles.title} focused />
+            options={({ navigation }) => ({
+               headerLeft: () => (
+                  <HeaderBackButton
+                     onPress={() => navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] })}
+                  />
                ),
+               headerTitle: () => <Label text={'Código de compra'} style={styles.title} focused />,
             })}
          />
       </Stack.Navigator>

@@ -68,8 +68,11 @@ export default class BuyView extends React.Component {
 
       Fetch.post('/purchase/create/', data)
          .then((res) => {
-            console.log(res.body.purchase);
-            this.setState({ showBuying: false, showBuyDone: true });
+            this.setState({
+               showBuying: false,
+               showBuyDone: true,
+               createdPurchase: res.body.purchase,
+            });
          })
          .catch((err) => {
             console.log(err);
@@ -88,11 +91,12 @@ export default class BuyView extends React.Component {
 
    close = () => {
       this.props.navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] });
-      //this.props.navigation.goBack();
    };
 
    goCodeView = () => {
-      this.props.navigation.navigate('generateCode');
+      this.setState({ showBuying: false, showBuyDone: false, showConfirm: false }, () =>
+         this.props.navigation.navigate('generateCode', this.state.createdPurchase),
+      );
    };
 
    render() {
@@ -147,27 +151,20 @@ export default class BuyView extends React.Component {
                onCancel={this.close}
                onConfirm={this.goCodeView}
             />
-            <RButton
+            {/* <RButton
                title="gogogo"
                onPress={() =>
                   this.props.navigation.navigate('generateCode', {
                      id: 4,
-                     created_at: '2020-11-01T01:25:24.431127Z',
                      amount: 10.0,
-                     gallons: None,
-                     qrcode_string: 'Cantidad: $10 | Usuario: Miguel PS | Cedula: None',
+                     qrcode_string: 'Cantidad: 10 | Usuario: Miguel PS | Cedula: None',
                      number_code: '4040-4',
                      code_expiry_date: '2020-11-04T01:25:24.829409Z',
-                     is_done: False,
-                     user: 4,
-                     gas_station: 1,
-                     company: 1,
-                     vehicle: 1,
                   })
                }
             >
                gogo
-            </RButton>
+            </RButton> */}
          </View>
       );
    }
