@@ -38,14 +38,14 @@ function AppDrawerNavigator(props) {
                .then((enabled) => {
                   if (enabled) getDeviceInfo();
                })
-               .catch((err) => {});
+               .catch((err) => {err});
             setLoaded(true);
          })
          .catch((error) => {
             Fetch.removeAuthToken();
             resetGenericPassword()
                .then(() => {})
-               .catch((err) => {});
+               .catch((err) => {err});
          });
    }, []);
 

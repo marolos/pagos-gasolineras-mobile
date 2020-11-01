@@ -19,7 +19,7 @@ function App({ user, dispatch }) {
 				Fetch.removeInterceptor('unauthorized')
             resetGenericPassword()
                .then(() => {})
-               .catch((err) => {});
+               .catch((err) => {err});
          });
    }, []);
 

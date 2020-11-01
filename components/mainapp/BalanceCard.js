@@ -14,7 +14,7 @@ function BalanceCard({ total, company, gasStation, onPress }) {
                <Text style={styles.name}>{gasStation.name}</Text>
                <View style={tailwind('flex flex-row')}>
                   <Text style={styles.totalText}>Saldo:</Text>
-                  <Text style={total > 5 ? styles.total1: styles.total0}>${total}</Text>
+                  <Text style={total > 5 ? styles.total1 : styles.total0}>${total}</Text>
                </View>
             </View>
          </View>

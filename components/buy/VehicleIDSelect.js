@@ -22,7 +22,7 @@ export default function VehicleIDSelect({ onChange }) {
                setSelected(res.body.vehicles[0]);
             }
          })
-         .catch((err) => {})
+         .catch((err) => {err})
          .finally(() => setLoading(false));
    }, []);
 

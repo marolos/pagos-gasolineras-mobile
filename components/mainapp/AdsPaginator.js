@@ -16,8 +16,8 @@ function AdsPaginator(props) {
    React.useEffect(() => {
       const req = makeCancelable(
          fakeFetch(itemsMocks, 100),
-         (itemsMocks) => {
-            setState({ items: itemsMocks, loading: false });
+         (_itemsMocks) => {
+            setState({ items: _itemsMocks, loading: false });
          },
          (err) => {
             if (err.isCanceled) return;

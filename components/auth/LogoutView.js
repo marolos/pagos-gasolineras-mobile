@@ -12,7 +12,7 @@ export default function LogoutView({ navigation }) {
    }
    return (
       <View style={styles.container}>
-         <View style={styles.bg}></View>
+         <View style={styles.bg} />
          <View style={tailwind('bg-white rounded-lg p-6 items-center w-4/5')}>
             <Text style={[typefaces.pm]}>¿Cerrar sesión?</Text>
             <View style={tailwind('flex flex-row mt-4')}>

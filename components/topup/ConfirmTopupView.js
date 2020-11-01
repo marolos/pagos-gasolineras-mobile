@@ -19,6 +19,7 @@ class ConfirmTopupView extends React.Component {
          showModal: false,
          sending: false,
          showConfirmCancel: false,
+         balanceResult: null,
       };
    }
 
@@ -33,9 +34,10 @@ class ConfirmTopupView extends React.Component {
          gas_station,
       })
          .then((res) => {
+            this.setState({ balanceResult: res.body.balance });
             if (!card.save) {
                Fetch.delete('/payment/user/card/', card)
-                  .then((res) => console.log(res))
+                  .then((_res) => console.log(_res))
                   .catch((err) => console.log('on delete::::', err))
                   .finally(() => this.setState({ sending: false }));
             } else {
@@ -57,18 +59,31 @@ class ConfirmTopupView extends React.Component {
       );
    };
 
+   onDoneClose = () => {
+      this.setState({ showModal: false }, () => {
+         this.props.navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] });
+      });
+   };
+
+   onDoneGoBuy = () => {
+      const { company, gas_station } = this.props.route.params;
+      const { id, total } = this.state.balanceResult;
+      this.setState({ showModal: false }, () => {
+         this.props.navigation.navigate('buyAfterTopup', { company, gas_station, id, total });
+      });
+   };
+
    render() {
-      const { amount, company } = this.props.route.params;
+      const { amount, company, gas_station } = this.props.route.params;
+      const balance_id = this.props.route.params.id;
       return (
          <View style={tailwind('items-center h-full')}>
             <View style={tailwind('mt-12')}>
                <Message />
             </View>
-
             <View style={tailwind('mt-12')}>
                <Resume amount={amount} useGreen={false} showAmount />
             </View>
-
             <Modal
                isVisible={this.state.showConfirmCancel}
                animationIn="fadeIn"
@@ -81,7 +96,6 @@ class ConfirmTopupView extends React.Component {
                   onContinue={() => this.setState({ showConfirmCancel: false })}
                />
             </Modal>
-
             <Modal
                isVisible={this.state.showModal}
                animationIn="fadeIn"
@@ -93,14 +107,16 @@ class ConfirmTopupView extends React.Component {
                   {this.state.sending && <Wait />}
                   {!this.state.sending && (
                      <Done
+                        onDoneClose={this.onDoneClose}
+                        onDoneGoBuy={this.onDoneGoBuy}
                         amount={amount}
-                        company={company.business_name}
-                        navigation={this.props.navigation}
+                        company={company}
+                        gas_station={gas_station}
+                        balance_id={balance_id}
                      />
                   )}
                </View>
             </Modal>
-
             <View style={tailwind('absolute bottom-0 right-0 mb-8 mr-8 flex flex-row')}>
                <Button
                   text={'cancelar'}
@@ -125,11 +141,7 @@ function Wait(props) {
    );
 }
 
-function Done({ amount, company, navigation }) {
-   function close() {
-      navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] });
-   }
-   function buy() {}
+function Done({ amount, gas_station, onDoneClose, onDoneGoBuy }) {
    return (
       <View style={tailwind('p-6 rounded-md')}>
          <View style={tailwind('flex flex-row')}>
@@ -138,12 +150,12 @@ function Done({ amount, company, navigation }) {
          </View>
          <View style={tailwind('flex flex-row justify-center mt-8')}>
             <Text style={[tailwind('text-sm'), typefaces.pm]}>
-               Se han recargado ${amount} en {company}
+               Se han recargado ${amount} en {gas_station.name}
             </Text>
          </View>
          <View style={tailwind('flex flex-row justify-evenly mt-8')}>
-            <Button text={'cerrar'} primary={false} onPress={close} style={{ width: 100 }} />
-            <Button text={'realizar compra'} onPress={buy} style={{ width: 150 }} />
+            <Button text={'cerrar'} primary={false} onPress={onDoneClose} style={{ width: 100 }} />
+            <Button text={'realizar compra'} onPress={onDoneGoBuy} style={{ width: 150 }} />
          </View>
       </View>
    );
@@ -160,12 +172,7 @@ function ConfirmCancel({ onCancel, onContinue }) {
                </Text>
             </View>
             <View style={tailwind('flex flex-row justify-evenly mt-8')}>
-               <Button
-                  text={'no'}
-                  primary={false}
-                  onPress={onContinue}
-                  style={{ width: 100 }}
-               />
+               <Button text={'no'} primary={false} onPress={onContinue} style={{ width: 100 }} />
                <Button text={'si'} onPress={onCancel} />
             </View>
          </View>

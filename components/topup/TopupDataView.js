@@ -82,7 +82,7 @@ function TopupDataView({ route, navigation, user }) {
                </View>
                <View>
                   <Text style={styles.billing.text}>Cantidad en dolares:</Text>
-                  <AddSubInput onChange={(amount) => setAmount(amount)} />
+                  <AddSubInput onChange={setAmount} />
                </View>
             </View>
             <View style={styles.billing.container}>

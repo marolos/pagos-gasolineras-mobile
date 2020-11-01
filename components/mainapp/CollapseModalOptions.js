@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import Modal from 'react-native-modal';
 import ArrowDownIcon from '../icons/ArrowDownIcon';
@@ -11,7 +11,7 @@ import FastImage from 'react-native-fast-image';
 
 function CollapseModalOptions({ visible, closeCollapse, station }) {
 	const navigation = useNavigation();
-	
+
    return (
       <Modal
          isVisible={visible}

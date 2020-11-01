@@ -4,7 +4,7 @@ import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
 import Ripple from 'react-native-material-ripple';
 
-export default function LoadingButton({ text, onPress, icon, loading, iconPos, style, textStyle={} }) {
+export default function LoadingButton({ text, onPress, icon, loading, iconPos, style, textStyle = {} }) {
    return (
       <Ripple
          onPress={onPress}

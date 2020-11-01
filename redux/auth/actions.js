@@ -1,5 +1,4 @@
 import { setGenericPassword, resetGenericPassword } from 'react-native-keychain';
-import { getMessaging } from '../../components/notification/firebaseConfig';
 import Fetch from '../../utils/Fetch';
 
 /**

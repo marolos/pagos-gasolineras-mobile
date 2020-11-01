@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View, Text, ActivityIndicator, Button as RButton } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import tailwind from 'tailwind-rn';
 import { FULL_HIGHT, FULL_WIDTH } from '../../utils/constants';
@@ -127,7 +127,7 @@ export default class BuyView extends React.Component {
                   ${remaining}
                </Text>
             </View>
-            <View style={tailwind('mt-6')}></View>
+            <View style={tailwind('mt-6')} />
             <AddSubInput onChange={this.updateAmount} />
             <View style={[tailwind('absolute'), { bottom: 100, right: FULL_WIDTH / 4 }]}>
                <Button

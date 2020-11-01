@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../../utils/styles';
 import Ripple from 'react-native-material-ripple';
-export default function Button({ text, onPress, primary = true, style = {}, textStyle = {}, viewStyle={} }) {
+export default function Button({ text, onPress, primary = true, style = {}, textStyle = {}, viewStyle = {} }) {
    return (
       <Ripple
          onPress={onPress}

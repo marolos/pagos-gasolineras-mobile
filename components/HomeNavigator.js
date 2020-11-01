@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import {
    createStackNavigator,
    CardStyleInterpolators,
@@ -74,6 +73,21 @@ function HomeNavigator({ dispatch }) {
             name="buy"
             component={BuyView}
             options={() => ({
+               headerTitle: () => (
+                  <Label text={'Comprar Combustible'} style={styles.title} focused />
+               ),
+               cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            })}
+         />
+         <Stack.Screen
+            name="buyAfterTopup"
+            component={BuyView}
+            options={({ navigation }) => ({
+               headerLeft: () => (
+                  <HeaderBackButton
+                     onPress={() => navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] })}
+                  />
+               ),
                headerTitle: () => (
                   <Label text={'Comprar Combustible'} style={styles.title} focused />
                ),

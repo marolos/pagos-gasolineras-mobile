@@ -79,20 +79,20 @@ const mapStateToProps = (state) => ({
    activeTab: state.activeTab,
 });
 const mapDispatchToProps = (dispatch) => ({
-   setActiveTab: (activeTab) => dispatch(setActiveTab(activeTab)),
+   setActive: (activeTab) => dispatch(setActiveTab(activeTab)),
 });
 
 const TabButton = connect(
    mapStateToProps,
    mapDispatchToProps,
-)(({ navigateTo, activeTab, setActiveTab, label, tabOption, icon, navigation }) => {
+)(({ navigateTo, activeTab, setActive, label, tabOption, icon, navigation }) => {
    const Icon = icon;
    const focused = activeTab.label === label.trim();
    return (
       <Ripple
          onPress={() => {
             navigation.navigate(navigateTo);
-            setActiveTab(tabOption);
+            setActive(tabOption);
          }}
          style={styles.tabButton.ripple}
          rippleCentered={true}

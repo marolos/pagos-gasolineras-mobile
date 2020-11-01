@@ -16,12 +16,12 @@ export default function LoggingOutView({ navigation }) {
          .then((token) => {
             Fetch.delete('/notification/user/token/', { token: token })
                .then((res) => {})
-               .catch((err) => {})
+               .catch((err) => {err})
                .finally(() => dispatch(logoutAction()));
             getMessaging()
                .deleteToken()
                .then(() => {})
-               .catch(() => {});
+               .catch((err) => {err});
          })
          .catch((err) => dispatch(logoutAction()));
    }, []);

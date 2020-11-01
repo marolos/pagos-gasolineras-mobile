@@ -42,6 +42,6 @@ export async function getDeviceInfo() {
 			console.log('again:::::')
          Fetch.post('/notification/user/token/', { device_info })
             .then((res) => {})
-            .catch((err) => {});
+            .catch((_err) => {_err});
       });
 }

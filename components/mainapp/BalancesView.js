@@ -30,13 +30,13 @@ function BalancesView(props) {
       loadData(state, setState, () => setRefreshing(false));
    }, [state]);
 
-   function onPressStation(item) {
+   const onPressStation = React.useCallback((item) => {
       setState((value) => ({
          ...value,
          selectedStation: item,
          modalVisible: true,
       }));
-   }
+   }, []);
 
    return (
       <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
@@ -53,7 +53,7 @@ function BalancesView(props) {
             <GasStationList
                loading={state.loading}
                data={state.balances}
-               onItemPress={(station) => onPressStation(station)}
+               onItemPress={onPressStation}
             />
          </View>
          {state.balances.length > 0 && state.selectedStation && (
@@ -72,12 +72,12 @@ function loadData(state, setState, cb) {
       Fetch.get('/users/balances/'),
       (res) => {
          setState({ ...state, balances: res.body.balances, loading: false });
-         if(cb) cb();
+         if (cb) cb();
       },
       (err) => {
          if (err.isCanceled) return;
          setState({ ...state, balances: [], loading: false });
-         if(cb) cb();
+         if (cb) cb();
       },
    );
 

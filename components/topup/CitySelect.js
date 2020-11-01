@@ -10,8 +10,8 @@ export default function CitySelect({ onChange, defaultValue, editable = true }) 
    const [hasErrors, setHasErrors] = React.useState(false);
    const [show, setShow] = React.useState(false);
    const data = cities.filter((city) => city.name.toLowerCase().includes(text.toLowerCase()));
-   function valid(text) {
-      return cities.find((item) => item.name.toLowerCase() === text.toLowerCase());
+   function valid(t) {
+      return cities.find((item) => item.name.toLowerCase() === t.toLowerCase());
    }
    React.useEffect(() => {
       onChange(text);
