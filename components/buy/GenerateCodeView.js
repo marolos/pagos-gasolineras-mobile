@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator, Image } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH } from '../../utils/constants';
 import { typefaces } from '../../utils/styles';
-import { formatISO, generateQR } from './utils';
+import { formatISODate, generateQR } from './utils';
 
 export default function GenerateCodeView({ navigation, route }) {
    const [loading, setLoading] = React.useState(false);
@@ -35,7 +35,7 @@ export default function GenerateCodeView({ navigation, route }) {
             <View style={tailwind('flex flex-row')}>
                <Text style={[tailwind('text-base'), typefaces.pr]}>Expiración: </Text>
                <Text style={[tailwind('text-base text-gray-800'), typefaces.pm]}>
-                  {formatISO(route.params.code_expiry_date)}
+                  {formatISODate(route.params.code_expiry_date)}
                </Text>
             </View>
          </View>
@@ -49,7 +49,7 @@ export default function GenerateCodeView({ navigation, route }) {
                />
             )}
          </View>
-         <View style={tailwind('flex items-center')}>
+         <View style={tailwind('flex items-center mt-4')}>
             <Text style={[tailwind('text-base text-gray-700'), typefaces.pm]}>
                Código numérico de la compra:
             </Text>

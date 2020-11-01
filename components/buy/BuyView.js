@@ -144,6 +144,7 @@ export default class BuyView extends React.Component {
                onCancel={this.onCancel}
                gasStation={gas_station}
                amount={this.state.amount}
+               vehicle={this.state.vehicle}
             />
             <BuyingModal show={this.state.showBuying} />
             <BuyDoneModal
@@ -151,26 +152,12 @@ export default class BuyView extends React.Component {
                onCancel={this.close}
                onConfirm={this.goCodeView}
             />
-            {/* <RButton
-               title="gogogo"
-               onPress={() =>
-                  this.props.navigation.navigate('generateCode', {
-                     id: 4,
-                     amount: 10.0,
-                     qrcode_string: 'Cantidad: 10 | Usuario: Miguel PS | Cedula: None',
-                     number_code: '4040-4',
-                     code_expiry_date: '2020-11-04T01:25:24.829409Z',
-                  })
-               }
-            >
-               gogo
-            </RButton> */}
          </View>
       );
    }
 }
 
-const ConfirmBuyModal = memo(({ show, onConfirm, onCancel, gasStation, amount }) => {
+const ConfirmBuyModal = memo(({ show, onConfirm, onCancel, gasStation, amount, vehicle }) => {
    return (
       <Modal
          isVisible={show}
@@ -188,11 +175,25 @@ const ConfirmBuyModal = memo(({ show, onConfirm, onCancel, gasStation, amount })
                   <InfoIcon />
                   <Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>Confirmar compra</Text>
                </View>
-               <View>
-                  <View style={tailwind('p-6')}>
-                     <Text>Gasolinera</Text>
-                     <Text>{gasStation.name}</Text>
+               <View style={tailwind('p-6')}>
+                  <View style={tailwind('flex flex-row items-center')}>
+                     <Text style={[tailwind('text-sm'), typefaces.pm]}>Gasolinera: </Text>
+                     <Text style={[tailwind('text-sm'), typefaces.pr]}>{gasStation.name}</Text>
                   </View>
+                  <View style={tailwind('flex flex-row items-center')}>
+                     <Text style={[tailwind('text-sm'), typefaces.pm]}>Cantidad: </Text>
+                     <Text style={[tailwind('text-sm text-green-600'), typefaces.pm]}>
+                        ${amount}
+                     </Text>
+                  </View>
+                  {vehicle && (
+                     <View style={tailwind('flex flex-row items-center')}>
+                        <Text style={[tailwind('text-sm'), typefaces.pm]}>Placa: </Text>
+                        <Text style={[tailwind('text-sm'), typefaces.pr]}>
+                           {vehicle.number} {vehicle.alias}
+                        </Text>
+                     </View>
+                  )}
                </View>
                <View style={tailwind('flex flex-row justify-evenly mt-8')}>
                   <Button

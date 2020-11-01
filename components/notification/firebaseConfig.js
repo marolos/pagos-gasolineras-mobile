@@ -34,7 +34,7 @@ export async function getDeviceInfo() {
    const os = Platform.OS;
    const token = await getMessaging().getToken();
    const device_info = { os, token };
-   console.log('datdatdatdtad::', { device_info });
+   console.log(':: Device Info ::', { device_info });
 
    Fetch.post('/notification/user/token/', { device_info })
       .then((res) => {})

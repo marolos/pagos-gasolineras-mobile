@@ -34,11 +34,11 @@ function AppDrawerNavigator(props) {
       getGenericPassword()
          .then((credentials) => {
             Fetch.setAuthToken(credentials.password);
-				requestUserPermission()
-					.then((enabled) => {
-               	if (enabled) getDeviceInfo();
-            	});
-            getDeviceInfo();
+            requestUserPermission()
+               .then((enabled) => {
+                  if (enabled) getDeviceInfo();
+               })
+               .catch((err) => {});
             setLoaded(true);
          })
          .catch((error) => {
@@ -66,7 +66,7 @@ function AppDrawerNavigator(props) {
                <Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
                <Drawer.Screen name="transfers" component={TransferNavigator} />
                <Drawer.Screen name="logout" component={LogoutView} />
-					<Drawer.Screen name="loggingOut" component={LoggingOutView}/>
+               <Drawer.Screen name="loggingOut" component={LoggingOutView} />
             </Drawer.Navigator>
          ) : (
             <View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>

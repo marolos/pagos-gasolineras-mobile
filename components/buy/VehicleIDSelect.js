@@ -7,7 +7,6 @@ import Fetch from '../../utils/Fetch';
 import { shadowStyle, typefaces } from '../../utils/styles';
 import ChevronDown from '../icons/ChevronDown';
 
-
 export default function VehicleIDSelect({ onChange }) {
    const [selected, setSelected] = React.useState(null);
    const [options, setOptions] = React.useState([]);
@@ -49,7 +48,7 @@ export default function VehicleIDSelect({ onChange }) {
             )}
             <AnimatedIcon change={open} />
          </Ripple>
-         {open && (
+         {open && !loading && (
             <View style={styles.list}>
                {options.map((item) => (
                   <Ripple
@@ -94,7 +93,6 @@ function AnimatedIcon({ change }) {
    );
 }
 
-
 const styles = {
    list: [
       tailwind('absolute bg-white w-40 border rounded-sm border-white'),
@@ -102,4 +100,3 @@ const styles = {
       shadowStyle,
    ],
 };
-

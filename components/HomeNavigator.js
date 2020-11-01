@@ -100,8 +100,4 @@ const styles = {
    title: tailwind('text-base mt-1'),
 };
 
-const mapStateToProps = (state) => ({
-   activeTab: state.activeTab,
-});
-
-export default connect(mapStateToProps)(HomeNavigator);
+export default HomeNavigator;
