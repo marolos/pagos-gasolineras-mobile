@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, Button as RButton } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import tailwind from 'tailwind-rn';
 import { FULL_HIGHT, FULL_WIDTH } from '../../utils/constants';
@@ -24,6 +24,7 @@ export default class BuyView extends React.Component {
          showConfirm: false,
          showBuying: false,
          showBuyDone: false,
+         createdPurchase: null,
       };
    }
 
@@ -36,12 +37,16 @@ export default class BuyView extends React.Component {
    };
 
    tryBuy = () => {
-      if (this.state.amount < 1) {
+      const { amount, balance, vehicle } = this.state;
+      if (!vehicle) {
+         SimpleToast.show('Seleccionar una placa');
+         return;
+      }
+      if (amount < 1) {
          SimpleToast.show('Ingrese una cantidad válida');
          return;
       }
-      const { total } = this.state.balance;
-      const remaining = total - this.state.amount;
+      const remaining = balance.total - amount;
       if (remaining < 0) {
          SimpleToast.show('Saldo insuficiente');
          return;
@@ -55,21 +60,39 @@ export default class BuyView extends React.Component {
 
       const data = {
          gas_station,
-			company,
-			balance_id: id,
+         company,
+         balance_id: id,
          amount: this.state.amount,
          vehicle: this.state.vehicle,
       };
 
-      //Fetch.post('/');
-
-      setTimeout(() => {
-         this.setState({ showBuying: false, showBuyDone: true });
-      }, 1000);
+      Fetch.post('/purchase/create/', data)
+         .then((res) => {
+            console.log(res.body.purchase);
+            this.setState({ showBuying: false, showBuyDone: true });
+         })
+         .catch((err) => {
+            console.log(err);
+            this.setState({ showBuying: false, showBuyDone: false, showConfirm: false });
+            SimpleToast.showWithGravity(
+               'No se pudo completar la transacción, reintente',
+               1000,
+               SimpleToast.CENTER,
+            );
+         });
    };
 
    onCancel = () => {
-      this.setState({ showConfirm: false });
+      this.setState({ showConfirm: false, showBuyDone: false, showBuying: false });
+   };
+
+   close = () => {
+      this.props.navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] });
+      //this.props.navigation.goBack();
+   };
+
+   goCodeView = () => {
+      this.props.navigation.navigate('generateCode');
    };
 
    render() {
@@ -119,7 +142,32 @@ export default class BuyView extends React.Component {
                amount={this.state.amount}
             />
             <BuyingModal show={this.state.showBuying} />
-            <BuyDoneModal show={this.state.showBuyDone} />
+            <BuyDoneModal
+               show={this.state.showBuyDone}
+               onCancel={this.close}
+               onConfirm={this.goCodeView}
+            />
+            <RButton
+               title="gogogo"
+               onPress={() =>
+                  this.props.navigation.navigate('generateCode', {
+                     id: 4,
+                     created_at: '2020-11-01T01:25:24.431127Z',
+                     amount: 10.0,
+                     gallons: None,
+                     qrcode_string: 'Cantidad: $10 | Usuario: Miguel PS | Cedula: None',
+                     number_code: '4040-4',
+                     code_expiry_date: '2020-11-04T01:25:24.829409Z',
+                     is_done: False,
+                     user: 4,
+                     gas_station: 1,
+                     company: 1,
+                     vehicle: 1,
+                  })
+               }
+            >
+               gogo
+            </RButton>
          </View>
       );
    }
@@ -164,7 +212,7 @@ const ConfirmBuyModal = memo(({ show, onConfirm, onCancel, gasStation, amount })
    );
 });
 
-function BuyingModal({ show }) {
+const BuyingModal = memo(({ show }) => {
    return (
       <Modal
          isVisible={show}
@@ -183,9 +231,9 @@ function BuyingModal({ show }) {
          </View>
       </Modal>
    );
-}
+});
 
-function BuyDoneModal({ show, onCancel, onConfirm }) {
+const BuyDoneModal = memo(({ show, onCancel, onConfirm }) => {
    return (
       <Modal
          isVisible={show}
@@ -201,14 +249,14 @@ function BuyDoneModal({ show, onCancel, onConfirm }) {
                   <Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>Compra realizada</Text>
                </View>
                <View>
-                  <View style={tailwind('p-6')}>
-                     <Text>
+                  <View style={tailwind('p-2')}>
+                     <Text style={[typefaces.pr]}>
                         Puede generar el código de la compra ahora, o generarlo luego buscándolo en
                         el menu de compras
                      </Text>
                   </View>
                </View>
-               <View style={tailwind('flex flex-row justify-evenly mt-8')}>
+               <View style={tailwind('flex flex-row justify-evenly mt-4')}>
                   <Button
                      text={'Cerrar'}
                      primary={false}
@@ -221,21 +269,25 @@ function BuyDoneModal({ show, onCancel, onConfirm }) {
          </View>
       </Modal>
    );
-}
+});
 
-function QRButton({ onPress, text }) {
+const QRButton = memo(({ onPress, text }) => {
    return (
       <Ripple
          onPress={onPress}
-         style={tailwind('rounded-md items-center w-56')}
+         style={tailwind('rounded-md items-center w-40')}
          rippleColor="#ffffff"
          rippleSize={500}
          rippleDuration={600}
       >
-         <View style={tailwind('flex flex-row bg-black rounded-md items-center w-full py-4')}>
+         <View
+            style={tailwind(
+               'flex flex-row bg-black rounded-md items-center justify-evenly w-full py-2 px-4',
+            )}
+         >
             <QRIcon />
-            <Text style={[tailwind('text-white'), typefaces.pm]}>{text}</Text>
+            <Text style={[tailwind('text-white mt-1'), typefaces.pm]}>{text}</Text>
          </View>
       </Ripple>
    );
-}
+});

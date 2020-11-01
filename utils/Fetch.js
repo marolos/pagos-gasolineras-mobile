@@ -88,9 +88,9 @@ class FetchClass {
 
       this.interceptors.forEach((interceptor) => {
          interceptor.fn(data);
-      });
+		});
 
-      if (!response.ok) {
+      if (response.status >= 400) {
          throw data;
       }
       return data;

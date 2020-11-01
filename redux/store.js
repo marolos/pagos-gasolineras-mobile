@@ -2,11 +2,11 @@ import { createStore, applyMiddleware } from 'redux';
 import rootReducers from './reducers';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
-import createEncryptor from 'redux-persist-transform-encrypt';
 import { ENCRYPTOR_KEY } from '../utils/constants';
 import thunk from 'redux-thunk';
+import { encryptTransform } from 'redux-persist-transform-encrypt/lib/sync';
 
-const encryptor = createEncryptor({
+const encryptor = encryptTransform({
    secretKey: ENCRYPTOR_KEY,
    onError: (error) => console.error('error on encryptor: ', error),
 });

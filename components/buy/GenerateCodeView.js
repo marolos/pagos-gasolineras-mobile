@@ -1,10 +1,11 @@
-import React from 'react'
-import { View, Text } from "react-native";
+import React from 'react';
+import { View, Text } from 'react-native';
 
-export default function GenerateCodeView(props) {
-  return (
-    <View>
-      <Text>code</Text>
-    </View>
-  );
+export default function GenerateCodeView({ navigation, route }) {
+	
+   return (
+      <View>
+         <Text>code</Text>
+      </View>
+   );
 }
