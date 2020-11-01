@@ -15,11 +15,11 @@ export default function TransfersNavigator({ navigation }) {
       <Stack.Navigator
          screenOptions={{
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
+				headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
          }}
       >
          <Stack.Screen
-            name="profileView"
+            name="transfersView"
             component={TransfersView}
             options={() => ({
                headerTitle: () => (

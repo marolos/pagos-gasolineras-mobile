@@ -83,12 +83,16 @@ class FetchClass {
    };
 
    handleResponse = async (response) => {
+      const contentType = response.headers.map['content-type'];
+      if (contentType !== 'application/json') {
+         return { body: { msg: 'No JSON' }, status: response.status };
+      }
       const body = await response.json();
       const data = { body, status: response.status };
 
       this.interceptors.forEach((interceptor) => {
          interceptor.fn(data);
-		});
+      });
 
       if (response.status >= 400) {
          throw data;
