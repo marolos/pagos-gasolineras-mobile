@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, ActivityIndicator, Image } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, Image, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import AdsPaginator from './AdsPaginator';
 import tailwind from 'tailwind-rn';
@@ -12,6 +12,7 @@ import Fetch from '../../utils/Fetch';
 import emptyImage from '../../assets/background/empty.png';
 
 function BalancesView(props) {
+   const [refreshing, setRefreshing] = React.useState(false);
    const [state, setState] = React.useState({
       selectedStation: null,
       modalVisible: false,
@@ -20,18 +21,14 @@ function BalancesView(props) {
    });
 
    React.useEffect(() => {
-      const req = makeCancelable(
-         Fetch.get('/users/balances/'),
-         (res) => {
-            setState({ ...state, balances: res.body.balances, loading: false });
-         },
-         (err) => {
-            if (err.isCanceled) return;
-            setState({ ...state, balances: [], loading: false });
-         },
-      );
+      const req = loadData(state, setState);
       return () => req.cancel();
    }, []);
+
+   const onRefresh = React.useCallback(() => {
+      setRefreshing(true);
+      loadData(state, setState, () => setRefreshing(false));
+   }, [state]);
 
    function onPressStation(item) {
       setState((value) => ({
@@ -42,7 +39,7 @@ function BalancesView(props) {
    }
 
    return (
-      <ScrollView>
+      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
          <View>
             <AdsPaginator />
          </View>
@@ -68,6 +65,23 @@ function BalancesView(props) {
          )}
       </ScrollView>
    );
+}
+
+function loadData(state, setState, cb) {
+   const cancelControl = makeCancelable(
+      Fetch.get('/users/balances/'),
+      (res) => {
+         setState({ ...state, balances: res.body.balances, loading: false });
+         if(cb) cb();
+      },
+      (err) => {
+         if (err.isCanceled) return;
+         setState({ ...state, balances: [], loading: false });
+         if(cb) cb();
+      },
+   );
+
+   return cancelControl;
 }
 
 function GasStationList({ data, onItemPress, loading }) {
