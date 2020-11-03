@@ -60,7 +60,7 @@ class LoginView extends React.Component {
             '/users/signup/facebook/',
             { token: user_access_token },
             (res) => {},
-            (err) => {
+            () => {
                this.setState({ showModal: false });
                SimpleToast.show('Error al iniciar sesión.');
             },

@@ -35,7 +35,9 @@ export default class TransfersView extends React.Component {
       if (this.reqTransfers) this.reqTransfers.cancel();
    }
 
-   onAddTransfer = () => {};
+   onAddTransfer = () => {
+		this.props.navigation.navigate('createTransferView')
+	};
 
    render() {
       if (this.state.loading) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-function ChevronDown(props) {
+function ChevronDownIcon(props) {
    return (
       <Svg width={14} height={8} viewBox="0 0 14 8" fill="none" {...props}>
          <Path
@@ -15,4 +15,4 @@ function ChevronDown(props) {
    );
 }
 
-export default ChevronDown;
+export default ChevronDownIcon;

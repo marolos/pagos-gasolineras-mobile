@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import Ripple from 'react-native-material-ripple';
-import Animated, { Easing } from 'react-native-reanimated';
 import tailwind from 'tailwind-rn';
 import Fetch from '../../utils/Fetch';
 import { shadowStyle, typefaces } from '../../utils/styles';
-import ChevronDown from '../icons/ChevronDown';
+import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
 
 export default function VehicleIDSelect({ onChange }) {
    const [selected, setSelected] = React.useState(null);
@@ -22,7 +21,9 @@ export default function VehicleIDSelect({ onChange }) {
                setSelected(res.body.vehicles[0]);
             }
          })
-         .catch((err) => {err})
+         .catch((err) => {
+            err;
+         })
          .finally(() => setLoading(false));
    }, []);
 
@@ -46,7 +47,7 @@ export default function VehicleIDSelect({ onChange }) {
                   {selected ? selected.number : 'seleccionar'}
                </Text>
             )}
-            <AnimatedIcon change={open} />
+            <AnimatedArrowIcon change={open} />
          </Ripple>
          {open && !loading && (
             <View style={styles.list}>
@@ -67,29 +68,6 @@ export default function VehicleIDSelect({ onChange }) {
             </View>
          )}
       </View>
-   );
-}
-
-function AnimatedIcon({ change }) {
-   const [value, setValue] = React.useState(new Animated.Value(0));
-
-   React.useEffect(() => {
-      Animated.timing(value, {
-         toValue: change ? 1 : 0,
-         duration: 120,
-         easing: Easing.cubic,
-      }).start();
-   }, [change]);
-
-   const spin = value.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '-180deg'],
-   });
-
-   return (
-      <Animated.View style={{ transform: [{ rotate: spin }] }}>
-         <ChevronDown />
-      </Animated.View>
    );
 }
 

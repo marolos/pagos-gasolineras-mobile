@@ -11,19 +11,25 @@ function App({ user, dispatch }) {
    React.useEffect(() => {
       getGenericPassword()
          .then((credentials) => {
-				Fetch.setAuthToken(credentials.password);
-				Fetch.addInterceptor(unauthorizedInterceptor(dispatch));
+            Fetch.setAuthToken(credentials.password);
+            Fetch.addInterceptor(unauthorizedInterceptor(dispatch));
          })
          .catch((error) => {
-				Fetch.removeAuthToken();
-				Fetch.removeInterceptor('unauthorized')
+            Fetch.removeAuthToken();
+            Fetch.removeInterceptor('unauthorized');
             resetGenericPassword()
                .then(() => {})
-               .catch((err) => {err});
+               .catch((err) => {
+                  err;
+               });
          });
    }, []);
 
-   return user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />;
+   return (
+      <React.Fragment>
+         {user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />}
+      </React.Fragment>
+   );
 }
 
 const mapStateToProps = (state) => ({ user: state.user });

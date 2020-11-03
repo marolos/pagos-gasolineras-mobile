@@ -7,6 +7,7 @@ import { typefaces } from '../../utils/styles';
 import InfoIcon from '../icons/InfoIcon';
 import AddSubInput from '../shared/AddSubInput';
 import Button from '../shared/Button';
+import LoadingModal from '../shared/LoadingModal'
 import VehicleIDSelect from './VehicleIDSelect';
 import Modal from 'react-native-modal';
 import SimpleToast from 'react-native-simple-toast';
@@ -146,7 +147,7 @@ export default class BuyView extends React.Component {
                amount={this.state.amount}
                vehicle={this.state.vehicle}
             />
-            <BuyingModal show={this.state.showBuying} />
+            <LoadingModal show={this.state.showBuying} text='Realizando la compra.'/>
             <BuyDoneModal
                show={this.state.showBuyDone}
                onCancel={this.close}
@@ -203,27 +204,6 @@ const ConfirmBuyModal = memo(({ show, onConfirm, onCancel, gasStation, amount, v
                      style={{ width: 100 }}
                   />
                   <Button text={'confirmar'} onPress={onConfirm} />
-               </View>
-            </View>
-         </View>
-      </Modal>
-   );
-});
-
-const BuyingModal = memo(({ show }) => {
-   return (
-      <Modal
-         isVisible={show}
-         animationIn="fadeIn"
-         animationOut="fadeOut"
-         backdropTransitionOutTiming={0}
-         style={tailwind('flex items-center')}
-      >
-         <View style={tailwind('w-full bg-white rounded-lg')}>
-            <View style={tailwind('p-6 rounded-md')}>
-               <Text style={[tailwind('text-base'), typefaces.pm]}>Realizando la compra.</Text>
-               <View style={tailwind('h-32 flex flex-row justify-center')}>
-                  <ActivityIndicator color="black" size="large" animating />
                </View>
             </View>
          </View>

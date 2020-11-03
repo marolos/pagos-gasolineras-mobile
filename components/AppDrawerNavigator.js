@@ -23,6 +23,7 @@ import LogoutIcon from './icons/LogoutIcon';
 import LogoutView from './auth/LogoutView';
 import { getDeviceInfo, requestUserPermission } from './notification/firebaseConfig';
 import LoggingOutView from './auth/LoggingOutView';
+import { connect } from 'react-redux';
 
 const Drawer = createDrawerNavigator();
 
@@ -38,14 +39,18 @@ function AppDrawerNavigator(props) {
                .then((enabled) => {
                   if (enabled) getDeviceInfo();
                })
-               .catch((err) => {err});
+               .catch((err) => {
+                  err;
+               });
             setLoaded(true);
          })
          .catch((error) => {
             Fetch.removeAuthToken();
             resetGenericPassword()
                .then(() => {})
-               .catch((err) => {err});
+               .catch((err) => {
+                  err;
+               });
          });
    }, []);
 
@@ -81,7 +86,7 @@ const DrawerContent = memo(({ navigation }) => {
    return (
       <View>
          <ProfileInfo />
-         <Line />
+         <Line style={{ height: 1.5 }} />
          <View>
             <DrawerItem
                icon={<ProfileIcon fill="#333" />}
@@ -104,7 +109,7 @@ const DrawerContent = memo(({ navigation }) => {
                navigateTo="transfers"
             />
          </View>
-         <Line />
+         <Line style={{ height: 1.5 }} />
          <View>
             <DrawerItem
                icon={<CardIcon />}
@@ -114,7 +119,7 @@ const DrawerContent = memo(({ navigation }) => {
                navigateTo="paymentMethods"
             />
          </View>
-         <Line />
+         <Line style={{ height: 1.5 }} />
          <View>
             <DrawerItemText
                text="Sugerencias y reclamos"
@@ -129,16 +134,22 @@ const DrawerContent = memo(({ navigation }) => {
    );
 });
 
-function ProfileInfo(props) {
+const ProfileInfo = connect((state) => ({ user: state.user }))(({ user }) => {
    return (
       <View style={tailwind('p-6')}>
-         <Text style={styles.title}>Manuela Cañizares</Text>
-         <Text style={styles.info}>manuela@email.com</Text>
-         <Text style={styles.info}>Id: 0912213243</Text>
-         <Text style={styles.status}>activo</Text>
+         <Text style={styles.title}>
+            {user.data.first_name} {user.data.last_name}
+         </Text>
+         <Text style={styles.info}>{user.data.email}</Text>
+         <Text style={styles.info}>Id: {user.data.cedula}</Text>
+         {user.data.is_active ? (
+            <Text style={styles.status}>activo</Text>
+         ) : (
+            <Text style={styles.statusInactive}>inactivo</Text>
+         )}
       </View>
    );
-}
+});
 
 function DrawerItem({ icon, text, style = {}, navigation, navigateTo }) {
    return (
@@ -182,6 +193,7 @@ const styles = {
    title: [tailwind('text-lg'), typefaces.pm],
    info: [tailwind('text-sm text-gray-700'), typefaces.pm],
    status: [tailwind('text-sm text-green-600'), typefaces.pm],
+   statusInactive: [tailwind('text-sm text-red-500'), typefaces.pm],
    itemTextText: [tailwind('text-base text-gray-700'), typefaces.pr],
    modal: {
       bg: {},

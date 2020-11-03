@@ -27,12 +27,13 @@ export function authRequest(url, form, onSuccess, onError) {
                   onSuccess(body);
                })
                .catch((error) => {
+						onError()
                   console.error('Error saving the token', error.message);
                });
          })
          .catch((error) => {
             console.error(error);
-            onError(error);
+            onError();
             dispatch(logout());
          });
 }

@@ -7,7 +7,7 @@ import SubstractIcon from '../icons/SubstractIcon';
 import { ADD_VALUE_STEP, FLOAT_FIXED_2 } from '../../utils/constants';
 import Ripple from 'react-native-material-ripple';
 
-export default function AddSubInput({ onChange }) {
+export default function AddSubInput({ onChange, style={} }) {
    const [state, dispatch] = React.useReducer(reducer, initialState);
 
    React.useEffect(() => {
@@ -17,7 +17,7 @@ export default function AddSubInput({ onChange }) {
    }, [state.count]);
 
    return (
-      <View style={styles.view}>
+      <View style={[styles.view, style]}>
          <Ripple onPress={() => dispatch({ type: 'substract' })} rippleCentered>
             <View>
                <SubstractIcon width={45} height={45} />

@@ -7,6 +7,7 @@ import {
 import Label from '../shared/Label';
 import TransfersView from './TransfersView';
 import tailwind from 'tailwind-rn';
+import CreateTransferView from './CreateTransferView';
 
 const Stack = createStackNavigator();
 
@@ -15,7 +16,7 @@ export default function TransfersNavigator({ navigation }) {
       <Stack.Navigator
          screenOptions={{
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-				headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
+            headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
          }}
       >
          <Stack.Screen
@@ -26,8 +27,17 @@ export default function TransfersNavigator({ navigation }) {
                   <Label
                      text={'Transferencias de saldo'}
                      style={tailwind('text-base mt-1')}
-                     focused={true}
+                     focused
                   />
+               ),
+            })}
+         />
+         <Stack.Screen
+            name="createTransferView"
+            component={CreateTransferView}
+            options={() => ({
+               headerTitle: () => (
+                  <Label text={'Transferir saldo'} style={tailwind('text-base mt-1')} focused />
                ),
             })}
          />

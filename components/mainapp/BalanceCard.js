@@ -25,7 +25,7 @@ function BalanceCard({ total, company, gasStation, onPress }) {
 const styles = {
    ripple: tailwind('m-2'),
    view: tailwind('flex flex-row rounded-md py-2 px-3 border border-gray-300'),
-   image: { width: 48, height: 48, marginRight: 15 },
+   image: { width: 40, height: 40, marginRight: 15 },
    line: tailwind('bg-gray-300 w-full mt-2 mb-1'),
    name: [tailwind('text-black text-base'), typefaces.psb],
 	totalText: [tailwind('text-gray-700 text-xs mr-1'), typefaces.pm],

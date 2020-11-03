@@ -28,7 +28,7 @@ function BalancesView(props) {
    const onRefresh = React.useCallback(() => {
       setRefreshing(true);
       loadData(state, setState, () => setRefreshing(false));
-   }, [state]);
+   }, [state.balances]);
 
    const onPressStation = React.useCallback((item) => {
       setState((value) => ({

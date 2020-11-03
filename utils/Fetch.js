@@ -8,13 +8,18 @@ import { REST_API_URL } from './constants';
  * Author: @miguelquo
  */
 class FetchClass {
-   baseURL = REST_API_URL;
-   headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-   };
+   constructor() {
+      this.baseURL = REST_API_URL;
+      this.headers = {
+         'Content-Type': 'application/json',
+         Accept: 'application/json',
+      };
+      this.interceptors = [];
+   }
 
-   interceptors = [];
+   addNetEvent = () => {};
+
+   removeNetEvent = () => {};
 
    setAuthToken = (token) => {
       this.headers['Authorization'] = `Bearer ${token}`;
