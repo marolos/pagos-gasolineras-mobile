@@ -12,7 +12,7 @@ export default class UserSelector extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
-         open: false,
+         open: true,
          input: null,
          inputShow: null,
       };
@@ -46,10 +46,10 @@ export default class UserSelector extends React.Component {
                <EditIcon />
             </Ripple>
             <ReactNativeModal isVisible={this.state.open}>
-               <View style={tailwind('h-32 bg-white')}>
-                  <Text>Ingresar usuario</Text>
+               <View style={tailwind('bg-white p-6 rounded-lg')}>
+                  <Text style={[tailwind('mb-4 ml-2'), typefaces.pm]}>Ingresar usuario</Text>
                   <BasicInput placeholder="Identificador o correo" onChange={this.onChange} />
-                  <View style={tailwind('flex flex-row')}>
+                  <View style={tailwind('flex flex-row justify-between mt-6')}>
                      <Button text="cancelar" onPress={this.hide} primary={false} />
                      <Button text="aceptar" onPress={this.accept} />
                   </View>

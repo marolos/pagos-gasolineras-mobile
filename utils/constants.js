@@ -1,7 +1,12 @@
 import { Dimensions } from 'react-native';
 
-//export const REST_API_URL = 'https://fuelpay.azurewebsites.net';
-export const REST_API_URL = 'http://localhost:8000';
+export const REST_API_URL =
+   process.env.NODE_ENV === 'development'
+      ? 'http://localhost:8000'
+      : 'https://fuelpay.azurewebsites.net';
+
+console.log(REST_API_URL);
+
 export const ENCRYPTOR_KEY = 'MIIEowIBAAKA2LCcVqUelTOc6TwslUAm8vxnoCAQEt3hhlv8FjvjmZGqJ';
 
 export const theme = {

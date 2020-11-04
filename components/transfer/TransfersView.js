@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import { useSelector } from 'react-redux';
 import tailwind from 'tailwind-rn';
@@ -20,6 +20,7 @@ class TransfersView extends React.Component {
       this.state = {
          loading: false,
          transfers: [],
+         refreshing: false,
       };
    }
 
@@ -45,6 +46,20 @@ class TransfersView extends React.Component {
       this.props.navigation.push('createTransferView');
    };
 
+   onRefresh = () => {
+		this.setState({refreshing: true})
+      this.reqTransfers = makeCancelable(
+         Fetch.get('/topup/user/transfer/', { all: '1' }),
+         (res) => {
+            this.setState({ transfers: res.body.transfers, loading: false, refreshing: false });
+         },
+         (err) => {
+            this.setState({ loading: false, refreshing: false });
+            console.error(err);
+         },
+      );
+   };
+
    render() {
       if (this.state.loading) {
          return (
@@ -65,7 +80,11 @@ class TransfersView extends React.Component {
          );
       }
       return (
-         <ScrollView>
+         <ScrollView
+            refreshControl={
+               <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+            }
+         >
             <View style={tailwind('p-4 flex flex-row justify-end')}>
                <IconButton
                   text="Transferir saldo"
@@ -97,7 +116,7 @@ function TransfersList({ transfers }) {
    return (
       <View style={tailwind('w-full px-4 py-2')}>
          {transfers.map((transfer) => {
-            const isReceiver = user.id === transfer.receiver_user.id;
+            const isReceiver = parseInt(user.user_id) === parseInt(transfer.receiver_user.id);
             return (
                <View
                   key={transfer.id}
@@ -115,22 +134,30 @@ function TransfersList({ transfers }) {
                      </View>
                      <View>
                         {isReceiver ? (
-                           <Text style={[typefaces.pm]}>
-                              Recibido de: {transfer.sender_user.email}
-                           </Text>
+                           <React.Fragment>
+                              <Text style={[typefaces.pm]}>Recibido</Text>
+                              <Text style={[typefaces.pr]}>de: {transfer.sender_user.email}</Text>
+                           </React.Fragment>
                         ) : (
-                           <Text style={[typefaces.pm]}>
-                              Enviado a: {transfer.receiver_user.email}
-                           </Text>
+                           <React.Fragment>
+                              <Text style={[typefaces.pm]}>Enviado</Text>
+                              <Text style={[typefaces.pr]}>a: {transfer.receiver_user.email}</Text>
+                           </React.Fragment>
                         )}
-                        <Text>{formatISODate(transfer.created_at)}</Text>
+                        <Text style={tailwind('text-sm text-gray-700')}>
+                           {formatISODate(transfer.created_at)}
+                        </Text>
                      </View>
                   </View>
                   <View>
                      {isReceiver ? (
-                        <Text style={tailwind('text-green-600')}>+ ${transfer.amount}</Text>
+                        <Text style={[tailwind('text-green-600 mr-1'), typefaces.psb]}>
+                           + ${transfer.amount}
+                        </Text>
                      ) : (
-                        <Text style={tailwind('text-orange-600')}>- ${transfer.amount}</Text>
+                        <Text style={[tailwind('text-red-400 mr-1'), typefaces.psb]}>
+                           - ${transfer.amount}
+                        </Text>
                      )}
                   </View>
                </View>

@@ -4,8 +4,8 @@ import Svg, { Path } from 'react-native-svg';
 function ArrowUpRightIcon(props) {
    return (
       <Svg
-         width={24}
-         height={24}
+         width={20}
+         height={20}
          viewBox="0 0 24 24"
          stroke="#000"
          strokeWidth={1.5}

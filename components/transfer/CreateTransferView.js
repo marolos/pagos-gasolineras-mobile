@@ -3,6 +3,7 @@ import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import ReactNativeModal from 'react-native-modal';
 import SimpleToast from 'react-native-simple-toast';
+import { connect } from 'react-redux';
 import tailwind from 'tailwind-rn';
 import Fetch from '../../utils/Fetch';
 import { typefaces } from '../../utils/styles';
@@ -14,7 +15,7 @@ import LoadingModal from '../shared/LoadingModal';
 import BalanceSelector from './BalanceSelector';
 import UserSelector from './UserSelector';
 
-export default class CreateTransferView extends React.Component {
+class CreateTransferView extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
@@ -62,7 +63,12 @@ export default class CreateTransferView extends React.Component {
          SimpleToast.show('Saldo insuficiente');
          return;
       }
+      const { cedula, email } = this.props.user;
 
+      if (receiverIdentifier.trim() === cedula || receiverIdentifier.trim() === email) {
+         SimpleToast.show('No puedes transferirte a tí mismo');
+         return;
+      }
       this.setState({ showConfirm: true });
    };
 
@@ -82,10 +88,10 @@ export default class CreateTransferView extends React.Component {
             console.error(':: err ::', err);
             this.setState({ showLoading: false, showDone: false });
             SimpleToast.show('No se pudo completar la transacción');
-		});
-		// setTimeout(()=> {
-		// 	this.setState({ showLoading: false, showDone: true })
-		// }, 600)
+         });
+      // setTimeout(()=> {
+      // 	this.setState({ showLoading: false, showDone: true })
+      // }, 600)
    };
 
    close = () => {
@@ -246,4 +252,4 @@ const styles = {
    line: { height: 1.5 },
 };
 
-//, { top: 300, right: FULL_WIDTH / 4 }]
+export default connect((state) => ({ user: state.user.data }))(CreateTransferView);
