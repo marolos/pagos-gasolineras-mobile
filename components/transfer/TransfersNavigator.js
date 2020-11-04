@@ -11,18 +11,18 @@ import CreateTransferView from './CreateTransferView';
 
 const Stack = createStackNavigator();
 
-export default function TransfersNavigator({ navigation }) {
+export default function TransfersNavigator(props) {
    return (
       <Stack.Navigator
          screenOptions={{
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
          }}
       >
          <Stack.Screen
             name="transfersView"
             component={TransfersView}
-            options={() => ({
+            options={({ navigation }) => ({
+               headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
                headerTitle: () => (
                   <Label
                      text={'Transferencias de saldo'}

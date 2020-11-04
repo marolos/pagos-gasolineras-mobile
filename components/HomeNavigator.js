@@ -85,7 +85,7 @@ function HomeNavigator({ dispatch }) {
             options={({ navigation }) => ({
                headerLeft: () => (
                   <HeaderBackButton
-                     onPress={() => navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] })}
+                     onPress={() => navigation.reset({ index: 0, routes: [{ name: 'home' }] })}
                   />
                ),
                headerTitle: () => (
@@ -100,7 +100,7 @@ function HomeNavigator({ dispatch }) {
             options={({ navigation }) => ({
                headerLeft: () => (
                   <HeaderBackButton
-                     onPress={() => navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] })}
+                     onPress={() => navigation.reset({ index: 0, routes: [{ name: 'home' }] })}
                   />
                ),
                headerTitle: () => <Label text={'Código de compra'} style={styles.title} focused />,

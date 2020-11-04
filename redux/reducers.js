@@ -16,9 +16,10 @@ const activeTab = (state = TabOptions.GAS, action) => {
    }
 };
 
+
 const rootReducers = combineReducers({
    ...authReducers,
-   activeTab,
+	activeTab,
 });
 
 export default rootReducers;

@@ -1,8 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import ReactNativeModal from 'react-native-modal';
 import SimpleToast from 'react-native-simple-toast';
 import tailwind from 'tailwind-rn';
+import Fetch from '../../utils/Fetch';
 import { typefaces } from '../../utils/styles';
 import InfoIcon from '../icons/InfoIcon';
 import AddSubInput from '../shared/AddSubInput';
@@ -18,7 +20,7 @@ export default class CreateTransferView extends React.Component {
       this.state = {
          showReceiver: false,
          showGasStation: false,
-         userToSend: null,
+         receiverIdentifier: null,
          gasStationBalance: null,
          showConfirm: false,
          sending: false,
@@ -34,7 +36,7 @@ export default class CreateTransferView extends React.Component {
    };
 
    selectUser = (input) => {
-      this.setState({ userToSend: input });
+      this.setState({ receiverIdentifier: input });
    };
 
    selectBalance = (balance) => {
@@ -42,8 +44,8 @@ export default class CreateTransferView extends React.Component {
    };
 
    trySend = () => {
-      const { userToSend, gasStationBalance, amount } = this.state;
-      if (!userToSend) {
+      const { receiverIdentifier, gasStationBalance, amount } = this.state;
+      if (!receiverIdentifier) {
          SimpleToast.show('Seleccionar un usuario');
          return;
       }
@@ -66,13 +68,30 @@ export default class CreateTransferView extends React.Component {
 
    sendTransfer = () => {
       this.setState({ showConfirm: false, showLoading: true });
-      setTimeout(() => this.setState({ showLoading: false, showDone: true }), 1000);
+      const { gasStationBalance, amount, receiverIdentifier } = this.state;
+      Fetch.post('/topup/user/transfer/', {
+         receiver: receiverIdentifier,
+         amount,
+         balance: gasStationBalance,
+      })
+         .then((res) => {
+            console.log(':: res ::', res);
+            this.setState({ showLoading: false, showDone: true });
+         })
+         .catch((err) => {
+            console.error(':: err ::', err);
+            this.setState({ showLoading: false, showDone: false });
+            SimpleToast.show('No se pudo completar la transacción');
+		});
+		// setTimeout(()=> {
+		// 	this.setState({ showLoading: false, showDone: true })
+		// }, 600)
    };
 
    close = () => {
       this.setState({ showDone: false }, () => {
-			this.props.navigation.goBack()
-		});
+         this.props.navigation.reset({ index: 0, key: null, routes: [{ name: 'home' }] });
+      });
    };
 
    render() {
@@ -111,7 +130,7 @@ export default class CreateTransferView extends React.Component {
                onCancel={() => this.setState({ showConfirm: false })}
                gasStation={balance ? balance : {}}
                amount={this.state.amount}
-               userToSend={this.state.userToSend}
+               userToSend={this.state.receiverIdentifier}
             />
             <LoadingModal show={this.state.showLoading} text="Transfiriendo saldo." />
             <TransferDoneModal show={this.state.showDone} onClose={this.close} />
@@ -173,7 +192,8 @@ const ConfirmTransferModal = memo(
    },
 );
 
-const TransferDoneModal = memo(({ show, onClose }) => {
+const TransferDoneModal = ({ show, onClose }) => {
+   const navigation = useNavigation();
    return (
       <ReactNativeModal
          isVisible={show}
@@ -190,14 +210,14 @@ const TransferDoneModal = memo(({ show, onClose }) => {
                      Transferencia completa
                   </Text>
                </View>
-               <View style={tailwind('flex flex-row justify-evenly mt-4')}>
+               <View style={tailwind('flex flex-row justify-evenly mt-8')}>
                   <Button text={'Aceptar'} onPress={onClose} style={{ width: 100 }} />
                </View>
             </View>
          </View>
       </ReactNativeModal>
    );
-});
+};
 
 const styles = {
    user: {
