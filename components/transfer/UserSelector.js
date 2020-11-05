@@ -12,7 +12,7 @@ export default class UserSelector extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
-         open: true,
+         open: false,
          input: null,
          inputShow: null,
       };
