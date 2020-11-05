@@ -6,6 +6,8 @@ import { getGenericPassword, resetGenericPassword } from 'react-native-keychain'
 import AppDrawerNavigator from './AppDrawerNavigator';
 import Fetch from './utils/Fetch';
 import { unauthorizedInterceptor } from './utils/interceptors';
+import { StyleSheet } from 'react-native';
+
 
 function App({ user, dispatch }) {
    React.useEffect(() => {

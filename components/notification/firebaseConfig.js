@@ -32,16 +32,25 @@ export async function requestUserPermission() {
 
 export async function getDeviceInfo() {
    const os = Platform.OS;
-   const token = await getMessaging().getToken();
-   const device_info = { os, token };
+   let token = null;
+   try {
+      token = await getMessaging().getToken();
+   } catch (err) {
+      console.error(err);
+      return;
+   }
+   if (!token) return;
+	const device_info = { os, token };
+	
    console.log(':: Device Info ::', { device_info });
-
    Fetch.post('/notification/user/token/', { device_info })
       .then((res) => {})
       .catch((err) => {
-			console.log('again:::::')
+         console.log('again:::::');
          Fetch.post('/notification/user/token/', { device_info })
             .then((res) => {})
-            .catch((_err) => {_err});
+            .catch((_err) => {
+               _err;
+            });
       });
 }
