@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { connect } from 'react-redux';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import HamburguerIcon from '../icons/HamburguerIcon';
 import Ripple from 'react-native-material-ripple';
 

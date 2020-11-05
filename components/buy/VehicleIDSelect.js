@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import tailwind from 'tailwind-rn';
-import Fetch from '../../utils/Fetch';
-import { shadowStyle, typefaces } from '../../utils/styles';
+import Fetch from '../utils/Fetch';
+import { shadowStyle, typefaces } from '../utils/styles';
 import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
 
 export default function VehicleIDSelect({ onChange }) {

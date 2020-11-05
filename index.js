@@ -4,7 +4,8 @@ import App from './components/App';
 import { name as appName } from './app.json';
 import { Provider as ReduxProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { getStore, getPersistor } from './redux/store';
+import { getPersistor, getStore } from './components/redux/store';
+
 
 const Loading = () => (
    <View>

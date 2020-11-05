@@ -3,9 +3,9 @@ import { ActivityIndicator, View, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Ripple from 'react-native-material-ripple';
 import tailwind from 'tailwind-rn';
-import Fetch from '../../utils/Fetch';
-import { shadowStyle, typefaces } from '../../utils/styles';
-import { makeCancelable } from '../../utils/utils';
+import Fetch from '../utils/Fetch';
+import { shadowStyle, typefaces } from '../utils/styles';
+import { makeCancelable } from '../utils/utils';
 import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
 
 export default function BalanceSelector({ onChange }) {

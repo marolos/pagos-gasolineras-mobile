@@ -4,8 +4,8 @@ import AuthFlowNavigator from './AuthFlowNavigator';
 import { connect } from 'react-redux';
 import { getGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import AppDrawerNavigator from './AppDrawerNavigator';
-import Fetch from '../utils/Fetch';
-import { unauthorizedInterceptor } from '../utils/interceptors';
+import Fetch from './utils/Fetch';
+import { unauthorizedInterceptor } from './utils/interceptors';
 
 function App({ user, dispatch }) {
    React.useEffect(() => {

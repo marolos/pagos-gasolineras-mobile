@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import CardItem from './CardItem';
 import tailwind from 'tailwind-rn';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import Line from '../shared/Line';
 import ArrowRightIcon from '../icons/ArrowRightIcon';
 import Ripple from 'react-native-material-ripple';
 import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 import { connect } from 'react-redux';
-import Fetch from '../../utils/Fetch';
+import Fetch from '../utils/Fetch';
 
 const initialState = {
    cards: [],

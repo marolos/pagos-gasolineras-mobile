@@ -4,8 +4,8 @@ import BasicInput from '../shared/BasicInput';
 import Button from '../shared/Button';
 import Modal from 'react-native-modal';
 import tailwind from 'tailwind-rn';
-import { typefaces } from '../../utils/styles';
-import { randomInt } from '../../utils/utils';
+import { typefaces } from '../utils/styles';
+import { randomInt } from '../utils/utils';
 
 export default function AddVehicleIdItemModal({ onAdd, onCancel, visible, close }) {
    const [item, setItem] = React.useState({

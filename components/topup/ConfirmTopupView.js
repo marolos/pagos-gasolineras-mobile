@@ -2,15 +2,15 @@ import React from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Resume } from './TopupDataView';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import tailwind from 'tailwind-rn';
 import InfoIcon from '../icons/InfoIcon';
 import Button from '../shared/Button';
 import Modal from 'react-native-modal';
 import CheckRoundedIcon from '../icons/CheckRoundedIcon';
-import { getOrderByAmount } from '../../utils/utils';
+import { getOrderByAmount } from '../utils/utils';
 import SimpleToast from 'react-native-simple-toast';
-import Fetch from '../../utils/Fetch';
+import Fetch from '../utils/Fetch';
 
 class ConfirmTopupView extends React.Component {
    constructor(props) {

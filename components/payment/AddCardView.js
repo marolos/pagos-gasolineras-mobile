@@ -3,14 +3,14 @@ import { View, TextInput, Text, ScrollView } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import tailwind from 'tailwind-rn';
 import NextIcon from '../icons/NextIcon';
-import { typefaces } from '../../utils/styles';
-import { formatExpiryDate } from '../../utils/utils';
+import { typefaces } from '../utils/styles';
+import { formatExpiryDate } from '../utils/utils';
 import CardNumberInput from '../shared/CardNumberInput';
 import CheckBox from '../shared/CheckBox';
 import { connect } from 'react-redux';
-import { FULL_HIGHT } from '../../utils/constants';
+import { FULL_HIGHT } from '../utils/constants';
 import SimpleToast from 'react-native-simple-toast';
-import Fetch from '../../utils/Fetch';
+import Fetch from '../utils/Fetch';
 
 const initialState = {
    cardNumber: '',

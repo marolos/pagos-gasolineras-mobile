@@ -9,16 +9,16 @@ import {
 } from 'react-native';
 import InfoIcon from '../icons/InfoIcon';
 import tailwind from 'tailwind-rn';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import BasicInput from '../shared/BasicInput';
 import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 import VehiclesIdInput from './VehiclesIdInput';
-import { FULL_WIDTH, FULL_HIGHT, CEDULA_REGEX, CHAR_REGEX } from '../../utils/constants';
-import { makeCancelable, equalForm, validForm } from '../../utils/utils';
+import { FULL_WIDTH, FULL_HIGHT, CEDULA_REGEX, CHAR_REGEX } from '../utils/constants';
+import { makeCancelable, equalForm, validForm } from '../utils/utils';
 import SimpleToast from 'react-native-simple-toast';
 import CitySelect from './CitySelect';
-import Fetch from '../../utils/Fetch';
+import Fetch from '../utils/Fetch';
 
 class BillingDataView extends React.Component {
    constructor(props) {

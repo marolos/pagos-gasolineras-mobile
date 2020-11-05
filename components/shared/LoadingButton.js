@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import tailwind from 'tailwind-rn';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import Ripple from 'react-native-material-ripple';
 
 export default function LoadingButton({ text, onPress, icon, loading, iconPos, style, textStyle = {} }) {

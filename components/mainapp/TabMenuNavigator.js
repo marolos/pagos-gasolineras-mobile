@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 import BalancesView from './BalancesView';
 import SearchView from './SearchView';
 import NotificationsView from './NotificationsView';
-import { setActiveTab } from '../../redux/actions';
-import { TabOptions } from '../../redux/reducers';
+import { setActiveTab } from '../redux/actions';
+import { TabOptions } from '../redux/reducers';
 import tailwind from 'tailwind-rn';
 import DispenserIcon from '../icons/DispenserIcon';
 import SearchIcon from '../icons/SearchIcon';
 import NotificationIcon from '../icons/NotificationIcon';
 import Ripple from 'react-native-material-ripple';
-import { typefaces, shadowStyle } from '../../utils/styles';
+import { typefaces, shadowStyle } from '../utils/styles';
 
 const Tab = createBottomTabNavigator();
 

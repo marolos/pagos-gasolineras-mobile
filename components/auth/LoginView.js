@@ -4,14 +4,14 @@ import { View, Text, TextInput, ActivityIndicator, Keyboard } from 'react-native
 import Modal from 'react-native-modal';
 import LoadingButton from '../shared/LoadingButton';
 import tailwind from 'tailwind-rn';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import TextButton from '../shared/TextButton';
 import UserLoginIcon from '../icons/UserLoginIcon';
 import PasswordLoginIcon from '../icons/PasswordLoginIcon';
 import FacebookButton from '../shared/FacebookButton';
-import { authRequest } from '../../redux/auth/actions';
+import { authRequest } from '../redux/auth/actions';
 import SimpleToast from 'react-native-simple-toast';
-import { EMAIL_REGEX } from '../../utils/constants';
+import { EMAIL_REGEX } from '../utils/constants';
 
 class LoginView extends React.Component {
    state = {

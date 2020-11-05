@@ -1,5 +1,5 @@
 import React from 'react';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import tailwind from 'tailwind-rn';
 import { Text } from 'react-native';
 

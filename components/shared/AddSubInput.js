@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import tailwind from 'tailwind-rn';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import AddIcon from '../icons/AddIcon';
 import SubstractIcon from '../icons/SubstractIcon';
-import { ADD_VALUE_STEP, FLOAT_FIXED_2 } from '../../utils/constants';
+import { ADD_VALUE_STEP, FLOAT_FIXED_2 } from '../utils/constants';
 import Ripple from 'react-native-material-ripple';
 
 export default function AddSubInput({ onChange, style={} }) {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, TextInput, Image } from 'react-native';
 import tailwind from 'tailwind-rn';
-import { createStringChunks } from '../../utils/utils';
-import { VISA_REGEX, MASTERCARD_REGEX, AMEX_REGEX } from '../../utils/constants';
+import { createStringChunks } from '../utils/utils';
+import { VISA_REGEX, MASTERCARD_REGEX, AMEX_REGEX } from '../utils/constants';
 import { getCardLogo } from '../payment/CardItem';
 import CardColorIcon from '../icons/CardColorIcon';
 

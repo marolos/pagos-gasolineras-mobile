@@ -1,6 +1,6 @@
 import { Alert, Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
-import Fetch from '../../utils/Fetch';
+import Fetch from '../utils/Fetch';
 
 let MessagingApp = null;
 

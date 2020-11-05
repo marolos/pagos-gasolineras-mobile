@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import tailwind from 'tailwind-rn';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import Modal from 'react-native-modal';
 
 const LoadingModal = memo(({ show, text }) => {

@@ -2,8 +2,8 @@ import React, { memo } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import tailwind from 'tailwind-rn';
-import { FULL_HIGHT, FULL_WIDTH } from '../../utils/constants';
-import { typefaces } from '../../utils/styles';
+import { FULL_HIGHT, FULL_WIDTH } from '../utils/constants';
+import { typefaces } from '../utils/styles';
 import InfoIcon from '../icons/InfoIcon';
 import AddSubInput from '../shared/AddSubInput';
 import Button from '../shared/Button';
@@ -13,7 +13,7 @@ import Modal from 'react-native-modal';
 import SimpleToast from 'react-native-simple-toast';
 import QRIcon from '../icons/QRIcon';
 import Ripple from 'react-native-material-ripple';
-import Fetch from '../../utils/Fetch';
+import Fetch from '../utils/Fetch';
 
 export default class BuyView extends React.Component {
    constructor(props) {

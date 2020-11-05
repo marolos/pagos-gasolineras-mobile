@@ -3,9 +3,9 @@ import { View, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Swiper from 'react-native-swiper';
 import tailwind from 'tailwind-rn';
-import { FULL_WIDTH, ADS_MAX_HEIGHT } from '../../utils/constants';
-import { fakeFetch, itemsMocks } from '../../utils/mocks';
-import { makeCancelable } from '../../utils/utils';
+import { FULL_WIDTH, ADS_MAX_HEIGHT } from '../utils/constants';
+import { fakeFetch, itemsMocks } from '../utils/mocks';
+import { makeCancelable } from '../utils/utils';
 
 function AdsPaginator(props) {
    const [state, setState] = React.useState({

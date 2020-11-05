@@ -8,7 +8,7 @@ import amexLogo from '../../assets/images/amex.png';
 import dinersLogo from '../../assets/images/diners.png';
 import discoverLogo from '../../assets/images/discover.png';
 import maestroLogo from '../../assets/images/maestro.png';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import RadioIcon from '../icons/RadioIcon';
 
 export default function CardItem({ holderName, type, onPress, selected }) {

@@ -1,9 +1,9 @@
 import React from 'react';
-import { createChunks } from '../../utils/utils';
+import { createChunks } from '../utils/utils';
 import { View, ActivityIndicator, Image, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import emptyImage from '../../assets/background/empty.png';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 
 export const DummyGrid = ({ ncol, GridItemComponent, data, onItemPress, loading }) => {
    const chunks = createChunks(Array.from(data.keys()), ncol);

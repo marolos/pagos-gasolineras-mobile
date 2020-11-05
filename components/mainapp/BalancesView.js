@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import AdsPaginator from './AdsPaginator';
 import tailwind from 'tailwind-rn';
 import BalanceCard from './BalanceCard';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import CollapseModalOptions from './CollapseModalOptions';
 import Line from '../shared/Line';
-import { makeCancelable } from '../../utils/utils';
-import Fetch from '../../utils/Fetch';
+import { makeCancelable } from '../utils/utils';
+import Fetch from '../utils/Fetch';
 import emptyImage from '../../assets/background/empty.png';
 
 function BalancesView(props) {

@@ -20,11 +20,11 @@ export const fakeFetch = (data, timing) =>
    new Promise((resolve) => setTimeout(resolve, timing || 2000, data));
 
 export const logos = [
-   require('../assets/images/pdv.png'),
-   require('../assets/images/shell.png'),
-   require('../assets/images/terpel.png'),
-   require('../assets/images/primax.png'),
-   require('../assets/images/repsol.png'),
+   require('../../assets/images/pdv.png'),
+   require('../../assets/images/shell.png'),
+   require('../../assets/images/terpel.png'),
+   require('../../assets/images/primax.png'),
+   require('../../assets/images/repsol.png'),
 ];
 
 export const getLogoByPath = (path) => {

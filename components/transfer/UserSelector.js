@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import ReactNativeModal from 'react-native-modal';
 import tailwind from 'tailwind-rn';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import EditIcon from '../icons/EditIcon';
 import BasicInput from '../shared/BasicInput';
 import Button from '../shared/Button';

@@ -2,9 +2,9 @@ import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { useDispatch } from 'react-redux';
 import tailwind from 'tailwind-rn';
-import { logoutAction } from '../../redux/auth/actions';
-import { FULL_HIGHT, FULL_WIDTH } from '../../utils/constants';
-import Fetch from '../../utils/Fetch';
+import { logoutAction } from '../redux/auth/actions';
+import { FULL_HIGHT, FULL_WIDTH } from '../utils/constants';
+import Fetch from '../utils/Fetch';
 import { getMessaging } from '../notification/firebaseConfig';
 
 export default function LoggingOutView({ navigation }) {

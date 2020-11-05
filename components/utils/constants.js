@@ -5,7 +5,6 @@ export const REST_API_URL =
       ? 'http://localhost:8000'
       : 'https://fuelpay.azurewebsites.net';
 
-console.log(REST_API_URL);
 
 export const ENCRYPTOR_KEY = 'MIIEowIBAAKA2LCcVqUelTOc6TwslUAm8vxnoCAQEt3hhlv8FjvjmZGqJ';
 

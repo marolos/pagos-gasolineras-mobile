@@ -1,9 +1,9 @@
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
-import { cities } from '../../utils/mocks';
+import { cities } from '../utils/mocks';
 import { View, Text, TextInput } from 'react-native';
 import tailwind from 'tailwind-rn';
-import { typefaces, shadowStyle } from '../../utils/styles';
+import { typefaces, shadowStyle } from '../utils/styles';
 
 export default function CitySelect({ onChange, defaultValue, editable = true }) {
    const [text, setText] = React.useState('');

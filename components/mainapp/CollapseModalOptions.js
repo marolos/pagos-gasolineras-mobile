@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import Modal from 'react-native-modal';
 import ArrowDownIcon from '../icons/ArrowDownIcon';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import Button from '../shared/Button';
 import { useNavigation } from '@react-navigation/native';
 import Ripple from 'react-native-material-ripple';

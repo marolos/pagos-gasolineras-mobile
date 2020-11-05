@@ -5,14 +5,14 @@ import NextIcon from '../icons/NextIcon';
 import tailwind from 'tailwind-rn';
 import Line from '../shared/Line';
 import ArrowRightIcon from '../icons/ArrowRightIcon';
-import { typefaces } from '../../utils/styles';
+import { typefaces } from '../utils/styles';
 import AddSubInput from '../shared/AddSubInput';
-import { FULL_HIGHT, IVA_RATE, COMMISION } from '../../utils/constants';
+import { FULL_HIGHT, IVA_RATE, COMMISION } from '../utils/constants';
 import Ripple from 'react-native-material-ripple';
-import { makeCancelable } from '../../utils/utils';
+import { makeCancelable } from '../utils/utils';
 import { connect } from 'react-redux';
 import SimpleToast from 'react-native-simple-toast';
-import Fetch from '../../utils/Fetch';
+import Fetch from '../utils/Fetch';
 
 function TopupDataView({ route, navigation, user }) {
    const [amount, setAmount] = React.useState(0);
