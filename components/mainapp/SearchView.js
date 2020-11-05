@@ -8,7 +8,8 @@ function SearchView(props) {
 
    React.useEffect(() => {
       setTimeout(() => setLoaded(true), 10);
-   }, []);
+	}, []);
+	
    return (
       <View>
          <Text>search</Text>
