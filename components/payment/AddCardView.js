@@ -112,7 +112,7 @@ function AddCardView({ navigation, route, user }) {
                   icon={<NextIcon />}
                   iconPos={'right'}
                   text="continuar"
-                  style={styles.loadingButton}
+                  style={styles.nextButton}
                   onPress={next}
                   loading={state.loading}
                />

@@ -227,8 +227,8 @@ const TransferDoneModal = ({ show, onClose }) => {
 
 const styles = {
    user: {
-      view: tailwind('flex flex-row items-center justify-between p-6'),
-      text: [tailwind('text-base'), typefaces.pm],
+      view: tailwind('p-6'),
+      text: [tailwind('text-base mb-1'), typefaces.pm],
    },
    balance: {
       view: tailwind('flex flex-row items-center justify-between p-6'),

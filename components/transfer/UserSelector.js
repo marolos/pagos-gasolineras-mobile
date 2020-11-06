@@ -3,10 +3,13 @@ import { View, Text } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import ReactNativeModal from 'react-native-modal';
 import tailwind from 'tailwind-rn';
-import { typefaces } from '../utils/styles';
+import { shadowStyle, typefaces } from '../utils/styles';
 import EditIcon from '../icons/EditIcon';
 import BasicInput from '../shared/BasicInput';
 import Button from '../shared/Button';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import Fetch from '../utils/Fetch';
+import Line from '../shared/Line';
 
 export default class UserSelector extends React.Component {
    constructor(props) {
@@ -15,7 +18,13 @@ export default class UserSelector extends React.Component {
          open: false,
          input: null,
          inputShow: null,
+         showResults: false,
+         results: [],
       };
+      this.searchDebounced = AwesomeDebouncePromise(
+         (text) => Fetch.get('/users/search/?text=' + text),
+         300,
+      );
    }
 
    press = () => {
@@ -34,22 +43,64 @@ export default class UserSelector extends React.Component {
    };
 
    onChange = (input) => {
-      this.setState(() => ({ input }));
+      this.setState(() => ({ input, showResults: !!input }));
+      if (!input) return;
+		if (input.length < 4) return;
+
+      this.searchDebounced(input)
+         .then((res) => {
+            this.setState({ results: res.body.results });
+         })
+         .catch((err) => {
+            err;
+            this.setState({ showResults: false });
+         });
+   };
+
+   onUserPress = (user) => {
+      this.setState(() => ({ input: user.email, showResults: false }));
    };
 
    render() {
-      const { inputShow } = this.state;
+      const { inputShow, input, showResults, open, results } = this.state;
       return (
          <View>
             <Ripple onPress={this.press} style={styles.ripple}>
-               <Text style={[typefaces.pr]}>{inputShow ? inputShow : 'Ingresar'}</Text>
+               <Text style={styles.rippleText}>{inputShow ? inputShow : 'Ingresar'}</Text>
                <EditIcon />
             </Ripple>
-            <ReactNativeModal isVisible={this.state.open}>
-               <View style={tailwind('bg-white p-6 rounded-lg')}>
-                  <Text style={[tailwind('mb-4 ml-2'), typefaces.pm]}>Ingresar usuario</Text>
-                  <BasicInput placeholder="Identificador o correo" onChange={this.onChange} />
-                  <View style={tailwind('flex flex-row justify-between mt-6')}>
+            <ReactNativeModal isVisible={open}>
+               <View style={styles.modal.view}>
+                  <View style={tailwind('flex flex-row mb-4')}>
+                     <EditIcon />
+                     <Text style={styles.modal.text}>Ingresar usuario</Text>
+                  </View>
+                  <View>
+                     <BasicInput
+                        placeholder="buscar por nombres o correo"
+                        onChange={this.onChange}
+                        defaultValue={input}
+                     />
+                     {showResults && results.length > 0 && (
+                        <View style={styles.list}>
+                           {results.map((user, index) => (
+                              <React.Fragment key={user.id}>
+                                 <Ripple
+                                    style={styles.itemRipple}
+                                    onPress={() => this.onUserPress(user)}
+                                 >
+                                    <Text>
+                                       {user.first_name} {user.last_name}
+                                    </Text>
+                                    <Text style={tailwind('text-gray-600')}>{user.email}</Text>
+                                 </Ripple>
+                                 {index !== results.length - 1 && <Line />}
+                              </React.Fragment>
+                           ))}
+                        </View>
+                     )}
+                  </View>
+                  <View style={styles.button.view}>
                      <Button text="cancelar" onPress={this.hide} primary={false} />
                      <Button text="aceptar" onPress={this.accept} />
                   </View>
@@ -60,6 +111,8 @@ export default class UserSelector extends React.Component {
    }
 }
 
+const ll = ['zxcv', 'asdf', 'qwer', 'trew'];
+
 const styles = {
    ripple: [
       tailwind(
@@ -67,4 +120,18 @@ const styles = {
       ),
       { minWidth: 130 },
    ],
+   rippleText: [tailwind('mr-2'), typefaces.pr],
+   modal: {
+      view: tailwind('bg-white p-6 rounded-lg'),
+      text: [tailwind('ml-2'), typefaces.pm],
+   },
+   button: {
+      view: tailwind('flex flex-row justify-between mt-12'),
+   },
+   list: [
+      tailwind('absolute bg-white w-64 border rounded-sm border-white'),
+      { position: 'absolute', top: 55, left: 10 },
+      shadowStyle,
+   ],
+   itemRipple: tailwind('px-2 py-1'),
 };

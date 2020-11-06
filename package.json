@@ -20,6 +20,7 @@
     "@react-navigation/drawer": "^5.8.5",
     "@react-navigation/native": "^5.7.0",
     "@react-navigation/stack": "^5.7.0",
+    "awesome-debounce-promise": "^2.1.0",
     "date-fns": "^2.16.1",
     "qrcode-generator": "^1.4.4",
     "react": "16.13.1",
