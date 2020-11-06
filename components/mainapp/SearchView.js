@@ -7,7 +7,7 @@ function SearchView(props) {
    const [loaded, setLoaded] = React.useState(false);
 
    React.useEffect(() => {
-      setTimeout(() => setLoaded(true), 10);
+      setTimeout(() => setLoaded(true), 100);
 	}, []);
 	
    return (

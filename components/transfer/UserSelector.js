@@ -45,7 +45,7 @@ export default class UserSelector extends React.Component {
    onChange = (input) => {
       this.setState(() => ({ input, showResults: !!input }));
       if (!input) return;
-		if (input.length < 4) return;
+      if (input.length < 4) return;
 
       this.searchDebounced(input)
          .then((res) => {
@@ -84,8 +84,9 @@ export default class UserSelector extends React.Component {
                      {showResults && results.length > 0 && (
                         <View style={styles.list}>
                            {results.map((user, index) => (
-                              <React.Fragment key={user.id}>
+                              <View key={user.id}>
                                  <Ripple
+                                    //key={user.id}
                                     style={styles.itemRipple}
                                     onPress={() => this.onUserPress(user)}
                                  >
@@ -95,7 +96,7 @@ export default class UserSelector extends React.Component {
                                     <Text style={tailwind('text-gray-600')}>{user.email}</Text>
                                  </Ripple>
                                  {index !== results.length - 1 && <Line />}
-                              </React.Fragment>
+                              </View>
                            ))}
                         </View>
                      )}
@@ -110,8 +111,6 @@ export default class UserSelector extends React.Component {
       );
    }
 }
-
-const ll = ['zxcv', 'asdf', 'qwer', 'trew'];
 
 const styles = {
    ripple: [
@@ -130,7 +129,7 @@ const styles = {
    },
    list: [
       tailwind('absolute bg-white w-64 border rounded-sm border-white'),
-      { position: 'absolute', top: 55, left: 10 },
+      { position: 'absolute', top: 55, left: 10, zIndex: 12 },
       shadowStyle,
    ],
    itemRipple: tailwind('px-2 py-1'),
