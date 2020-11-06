@@ -10,6 +10,7 @@ import Button from '../shared/Button';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import Fetch from '../utils/Fetch';
 import Line from '../shared/Line';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default class UserSelector extends React.Component {
    constructor(props) {
@@ -83,21 +84,22 @@ export default class UserSelector extends React.Component {
                      />
                      {showResults && results.length > 0 && (
                         <View style={styles.list}>
-                           {results.map((user, index) => (
-                              <View key={user.id}>
-                                 <Ripple
-                                    //key={user.id}
-                                    style={styles.itemRipple}
-                                    onPress={() => this.onUserPress(user)}
-                                 >
-                                    <Text>
-                                       {user.first_name} {user.last_name}
-                                    </Text>
-                                    <Text style={tailwind('text-gray-600')}>{user.email}</Text>
-                                 </Ripple>
-                                 {index !== results.length - 1 && <Line />}
-                              </View>
-                           ))}
+                           <ScrollView keyboardShouldPersistTaps='handled' style={{maxHeight: 160}}>
+                              {results.map((user, index) => (
+                                 <View key={user.id}>
+                                    <Ripple
+                                       style={styles.itemRipple}
+                                       onPress={() => this.onUserPress(user)}
+                                    >
+                                       <Text>
+                                          {user.first_name} {user.last_name}
+                                       </Text>
+                                       <Text style={tailwind('text-gray-600')}>{user.email}</Text>
+                                    </Ripple>
+                                    {index !== results.length - 1 && <Line />}
+                                 </View>
+                              ))}
+                           </ScrollView>
                         </View>
                      )}
                   </View>
@@ -132,5 +134,6 @@ const styles = {
       { position: 'absolute', top: 55, left: 10, zIndex: 12 },
       shadowStyle,
    ],
-   itemRipple: tailwind('px-2 py-1'),
+	itemRipple: tailwind('px-2 py-1'),
+	scroll: {}
 };
