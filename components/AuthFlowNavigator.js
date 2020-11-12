@@ -14,7 +14,6 @@ function AuthFlowNavigator(props) {
    }, []);
    return (
       <NavigationContainer>
-         <StatusBar hidden={false} backgroundColor="black" />
          <Stack.Navigator
             screenOptions={{ cardStyle: { backgroundColor: 'white' }, headerShown: false }}
          >

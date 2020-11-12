@@ -6,8 +6,10 @@ import { getGenericPassword, resetGenericPassword } from 'react-native-keychain'
 import AppDrawerNavigator from './AppDrawerNavigator';
 import Fetch from './utils/Fetch';
 import { unauthorizedInterceptor } from './utils/interceptors';
-import { StyleSheet } from 'react-native';
+import { enableScreens } from 'react-native-screens';
+import { StatusBar } from 'react-native';
 
+enableScreens();
 
 function App({ user, dispatch }) {
    React.useEffect(() => {
@@ -29,6 +31,7 @@ function App({ user, dispatch }) {
 
    return (
       <React.Fragment>
+         <StatusBar hidden={false} backgroundColor="black" />
          {user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />}
       </React.Fragment>
    );

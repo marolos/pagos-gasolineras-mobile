@@ -7,6 +7,9 @@ export const REST_API_URL =
 
 
 export const ENCRYPTOR_KEY = 'MIIEowIBAAKA2LCcVqUelTOc6TwslUAm8vxnoCAQEt3hhlv8FjvjmZGqJ';
+export const MAPBOX_TOKEN = 'sk.eyJ1IjoibWlndWVscXVvIiwiYSI6ImNraGYyeGZ1eTA1bHkzMHBhZnpwcWV2YzQifQ.-DgT0S5tfdVKQuPHcVv9-A'
+//export const MAPBOX_TOKEN = 'pk.eyJ1IjoiZnVlbHBheSIsImEiOiJja2hibTd2bmgwMTRuMnNxamQ5eThheWttIn0.8oO_NxO2GcZDbOi4YvJF_w'
+export const MAP_CENTER =[ -79.891971, -2.171499]
 
 export const theme = {
    dark: false,

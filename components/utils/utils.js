@@ -187,3 +187,8 @@ export function getOrderByAmount(amount) {
       amount: amount + COMMISION,
    };
 }
+
+export function sortByDate(key, ascendent=false) {
+   if (ascendent) return (a, b) => Date.parse(a[key]) - Date.parse(b[key]);
+   return (a, b) => Date.parse(b[key]) - Date.parse(a[key]);
+}

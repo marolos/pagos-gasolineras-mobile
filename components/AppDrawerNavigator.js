@@ -56,7 +56,6 @@ function AppDrawerNavigator(props) {
 
    return (
       <NavigationContainer theme={theme}>
-         <StatusBar hidden={false} backgroundColor="black" />
          {loaded ? (
             <Drawer.Navigator
                drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}

@@ -8,7 +8,7 @@ import emptyImage from '../../assets/background/empty.png';
 import { FULL_HIGHT } from '../utils/constants';
 import Fetch from '../utils/Fetch';
 import { typefaces } from '../utils/styles';
-import { makeCancelable } from '../utils/utils';
+import { makeCancelable, sortByDate } from '../utils/utils';
 import { formatISODate } from '../buy/utils';
 import ArrowLeftDownIcon from '../icons/ArrowLeftDownIcon';
 import ArrowUpRightIcon from '../icons/ArrowUpRightIcon';
@@ -47,7 +47,7 @@ class TransfersView extends React.Component {
    };
 
    onRefresh = () => {
-		this.setState({refreshing: true})
+      this.setState({ refreshing: true });
       this.reqTransfers = makeCancelable(
          Fetch.get('/topup/user/transfer/', { all: '1' }),
          (res) => {
@@ -115,7 +115,7 @@ function TransfersList({ transfers }) {
    const user = useSelector((state) => state.user.data);
    return (
       <View style={tailwind('w-full px-4 py-2')}>
-         {transfers.map((transfer) => {
+         {transfers.sort(sortByDate('created_at')).map((transfer) => {
             const isReceiver = parseInt(user.user_id) === parseInt(transfer.receiver_user.id);
             return (
                <View

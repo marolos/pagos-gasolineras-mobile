@@ -9,7 +9,6 @@ import BasicInput from '../shared/BasicInput';
 import Button from '../shared/Button';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import Fetch from '../utils/Fetch';
-import Line from '../shared/Line';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default class UserSelector extends React.Component {
@@ -24,7 +23,7 @@ export default class UserSelector extends React.Component {
       };
       this.searchDebounced = AwesomeDebouncePromise(
          (text) => Fetch.get('/users/search/?text=' + text),
-         300,
+         330,
       );
    }
 
@@ -72,7 +71,7 @@ export default class UserSelector extends React.Component {
             </Ripple>
             <ReactNativeModal isVisible={open}>
                <View style={styles.modal.view}>
-                  <View style={tailwind('flex flex-row mb-4')}>
+                  <View style={tailwind('flex flex-row mb-2')}>
                      <EditIcon />
                      <Text style={styles.modal.text}>Ingresar usuario</Text>
                   </View>
@@ -84,20 +83,21 @@ export default class UserSelector extends React.Component {
                      />
                      {showResults && results.length > 0 && (
                         <View style={styles.list}>
-                           <ScrollView keyboardShouldPersistTaps='handled' style={{maxHeight: 160}}>
+                           <ScrollView
+                              keyboardShouldPersistTaps="handled"
+                              style={{ maxHeight: 150 }}
+                           >
                               {results.map((user, index) => (
-                                 <View key={user.id}>
-                                    <Ripple
-                                       style={styles.itemRipple}
-                                       onPress={() => this.onUserPress(user)}
-                                    >
-                                       <Text>
-                                          {user.first_name} {user.last_name}
-                                       </Text>
-                                       <Text style={tailwind('text-gray-600')}>{user.email}</Text>
-                                    </Ripple>
-                                    {index !== results.length - 1 && <Line />}
-                                 </View>
+                                 <Ripple
+                                    key={user.id}
+                                    style={styles.itemRipple}
+                                    onPress={() => this.onUserPress(user)}
+                                 >
+                                    <Text>
+                                       {user.first_name} {user.last_name}
+                                    </Text>
+                                    <Text style={tailwind('text-gray-600')}>{user.email}</Text>
+                                 </Ripple>
                               ))}
                            </ScrollView>
                         </View>
@@ -127,13 +127,13 @@ const styles = {
       text: [tailwind('ml-2'), typefaces.pm],
    },
    button: {
-      view: tailwind('flex flex-row justify-between mt-12'),
+      view: tailwind('flex flex-row justify-between mt-16 mb-8'),
    },
    list: [
       tailwind('absolute bg-white w-64 border rounded-sm border-white'),
       { position: 'absolute', top: 55, left: 10, zIndex: 12 },
       shadowStyle,
    ],
-	itemRipple: tailwind('px-2 py-1'),
-	scroll: {}
+   itemRipple: tailwind('px-2 py-1'),
+   scroll: {},
 };
