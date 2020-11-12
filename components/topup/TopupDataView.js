@@ -37,9 +37,9 @@ function TopupDataView({ route, navigation, user }) {
    }, []);
 
    function next() {
-      if (amount < 10) {
+      if (amount < 5) {
          SimpleToast.showWithGravity(
-            'Ingrese una cantidad mayor o igual a $10',
+            'Ingrese una cantidad mayor o igual a $5',
             SimpleToast.LONG,
             SimpleToast.CENTER,
          );
