@@ -1,14 +1,13 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Keyboard } from 'react-native';
-//import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { Button, View } from 'react-native';
 import { FULL_HIGHT, FULL_WIDTH, MAPBOX_TOKEN, MAP_CENTER } from '../utils/constants';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import tailwind from 'tailwind-rn';
-import { shadowStyle, shadowStyle2 } from '../utils/styles';
-import SearchIcon from '../icons/SearchIcon';
-import Animated, { Easing } from 'react-native-reanimated';
+import SearchBox from '../search/SearchBox';
+import CollapseSelectedStation from '../search/CollapseSelectedStation';
+import Fetch from '../utils/Fetch';
 
 MapboxGL.setAccessToken(MAPBOX_TOKEN);
+MapboxGL.setTelemetryEnabled(false);
 
 class SearchView extends React.Component {
    constructor(props) {
@@ -16,125 +15,104 @@ class SearchView extends React.Component {
       this.state = {
          loaded: false,
          perm: false,
+         center: MAP_CENTER,
+         zoom: 12,
+         userLocation: MAP_CENTER,
+         showLocation: false,
+         showCollapse: false,
+         pointers: [],
+         selectedStation: null,
       };
    }
+
    componentDidMount() {
-      MapboxGL.setTelemetryEnabled(false);
       setTimeout(() => {
          this.setState({ loaded: true });
-         MapboxGL.requestAndroidLocationPermissions()
-            .then((acepted) => this.setState({ perm: acepted }))
-            .catch((err) => this.setState({ perm: false }));
       }, 90);
    }
 
+   getUserLocation = async () => {
+      try {
+         const granted = await MapboxGL.requestAndroidLocationPermissions();
+         if (granted) {
+            this.setState({ showLocation: granted });
+         }
+         return granted;
+      } catch (err) {
+         console.error(err);
+         return false;
+      }
+   };
+
+   updateUserLocation = (location) => {
+      const newLocation = [location.coords.longitude, location.coords.latitude];
+      this.setState({ userLocation: newLocation, center: newLocation });
+   };
+
+   onSelectPointer = (station, feature) => {
+      this.selectStation(station);
+   };
+
+   selectStation = (station) => {
+      this.setState({ selectedStation: station, showCollapse: true });
+   };
+
+   onSearchNear = async () => {
+      const granted = await this.getUserLocation();
+      if (granted) {
+         try {
+            const {
+               userLocation: [longitude, latitude],
+            } = this.state;
+            const response = await Fetch.get('/company/search/gs/nearto/', { longitude, latitude });
+            this.setState({ pointers: response.body.result, zoom: 13 });
+         } catch (error) {
+            this.setState({ pointers: [] });
+         }
+      }
+   };
+
    render() {
+      const { center, zoom, showLocation, pointers } = this.state;
       return (
          <View>
-            <SearchBox />
+            <SearchBox onSelectStation={this.selectStation} onSearchNear={this.onSearchNear} />
             {this.state.loaded && (
                <View style={styles.map.view}>
                   <MapboxGL.MapView style={styles.map.map} rotateEnabled={false}>
-                     <MapboxGL.Camera centerCoordinate={MAP_CENTER} zoomLevel={12} />
-                     {
+                     <MapboxGL.Camera centerCoordinate={center} zoomLevel={zoom} />
+                     {showLocation && (
+                        <MapboxGL.UserLocation onUpdate={this.updateUserLocation} animated />
+                     )}
+                     {pointers.map((station) => (
                         <MapboxGL.PointAnnotation
-                           id={'1'}
-                           coordinate={MAP_CENTER}
-                           selected
-                           title="nope"
+                           id={station.id + ''}
+                           key={station.id}
+                           coordinate={[station.longitude, station.latitude]}
+                           selected={false}
+                           title={station.name}
+                           onSelected={(feature) => this.onSelectPointer(station, feature)}
                         />
-                     }
+                     ))}
                   </MapboxGL.MapView>
-
-                  {/* <MapView
-                  provider={PROVIDER_GOOGLE}
-                  style={{ ...StyleSheet.absoluteFillObject }}
-                  initialRegion={{
-                     latitude: 37.78825,
-                     longitude: -122.4324,
-                     latitudeDelta: 0.0922,
-                     longitudeDelta: 0.0421,
-                  }}
-               /> */}
                </View>
+            )}
+            {this.state.selectedStation && (
+               <CollapseSelectedStation
+                  visible={this.state.showCollapse}
+                  closeCollapse={() => this.setState({ showCollapse: false })}
+                  station={this.state.selectedStation}
+               />
             )}
          </View>
       );
    }
 }
 
-class SearchBox extends React.Component {
-   constructor(props) {
-      super(props);
-      this.state = {
-         loading: false,
-         open: false,
-      };
-   }
-
-   componentDidMount() {
-      Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
-      Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
-   }
-
-   componentWillUnmount() {
-      Keyboard.removeListener('keyboardDidShow', this.keyboardDidShow);
-      Keyboard.removeListener('keyboardDidHide', this.keyboardDidHide);
-   }
-
-   keyboardDidShow = () => {
-      this.setState({ open: true });
-   };
-
-   keyboardDidHide = () => {
-      this.setState({ open: false });
-   };
-
-   render() {
-      return (
-         <View style={styles.search.view}>
-            <View style={styles.search.box}>
-               <TextInput placeholder="nombre, dirección." style={tailwind('w-4/5')} />
-               <SearchIcon />
-            </View>
-            <AnimatedBackground show={this.state.open} />
-         </View>
-      );
-   }
-}
-
-function AnimatedBackground({ show }) {
-   const [value, setValue] = React.useState(new Animated.Value(0));
-
-   React.useEffect(() => {
-      Animated.timing(value, {
-         toValue: show ? FULL_HIGHT : 0,
-         duration: 250,
-         easing: Easing.circle,
-      }).start();
-   }, [show]);
-
-   return (
-      <Animated.View style={[styles.search.bg, { height: value, width: value }]}></Animated.View>
-   );
-}
-
 const styles = {
    map: {
       view: { height: FULL_HIGHT - 50, width: FULL_WIDTH },
       map: { flex: 1 },
-   },
-   search: {
-      view: [
-         { position: 'absolute', zIndex: 20, top: 20, left: 20 },
-         tailwind('flex justify-center items-center'),
-      ],
-      box: [
-         tailwind('flex flex-row items-center justify-evenly bg-white px-2 rounded-md'),
-         shadowStyle2,
-         { width: FULL_WIDTH - 40 },
-      ],
-      bg: { position: 'absolute', backgroundColor: 'white', top: -20, ...tailwind('rounded-b-full') },
    },
 };
 

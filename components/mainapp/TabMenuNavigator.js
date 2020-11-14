@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Keyboard, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import BalancesView from './BalancesView';
 import SearchView from './SearchView';
@@ -27,38 +27,14 @@ function TabMenuNavigator(props) {
 }
 
 function CustomTabBar(props) {
-   // const [showTab, setShowTab] = React.useState(true);
-
-   // React.useEffect(() => {
-   //    Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
-   //    Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
-
-   //    return () => {
-   //       Keyboard.removeListener('keyboardDidShow', _keyboardDidShow);
-   //       Keyboard.removeListener('keyboardDidHide', _keyboardDidHide);
-   //    };
-   // }, []);
-
-   // const _keyboardDidShow = () => {
-   //    setShowTab(false);
-   // };
-
-   // const _keyboardDidHide = () => {
-   //    setShowTab(true);
-   // };
-
    return (
       <View style={styles.bar.view}>
-         {/* {showTab && (
-            <React.Fragment> */}
          <View style={styles.bar.line} />
          <View style={styles.bar.buttons}>
             <TabButtonGasStation navigation={props.navigation} />
             <TabButtonSearch navigation={props.navigation} />
             <TabButtonNotifications navigation={props.navigation} />
          </View>
-         {/* </React.Fragment>
-         )} */}
       </View>
    );
 }

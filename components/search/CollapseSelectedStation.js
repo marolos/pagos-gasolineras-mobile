@@ -7,11 +7,9 @@ import { typefaces } from '../utils/styles';
 import Button from '../shared/Button';
 import { useNavigation } from '@react-navigation/native';
 import Ripple from 'react-native-material-ripple';
-import FastImage from 'react-native-fast-image';
-
-function CollapseModalOptions({ visible, closeCollapse, station }) {
+let i = 0;
+function CollapseSelectedStation({ visible, closeCollapse, station }) {
    const navigation = useNavigation();
-
    return (
       <Modal
          isVisible={visible}
@@ -26,15 +24,7 @@ function CollapseModalOptions({ visible, closeCollapse, station }) {
          <View style={styles.view}>
             <View style={tailwind('p-6')}>
                <View style={styles.title}>
-                  <FastImage
-                     source={{ uri: station.company.company_logo_path }}
-                     style={styles.image}
-                  />
-                  <Text style={styles.titleText}>{station.gas_station.name}</Text>
-               </View>
-               <View style={styles.total}>
-                  <Text style={styles.totalText}>Saldo disponible:</Text>
-                  <Text style={styles.totalValue}>${station.total}</Text>
+                  <Text style={styles.titleText}>{station.name}</Text>
                </View>
                <View style={styles.options}>
                   <Button
@@ -42,14 +32,17 @@ function CollapseModalOptions({ visible, closeCollapse, station }) {
                      primary={false}
                      onPress={() => {
                         closeCollapse();
-                        setTimeout(() => navigation.navigate('billingData', station), 400);
+                        // setTimeout(
+                        //    () => navigation.navigate('billingData', { gas_station: station }),
+                        //    400,
+                        // );
                      }}
                   />
                   <Button
                      text={'comprar'}
                      onPress={() => {
                         closeCollapse();
-                        setTimeout(() => navigation.navigate('buy', station), 400);
+                        // setTimeout(() => navigation.navigate('buy', { gas_station: station }), 400);
                      }}
                   />
                </View>
@@ -78,4 +71,4 @@ const styles = {
    options: tailwind('flex flex-row justify-evenly mt-6'),
 };
 
-export default CollapseModalOptions;
+export default CollapseSelectedStation;

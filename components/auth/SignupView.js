@@ -99,14 +99,7 @@ class SignupView extends React.Component {
                      <Text style={[tailwind('text-2xl'), typefaces.pb]}>Crear una cuenta</Text>
                   </View>
                </View>
-               <View
-                  style={[
-                     tailwind(
-                        'absolute bg-white items-center rounded-md border-2 border-gray-200 px-6 py-8',
-                     ),
-                     styles.card,
-                  ]}
-               >
+               <View style={styles.card}>
                   <View>
                      <BasicInput
                         placeholder="Nombres"
@@ -173,8 +166,11 @@ class SignupView extends React.Component {
    }
 }
 
-const styles = StyleSheet.create({
-   card: { top: 140 },
-});
+const styles = {
+   card: [
+      tailwind('absolute bg-white items-center rounded-md border-2 border-gray-200 px-6 py-8'),
+      { top: 140 },
+   ],
+};
 
 export default connect()(SignupView);

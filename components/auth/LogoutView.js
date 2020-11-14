@@ -6,22 +6,25 @@ import { typefaces } from '../utils/styles';
 import Button from '../shared/Button';
 
 export default function LogoutView({ navigation }) {
-
-   function close() {
-      navigation.navigate('home');
-   }
    return (
       <View style={styles.container}>
          <View style={styles.bg} />
          <View style={tailwind('bg-white rounded-lg p-6 items-center w-4/5')}>
             <Text style={[typefaces.pm]}>¿Cerrar sesión?</Text>
             <View style={tailwind('flex flex-row mt-4')}>
-               <Button text="no" style={tailwind('w-2/5 mr-4')} onPress={close} primary={false} />
+               <Button
+                  text="no"
+                  style={tailwind('w-2/5 mr-4')}
+						primary={false}
+                  onPress={() => {
+                     navigation.navigate('home');
+                  }}
+               />
                <Button
                   text="si"
                   style={tailwind('w-2/5')}
                   onPress={() => {
-							navigation.navigate('loggingOut')
+                     navigation.navigate('loggingOut');
                   }}
                />
             </View>

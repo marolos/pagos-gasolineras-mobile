@@ -11,19 +11,17 @@ export default function PasswordInput({ placeholder, onChange, validate, style }
          <TextInput
             placeholder={placeholder}
             style={[
-               tailwind('rounded-md border-2 border-gray-200 w-64 pl-5'),
-               editing
-                  ? tailwind('bg-white border-2 border-gray-600')
-                  : tailwind('bg-gray-200'),
-               hasErrors ? tailwind('bg-white border-2 border-red-400') : {},
-					typefaces.pm,
-					style ? style : {},
+               styles.input,
+               typefaces.pm,
+               editing ? styles.editing : styles.noEditing,
+               hasErrors ? styles.error : {},
+               style ? style : {},
             ]}
             onChangeText={(text) => {
                if (validate) {
                   setHasError(!validate(text));
-					}
-					onChange(text)
+               }
+               onChange(text);
             }}
             onFocus={(e) => setEditing(true)}
             onEndEditing={(e) => {
@@ -34,3 +32,10 @@ export default function PasswordInput({ placeholder, onChange, validate, style }
       </View>
    );
 }
+
+const styles = {
+   input: tailwind('rounded-md border-2 border-gray-200 w-64 pl-5'),
+   editing: tailwind('bg-white border-2 border-gray-600'),
+   noEditing: tailwind('bg-gray-200'),
+   error: tailwind('bg-white border-2 border-red-400'),
+};
