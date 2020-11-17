@@ -56,7 +56,6 @@ class SearchBox extends React.Component {
       this.setState({ loading: true });
       this.searchDebounced(text)
          .then((res) => {
-            console.log(res.body);
             this.setState({ results: res.body.result, loading: false });
          })
          .catch((err) => {
@@ -74,18 +73,23 @@ class SearchBox extends React.Component {
             </Ripple>
          );
       }
-      return loading ? <ActivityIndicator size="small" color="black" animating /> : <SearchIcon />;
+      return loading ? (
+         <ActivityIndicator size="small" color="black" animating />
+      ) : (
+         <SearchIcon fill={'#777'} focused />
+      );
    };
 
    selectStation = (station) => {
+      Keyboard.dismiss()
       if (this.props.onSelectStation) {
          this.props.onSelectStation(station);
       }
    };
 
    onSearchNear = async () => {
-		this.setState({ loading: true, open: false });
-		Keyboard.dismiss()
+      this.setState({ loading: true, open: false });
+      Keyboard.dismiss();
       if (this.props.onSearchNear) {
          await this.props.onSearchNear();
          this.setState({ loading: false });
@@ -136,11 +140,11 @@ function AnimatedBackground({ show }) {
 function ResultList({ results = [], onPressItem = () => {}, onSearchNear = () => {} }) {
    return (
       <ScrollView keyboardShouldPersistTaps="handled" style={styles.resultList}>
-         <SearchNear onPress={onSearchNear} />
+         <SearchNearButton onPress={onSearchNear} />
          {results.map((station) => (
             <Ripple
                key={station.id}
-               style={tailwind('flex flex-row items-center justify-between px-6 py-1')}
+               style={tailwind('flex flex-row items-center justify-between px-6 pt-1 pb-2')}
                onPress={() => onPressItem(station)}
             >
                <View style={tailwind('flex flex-row items-center')}>
@@ -161,7 +165,7 @@ function ResultList({ results = [], onPressItem = () => {}, onSearchNear = () =>
    );
 }
 
-function SearchNear({ onPress }) {
+function SearchNearButton({ onPress }) {
    return (
       <Ripple onPress={onPress} style={tailwind('flex flex-row items-center mb-3 px-4 py-2')}>
          <View
@@ -175,7 +179,7 @@ function SearchNear({ onPress }) {
 }
 
 const styles = {
-   boxScrollView: { zIndex: 20 },
+   boxScrollView: { zIndex: 5 },
    view: [{ position: 'absolute', top: 10, left: 5 }, tailwind('flex items-center')],
    box: [
       tailwind('flex flex-row items-center justify-between bg-white px-6 rounded-md m-3'),
@@ -186,10 +190,10 @@ const styles = {
       position: 'absolute',
       backgroundColor: 'white',
       top: -20,
-      zIndex: 10,
+      zIndex: 4,
       ...tailwind('rounded-b-full'),
    },
-   resultList: [tailwind('absolute w-full'), { zIndex: 20, top: 85 }],
+   resultList: [tailwind('absolute w-full'), { zIndex: 5, top: 85 }],
 };
 
 export default SearchBox;

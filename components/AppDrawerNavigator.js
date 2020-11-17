@@ -1,11 +1,10 @@
 import React, { memo } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { StatusBar, View, Text, ActivityIndicator } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import ProfileNavigator from './profile/ProfileNavigator';
 import HomeNavigator from './HomeNavigator';
 import SplashScreen from 'react-native-splash-screen';
-import { theme, FULL_HIGHT } from './utils/constants';
+import {  FULL_HIGHT } from './utils/constants';
 import { getGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import tailwind from 'tailwind-rn';
 import Fetch from './utils/Fetch';
@@ -24,11 +23,12 @@ import LogoutView from './auth/LogoutView';
 import { getDeviceInfo, requestUserPermission } from './notification/firebaseConfig';
 import LoggingOutView from './auth/LoggingOutView';
 import { connect } from 'react-redux';
+import HandleNotification from './linking/HandleNotification';
 
 const Drawer = createDrawerNavigator();
 
 function AppDrawerNavigator(props) {
-   const [loaded, setLoaded] = React.useState(false);
+   const [loadedCredentials, setLoadedCredentials] = React.useState(false);
 
    React.useEffect(() => {
       SplashScreen.hide();
@@ -42,7 +42,7 @@ function AppDrawerNavigator(props) {
                .catch((err) => {
                   err;
                });
-            setLoaded(true);
+            setLoadedCredentials(true);
          })
          .catch((error) => {
             Fetch.removeAuthToken();
@@ -54,30 +54,28 @@ function AppDrawerNavigator(props) {
          });
    }, []);
 
-   return (
-      <NavigationContainer theme={theme}>
-         {loaded ? (
-            <Drawer.Navigator
-               drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}
-            >
-               <Drawer.Screen
-                  name="home"
-                  component={HomeNavigator}
-                  options={{ drawerLabel: () => null }}
-               />
-               <Drawer.Screen name="profile" component={ProfileNavigator} />
-               <Drawer.Screen name="records" component={RecordsNavigator} />
-               <Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
-               <Drawer.Screen name="transfers" component={TransferNavigator} />
-               <Drawer.Screen name="logout" component={LogoutView} />
-               <Drawer.Screen name="loggingOut" component={LoggingOutView} />
-            </Drawer.Navigator>
-         ) : (
-            <View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>
-               <ActivityIndicator animating color="black" size="large" />
-            </View>
-         )}
-      </NavigationContainer>
+   return loadedCredentials ? (
+      <Drawer.Navigator
+         drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}
+         initialRouteName={'home'}
+      >
+         <Drawer.Screen
+            name="home"
+            component={HomeNavigator}
+            options={{ drawerLabel: () => null }}
+         />
+         <Drawer.Screen name="profile" component={ProfileNavigator} />
+         <Drawer.Screen name="records" component={RecordsNavigator} />
+         <Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
+         <Drawer.Screen name="transfers" component={TransferNavigator} />
+         <Drawer.Screen name="logout" component={LogoutView} />
+         <Drawer.Screen name="loggingOut" component={LoggingOutView} />
+         <Drawer.Screen name="handleNotification" component={HandleNotification} />
+      </Drawer.Navigator>
+   ) : (
+      <View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>
+         <ActivityIndicator animating color="black" size="large" />
+      </View>
    );
 }
 
@@ -200,3 +198,17 @@ const styles = {
 };
 
 export default AppDrawerNavigator;
+
+//adb shell am start -W -a android.intent.action.VIEW -d "fuelpay://notification/2/3" com.pagosgasolineras
+// const linking = {
+//    prefixes: ['fuelpay://'],
+//    config: {
+//       screens: {
+//          home: {
+//             screens: {
+//                notificationLinking: 'notification/:type/:id',
+//             },
+//          },
+//       },
+//    },
+// };

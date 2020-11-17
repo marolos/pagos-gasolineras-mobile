@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import BalancesView from './BalancesView';
-import SearchView from './SearchView';
 import NotificationsView from './NotificationsView';
 import { setActiveTab } from '../redux/actions';
 import { TabOptions } from '../redux/reducers';
@@ -13,6 +12,7 @@ import SearchIcon from '../icons/SearchIcon';
 import NotificationIcon from '../icons/NotificationIcon';
 import Ripple from 'react-native-material-ripple';
 import { typefaces, shadowStyle } from '../utils/styles';
+import SearchView from '../search/SearchView';
 
 const Tab = createBottomTabNavigator();
 

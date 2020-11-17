@@ -7,7 +7,7 @@ let MessagingApp = null;
 export function initFirebase() {
    MessagingApp = getMessaging();
    MessagingApp.onMessage((message) => {
-      Alert.alert(message.data.type, JSON.stringify(message.data));
+      Alert.alert(message.notification.title, message.notification.body);
    });
    MessagingApp.setBackgroundMessageHandler(async (message) => {
       Alert.alert('A new FCM message arrived!', JSON.stringify(message.data));
@@ -40,9 +40,8 @@ export async function getDeviceInfo() {
       return;
    }
    if (!token) return;
-	const device_info = { os, token };
-	
-   console.log(':: Device Info ::', { device_info });
+   const device_info = { os, token };
+
    Fetch.post('/notification/user/token/', { device_info })
       .then((res) => {})
       .catch((err) => {

@@ -8,8 +8,12 @@ import Fetch from './utils/Fetch';
 import { unauthorizedInterceptor } from './utils/interceptors';
 import { enableScreens } from 'react-native-screens';
 import { StatusBar } from 'react-native';
+import { initFirebase } from './notification/firebaseConfig';
+import { NavigationContainer } from '@react-navigation/native';
+import { theme } from './utils/constants';
 
 enableScreens();
+initFirebase();
 
 function App({ user, dispatch }) {
    React.useEffect(() => {
@@ -32,7 +36,9 @@ function App({ user, dispatch }) {
    return (
       <React.Fragment>
          <StatusBar hidden={false} backgroundColor="black" />
-         {user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />}
+         <NavigationContainer theme={theme}>
+            {user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />}
+         </NavigationContainer>
       </React.Fragment>
    );
 }

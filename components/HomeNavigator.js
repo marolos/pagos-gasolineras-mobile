@@ -15,10 +15,25 @@ import ChooseCardView from './payment/ChooseCardView';
 import AddCardView from './payment/AddCardView';
 import ConfirmTopupView from './topup/ConfirmTopupView';
 import GenerateCodeView from './buy/GenerateCodeView';
+import { getMessaging } from './notification/firebaseConfig';
 
 const Stack = createStackNavigator();
 
-function HomeNavigator({ dispatch }) {
+function HomeNavigator({ navigation }) {
+   React.useEffect(() => {
+      getMessaging().onNotificationOpenedApp((message) => {
+         console.log('::from opened::', message);
+         navigation.navigate('handleNotification');
+      });
+      getMessaging()
+         .getInitialNotification()
+         .then((message) => {
+            if (message) {
+               console.log('::from exited::', message);
+               navigation.navigate('profile');
+            }
+         });
+   }, []);
    return (
       <Stack.Navigator
          screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}

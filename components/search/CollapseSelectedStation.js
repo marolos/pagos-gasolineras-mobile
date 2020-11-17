@@ -7,9 +7,12 @@ import { typefaces } from '../utils/styles';
 import Button from '../shared/Button';
 import { useNavigation } from '@react-navigation/native';
 import Ripple from 'react-native-material-ripple';
-let i = 0;
+
 function CollapseSelectedStation({ visible, closeCollapse, station }) {
-   const navigation = useNavigation();
+	const navigation = useNavigation();
+	React.useEffect(()=>{
+		
+	}, [])
    return (
       <Modal
          isVisible={visible}

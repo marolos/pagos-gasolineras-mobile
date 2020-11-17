@@ -1,10 +1,12 @@
 import React from 'react';
-import { Button, View } from 'react-native';
+import { View } from 'react-native';
 import { FULL_HIGHT, FULL_WIDTH, MAPBOX_TOKEN, MAP_CENTER } from '../utils/constants';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import SearchBox from '../search/SearchBox';
-import CollapseSelectedStation from '../search/CollapseSelectedStation';
+import SearchBox from './SearchBox';
+import CollapseSelectedStation from './CollapseSelectedStation';
 import Fetch from '../utils/Fetch';
+import SimpleToast from 'react-native-simple-toast';
+import pointImg from '../../assets/icons/point.png';
 
 MapboxGL.setAccessToken(MAPBOX_TOKEN);
 MapboxGL.setTelemetryEnabled(false);
@@ -49,12 +51,12 @@ class SearchView extends React.Component {
       this.setState({ userLocation: newLocation, center: newLocation });
    };
 
-   onSelectPointer = (station, feature) => {
-      this.selectStation(station);
-   };
-
-   selectStation = (station) => {
-      this.setState({ selectedStation: station, showCollapse: true });
+   onSelectPointer = (station, event) => {
+      this.setState({
+         selectedStation: station,
+         center: [station.longitude, station.latitude],
+         showCollapse: true,
+      });
    };
 
    onSearchNear = async () => {
@@ -69,39 +71,57 @@ class SearchView extends React.Component {
          } catch (error) {
             this.setState({ pointers: [] });
          }
+      } else {
+         SimpleToast.showWithGravity(
+            'Necesita proveer permisos de localización',
+            500,
+            SimpleToast.CENTER,
+         );
       }
    };
 
+   onSelectStationResult = (station) => {
+      this.setState({
+         selectStation: station,
+         pointers: [station],
+         zoom: 14,
+         center: [station.longitude, station.latitude],
+         showCollapse: true,
+      });
+   };
+
    render() {
-      const { center, zoom, showLocation, pointers } = this.state;
+      const { center, zoom, showLocation, pointers, selectedStation, showCollapse } = this.state;
       return (
          <View>
-            <SearchBox onSelectStation={this.selectStation} onSearchNear={this.onSearchNear} />
-            {this.state.loaded && (
-               <View style={styles.map.view}>
+            <SearchBox
+               onSelectStation={this.onSelectStationResult}
+               onSearchNear={this.onSearchNear}
+            />
+            <View style={styles.map.view}>
+               {this.state.loaded && (
                   <MapboxGL.MapView style={styles.map.map} rotateEnabled={false}>
                      <MapboxGL.Camera centerCoordinate={center} zoomLevel={zoom} />
                      {showLocation && (
                         <MapboxGL.UserLocation onUpdate={this.updateUserLocation} animated />
                      )}
                      {pointers.map((station) => (
-                        <MapboxGL.PointAnnotation
-                           id={station.id + ''}
+                        <Pointer
                            key={station.id}
-                           coordinate={[station.longitude, station.latitude]}
-                           selected={false}
-                           title={station.name}
-                           onSelected={(feature) => this.onSelectPointer(station, feature)}
+                           id={station.id}
+                           coord={[station.longitude, station.latitude]}
+                           onPress={(event) => this.onSelectPointer(station, event)}
+                           label={station.name}
                         />
                      ))}
                   </MapboxGL.MapView>
-               </View>
-            )}
-            {this.state.selectedStation && (
+               )}
+            </View>
+            {selectedStation && (
                <CollapseSelectedStation
-                  visible={this.state.showCollapse}
+                  visible={showCollapse}
                   closeCollapse={() => this.setState({ showCollapse: false })}
-                  station={this.state.selectedStation}
+                  station={selectedStation}
                />
             )}
          </View>
@@ -109,11 +129,50 @@ class SearchView extends React.Component {
    }
 }
 
+function Pointer({ id, coord, label, onPress }) {
+   return (
+      <MapboxGL.ShapeSource
+         id={id.toString()}
+         hitbox={{ width: 20, height: 20 }}
+         onPress={onPress}
+         shape={getShape(id, coord)}
+      >
+         <MapboxGL.SymbolLayer id={'icon' + id.toString()} style={styles.iconLayer} />
+         <MapboxGL.SymbolLayer id={'text' + id.toString()} style={getTextStyle(label)} />
+      </MapboxGL.ShapeSource>
+   );
+}
+
+function getShape(id, coord) {
+   return {
+      id: id.toString(),
+      type: 'Feature',
+      geometry: {
+         type: 'Point',
+         coordinates: coord,
+      },
+   };
+}
+
+function getTextStyle(label) {
+   return {
+      textField: label,
+      textAllowOverlap: false,
+      textIgnorePlacement: true,
+      textTranslate: [18, -15],
+      textSize: 12,
+      textColor: '#333',
+      textMaxWidth: 20,
+      textAnchor: 'left',
+   };
+}
+
 const styles = {
    map: {
       view: { height: FULL_HIGHT - 50, width: FULL_WIDTH },
       map: { flex: 1 },
    },
+   iconLayer: { iconImage: pointImg, iconSize: 0.7, iconTranslate: [0, -10] },
 };
 
 export default SearchView;
