@@ -29,7 +29,7 @@ class FetchClass {
       delete this.headers['Authorization'];
    };
 
-   addHeader = (name, value) => {
+   setHeader = (name, value) => {
       this.headers[name] = value;
    };
 
@@ -90,7 +90,7 @@ class FetchClass {
    handleResponse = async (response) => {
       const contentType = response.headers.map['content-type'];
       if (contentType !== 'application/json') {
-         return { body: { msg: 'No JSON' }, status: response.status };
+         throw { body: { msg: 'No JSON' }, status: response.status };
       }
       const body = await response.json();
       const data = { body, status: response.status };

@@ -4,7 +4,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import ProfileNavigator from './profile/ProfileNavigator';
 import HomeNavigator from './HomeNavigator';
 import SplashScreen from 'react-native-splash-screen';
-import {  FULL_HIGHT } from './utils/constants';
+import { FULL_HIGHT } from './utils/constants';
 import { getGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import tailwind from 'tailwind-rn';
 import Fetch from './utils/Fetch';
@@ -24,6 +24,7 @@ import { getDeviceInfo, requestUserPermission } from './notification/firebaseCon
 import LoggingOutView from './auth/LoggingOutView';
 import { connect } from 'react-redux';
 import HandleNotification from './linking/HandleNotification';
+import FeedbackNavigator from './feedback/FeedbackNavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -57,7 +58,7 @@ function AppDrawerNavigator(props) {
    return loadedCredentials ? (
       <Drawer.Navigator
          drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}
-         initialRouteName={'home'}
+			initialRouteName={'home'}
       >
          <Drawer.Screen
             name="home"
@@ -71,6 +72,7 @@ function AppDrawerNavigator(props) {
          <Drawer.Screen name="logout" component={LogoutView} />
          <Drawer.Screen name="loggingOut" component={LoggingOutView} />
          <Drawer.Screen name="handleNotification" component={HandleNotification} />
+         <Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}}/>
       </Drawer.Navigator>
    ) : (
       <View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>
@@ -122,6 +124,7 @@ const DrawerContent = memo(({ navigation }) => {
                text="Sugerencias y reclamos"
                style={tailwind('pt-2')}
                navigation={navigation}
+               navigateTo="feedbackView"
             />
             <DrawerItemText text="Políticas de servicios" navigation={navigation} />
             <DrawerItemText text="Contácto" navigation={navigation} />
@@ -159,9 +162,9 @@ function DrawerItem({ icon, text, style = {}, navigation, navigateTo }) {
    );
 }
 
-function DrawerItemText({ text, style = {}, navigation }) {
+function DrawerItemText({ text, style = {}, navigation, navigateTo }) {
    return (
-      <Ripple style={style}>
+      <Ripple onPress={navigateTo && (() => navigation.navigate(navigateTo))} style={style}>
          <View style={tailwind('py-2 px-3')}>
             <Text style={styles.itemTextText}>{text}</Text>
          </View>

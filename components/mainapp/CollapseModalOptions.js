@@ -42,14 +42,14 @@ function CollapseModalOptions({ visible, closeCollapse, station }) {
                      primary={false}
                      onPress={() => {
                         closeCollapse();
-                        setTimeout(() => navigation.navigate('billingData', station), 400);
+                        setTimeout(() => navigation.navigate('billingData', station), 200);
                      }}
                   />
                   <Button
                      text={'comprar'}
                      onPress={() => {
                         closeCollapse();
-                        setTimeout(() => navigation.navigate('buy', station), 400);
+                        setTimeout(() => navigation.navigate('buy', station), 200);
                      }}
                   />
                </View>
