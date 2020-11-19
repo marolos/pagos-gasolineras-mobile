@@ -14,6 +14,7 @@ export async function generateQR(text, typeNumber = 0, errorCorrection = 'L', ce
    }
 }
 
+
 export function formatISODate(ISOString, pattern = 'PPpp') {
    return format(new Date(ISOString), pattern, { locale: es });
 }

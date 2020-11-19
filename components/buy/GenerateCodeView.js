@@ -5,21 +5,17 @@ import { FULL_WIDTH } from '../utils/constants';
 import { typefaces } from '../utils/styles';
 import { formatISODate, generateQR } from './utils';
 
-export default function GenerateCodeView({ navigation, route }) {
-   const [loading, setLoading] = React.useState(false);
-   const [data, setData] = React.useState({});
+export default function GenerateCodeView({ route }) {
+   const { params } = route;
+   const [loading, setLoading] = React.useState(true);
+   const [qr, setQr] = React.useState('');
 
    React.useEffect(() => {
-		setLoading(true);
-      generateQR(route.params.qrcode_string)
-         .then((url) => {
-            setData({ ...route.params, qrcode: url });
-         })
-         .catch((err) => {
-            console.error(err);
-         })
+      generateQR(params.qrcode_string)
+         .then((urlImg) => setQr(urlImg))
+         .catch((err) => console.error(err))
          .finally(() => {
-            setTimeout(() => setLoading(false), 200);
+            setTimeout(() => setLoading(false), 300);
          });
    }, []);
 
@@ -29,13 +25,13 @@ export default function GenerateCodeView({ navigation, route }) {
             <View style={tailwind('flex flex-row')}>
                <Text style={[tailwind('text-base'), typefaces.pr]}>Cantidad: </Text>
                <Text style={[tailwind('text-base text-green-600'), typefaces.pm]}>
-                  ${route.params.amount}
+                  ${params.amount}
                </Text>
             </View>
             <View style={tailwind('flex flex-row')}>
                <Text style={[tailwind('text-base'), typefaces.pr]}>Expiración: </Text>
                <Text style={[tailwind('text-base text-gray-800'), typefaces.pm]}>
-                  {formatISODate(route.params.code_expiry_date)}
+                  {formatISODate(params.code_expiry_date)}
                </Text>
             </View>
          </View>
@@ -44,7 +40,7 @@ export default function GenerateCodeView({ navigation, route }) {
                <ActivityIndicator size="large" color="black" animating />
             ) : (
                <Image
-                  source={{ uri: data.qrcode }}
+                  source={{ uri: qr }}
                   style={{ width: FULL_WIDTH - 50, height: FULL_WIDTH - 50 }}
                />
             )}
@@ -54,7 +50,7 @@ export default function GenerateCodeView({ navigation, route }) {
                Código numérico de la compra:
             </Text>
             <Text style={[tailwind('text-xl text-gray-800'), typefaces.pm]}>
-               {route.params.number_code}
+               {params.number_code}
             </Text>
          </View>
       </View>

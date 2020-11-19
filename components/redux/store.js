@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import rootReducers from './reducers';
 import { persistStore, persistReducer } from 'redux-persist';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ENCRYPTOR_KEY } from '../utils/constants';
 import thunk from 'redux-thunk';
 import { encryptTransform } from 'redux-persist-transform-encrypt/lib/sync';
@@ -23,7 +23,6 @@ const reducers = persistReducer(
 
 const store = createStore(reducers, applyMiddleware(thunk));
 const persistor = persistStore(store);
-
 
 export const getPersistor = () => persistor;
 export const getStore = () => store;

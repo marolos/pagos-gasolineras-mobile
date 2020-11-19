@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-   View,
-   Text,
-   ScrollView,
-   ActivityIndicator,
-   FlatList,
-   Keyboard,
-} from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, Keyboard } from 'react-native';
 import InfoIcon from '../icons/InfoIcon';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
@@ -19,6 +12,9 @@ import { makeCancelable, equalForm, validForm } from '../utils/utils';
 import SimpleToast from 'react-native-simple-toast';
 import CitySelect from './CitySelect';
 import Fetch from '../utils/Fetch';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { connect } from 'react-redux';
+import { getStorageItem, setStorageItem } from '../utils/storage';
 
 class BillingDataView extends React.Component {
    constructor(props) {
@@ -40,16 +36,14 @@ class BillingDataView extends React.Component {
    }
 
    componentDidMount() {
-      this.request = makeCancelable(
-         Fetch.get('/users/billing/data/'),
-         (res) => {
-            this.setState({ actualData: res.body, form: res.body, loadingData: false });
-         },
-         (err) => {
-            if (err.isCanceled) return;
-            this.setState({ loadingData: false });
-         },
-      );
+      const { user_id } = this.props.user;
+      getStorageItem('form' + user_id)
+         .then((data) => {
+            this.setState({ actualData: data, form: data, loadingData: false });
+         })
+         .catch((err) => {
+            this.loadData();
+         });
    }
 
    componentWillUnmount() {
@@ -57,11 +51,27 @@ class BillingDataView extends React.Component {
       if (this.saveRequest) this.saveRequest.cancel();
    }
 
+   loadData = () => {
+      const { user_id } = this.props.user;
+      this.request = makeCancelable(
+         Fetch.get('/users/billing/data/'),
+         (res) => {
+            this.setState({ actualData: res.body, form: res.body, loadingData: false });
+            setStorageItem('form' + user_id, res.body);
+         },
+         (err) => {
+            if (err.isCanceled) return;
+            this.setState({ loadingData: false });
+         },
+      );
+   };
+
    sendData = () => {
       Keyboard.dismiss();
       if (this.state.loading) return;
+      const { user_id } = this.props.user;
       const { navigation, route } = this.props;
-		const { actualData, form } = this.state;
+      const { actualData, form } = this.state;
 
       const { valid, message } = validForm(form);
       if (!valid) {
@@ -80,6 +90,7 @@ class BillingDataView extends React.Component {
             this.setState({ loading: false, actualData: this.state.form }, () => {
                navigation.push('topupData', route.params);
             });
+            setStorageItem('form' + user_id, this.state.form);
          },
          (err) => {
             if (err.isCanceled) return;
@@ -95,6 +106,7 @@ class BillingDataView extends React.Component {
                actualData: this.state.actualData,
                form: this.state.actualData,
             });
+            setStorageItem('form' + user_id, this.actualData);
          },
       );
    };
@@ -103,7 +115,6 @@ class BillingDataView extends React.Component {
       const formData = this.state.form;
       return (
          <ScrollView keyboardShouldPersistTaps="handled">
-            <FlatList />
             <View style={tailwind('px-5 py-4')}>
                <Message />
             </View>
@@ -238,14 +249,16 @@ const styles = {
    message: {
       view: tailwind('flex flex-row bg-orange-200 items-center rounded-md px-4 py-2'),
       text: [tailwind('text-yellow-800 text-xs ml-3'), typefaces.pr],
-	},
-	input: {
-		container: tailwind('w-64 my-2'),
-		text: [tailwind('ml-2 text-sm'), typefaces.pr],
-	},
-	button: {
-		container: tailwind('flex flex-row justify-end pr-6 mt-12 mb-4'),
-	},
-}
+   },
+   input: {
+      container: tailwind('w-64 my-2'),
+      text: [tailwind('ml-2 text-sm'), typefaces.pr],
+   },
+   button: {
+      container: tailwind('flex flex-row justify-end pr-6 mt-12 mb-16'),
+   },
+};
 
-export default BillingDataView;
+const mapStateToProps = (state) => ({ user: state.user.data });
+
+export default connect(mapStateToProps)(BillingDataView);

@@ -73,7 +73,7 @@ class SearchView extends React.Component {
          }
       } else {
          SimpleToast.showWithGravity(
-            'Necesita proveer permisos de localización',
+            'Necesita proveer permisos de geolocalización',
             500,
             SimpleToast.CENTER,
          );
@@ -82,7 +82,7 @@ class SearchView extends React.Component {
 
    onSelectStationResult = (station) => {
       this.setState({
-         selectStation: station,
+         selectedStation: station,
          pointers: [station],
          zoom: 14,
          center: [station.longitude, station.latitude],
@@ -122,6 +122,7 @@ class SearchView extends React.Component {
                   visible={showCollapse}
                   closeCollapse={() => this.setState({ showCollapse: false })}
                   station={selectedStation}
+                  navigation={this.props.navigation}
                />
             )}
          </View>
@@ -160,8 +161,8 @@ function getTextStyle(label) {
       textAllowOverlap: false,
       textIgnorePlacement: true,
       textTranslate: [18, -15],
-      textSize: 12,
-      textColor: '#333',
+      textSize: 13,
+      textColor: '#222',
       textMaxWidth: 20,
       textAnchor: 'left',
    };

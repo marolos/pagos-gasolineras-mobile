@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Image, RefreshControl } from 'react-native';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import AdsPaginator from './AdsPaginator';
 import tailwind from 'tailwind-rn';
 import BalanceCard from './BalanceCard';
@@ -10,8 +10,11 @@ import Line from '../shared/Line';
 import { makeCancelable } from '../utils/utils';
 import Fetch from '../utils/Fetch';
 import emptyImage from '../../assets/background/empty.png';
+import { setActiveTab } from '../redux/actions';
+import { TabOptions } from '../redux/reducers';
 
 function BalancesView(props) {
+	const dispatch = useDispatch()
    const [refreshing, setRefreshing] = React.useState(false);
    const [state, setState] = React.useState({
       selectedStation: null,
@@ -21,6 +24,7 @@ function BalancesView(props) {
    });
 
    React.useEffect(() => {
+		dispatch(setActiveTab(TabOptions.GAS))
       const req = loadData(state, setState);
       return () => req.cancel();
    }, []);
