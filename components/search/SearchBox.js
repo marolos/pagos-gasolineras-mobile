@@ -80,10 +80,10 @@ class SearchBox extends React.Component {
       );
    };
 
-   selectStation = (station) => {
+   selectResult = (station) => {
       Keyboard.dismiss()
-      if (this.props.onSelectStation) {
-         this.props.onSelectStation(station);
+      if (this.props.onSelectResult) {
+         this.props.onSelectResult(station);
       }
    };
 
@@ -113,7 +113,7 @@ class SearchBox extends React.Component {
             {open && (
                <ResultList
                   results={this.state.results}
-                  onPressItem={this.selectStation}
+                  onPressItem={this.selectResult}
                   onSearchNear={this.onSearchNear}
                />
             )}

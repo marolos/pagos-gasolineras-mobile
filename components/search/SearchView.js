@@ -20,7 +20,6 @@ class SearchView extends React.Component {
          center: MAP_CENTER,
          zoom: 12,
          userLocation: MAP_CENTER,
-         updateCount: 0,
          showLocation: false,
          showCollapse: false,
          pointers: [],
@@ -49,14 +48,8 @@ class SearchView extends React.Component {
 
    updateUserLocation = (location) => {
       const newLocation = [location.coords.longitude, location.coords.latitude];
-      if (this.state.updateCount < 2) {
-         this.setState({
-            center: newLocation,
-         });
-      }
       this.setState((state) => ({
          userLocation: newLocation,
-         updateCount: state.updateCount + 1,
       }));
    };
 
@@ -69,13 +62,13 @@ class SearchView extends React.Component {
    };
 
    onSearchNear = async () => {
-      this.setState({ updateCount: 0 });
       const granted = await this.getUserLocation();
       if (granted) {
          try {
             const {
                userLocation: [longitude, latitude],
             } = this.state;
+            this.setState({ showLocation: true });
             const response = await Fetch.get('/company/search/gs/nearto/', { longitude, latitude });
             this.setState({ pointers: response.body.result, zoom: 13 });
          } catch (error) {
@@ -90,13 +83,14 @@ class SearchView extends React.Component {
       }
    };
 
-   onSelectStationResult = (station) => {
+   onSelectResult = (station) => {
       this.setState({
          selectedStation: station,
          pointers: [station],
          zoom: 14,
          center: [station.longitude, station.latitude],
          showCollapse: true,
+         showLocation: false,
       });
    };
 
@@ -104,10 +98,7 @@ class SearchView extends React.Component {
       const { center, zoom, showLocation, pointers, selectedStation, showCollapse } = this.state;
       return (
          <View>
-            <SearchBox
-               onSelectStation={this.onSelectStationResult}
-               onSearchNear={this.onSearchNear}
-            />
+            <SearchBox onSelectResult={this.onSelectResult} onSearchNear={this.onSearchNear} />
             <View style={styles.map.view}>
                {this.state.loaded && (
                   <MapboxGL.MapView style={styles.map.map} rotateEnabled={false}>
