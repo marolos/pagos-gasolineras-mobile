@@ -20,6 +20,7 @@ class SearchView extends React.Component {
          center: MAP_CENTER,
          zoom: 12,
          userLocation: MAP_CENTER,
+         updateCount: 0,
          showLocation: false,
          showCollapse: false,
          pointers: [],
@@ -47,8 +48,14 @@ class SearchView extends React.Component {
    };
 
    updateUserLocation = (location) => {
-      const newLocation = [location.coords.longitude, location.coords.latitude];
-      this.setState({ userLocation: newLocation, center: newLocation });
+      if (this.state.updateCount <= 2) {
+         const newLocation = [location.coords.longitude, location.coords.latitude];
+         this.setState((state) => ({
+            userLocation: newLocation,
+            center: newLocation,
+            updateCount: state.updateCount + 1,
+         }));
+      }
    };
 
    onSelectPointer = (station, event) => {
