@@ -49,7 +49,7 @@ class SearchView extends React.Component {
 
    updateUserLocation = (location) => {
       const newLocation = [location.coords.longitude, location.coords.latitude];
-      if (this.state.updateCount <= 2) {
+      if (this.state.updateCount < 2) {
          this.setState({
             center: newLocation,
          });
@@ -76,7 +76,7 @@ class SearchView extends React.Component {
                userLocation: [longitude, latitude],
             } = this.state;
             const response = await Fetch.get('/company/search/gs/nearto/', { longitude, latitude });
-            this.setState({ pointers: response.body.result, zoom: 13 });
+            this.setState({ pointers: response.body.result, zoom: 13, updateCount: 0 });
          } catch (error) {
             this.setState({ pointers: [] });
          }
