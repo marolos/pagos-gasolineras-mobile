@@ -48,14 +48,16 @@ class SearchView extends React.Component {
    };
 
    updateUserLocation = (location) => {
+      const newLocation = [location.coords.longitude, location.coords.latitude];
       if (this.state.updateCount <= 2) {
-         const newLocation = [location.coords.longitude, location.coords.latitude];
-         this.setState((state) => ({
-            userLocation: newLocation,
+         this.setState({
             center: newLocation,
-            updateCount: state.updateCount + 1,
-         }));
+         });
       }
+      this.setState((state) => ({
+         userLocation: newLocation,
+         updateCount: state.updateCount + 1,
+      }));
    };
 
    onSelectPointer = (station, event) => {
