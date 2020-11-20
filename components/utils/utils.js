@@ -1,4 +1,13 @@
-import { IVA_RATE, COMMISION, CEDULA_REGEX, CHAR_REGEX, ALPHANUMERIC } from './constants';
+import {
+   IVA_RATE,
+   COMMISION,
+   CEDULA_REGEX,
+   CHAR_REGEX,
+   ALPHANUMERIC,
+   MAPBOX_API_URL,
+   MAPBOX_TOKEN,
+} from './constants';
+import { FetchClass } from './Fetch';
 import { cities } from './mocks';
 
 /**
@@ -188,7 +197,36 @@ export function getOrderByAmount(amount) {
    };
 }
 
-export function sortByDate(key, ascendent=false) {
+export function sortByDate(key, ascendent = false) {
    if (ascendent) return (a, b) => Date.parse(a[key]) - Date.parse(b[key]);
    return (a, b) => Date.parse(b[key]) - Date.parse(a[key]);
+}
+
+export function sleep(delay = 100) {
+   return new Promise((resolve) => setTimeout(resolve, delay));
+}
+
+export async function getMapboxRoute(start, end) {
+   const response = await new FetchClass(
+      null,
+   ).get(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${start.join(',')};${end.join(',')}`,
+      { access_token: MAPBOX_TOKEN, steps: true },
+   );
+   const { routes } = response.body;
+   const steps = [];
+   if (routes && routes[0] && routes[0].legs) {
+      routes[0].legs[0].steps.forEach((step) => {
+         step.intersections.forEach((inter) => {
+            steps.push(inter.location);
+         });
+      });
+      const routeResult = [[start, steps[0]]];
+      for (let i = 0; i < steps.length - 1; i++) {
+         routeResult.push([steps[i], steps[i + 1]]);
+      }
+      return routeResult;
+   }
+
+   return [];
 }

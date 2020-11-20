@@ -5,6 +5,11 @@ export const REST_API_URL =
       ? 'http://localhost:8000'
       : 'https://fuelpay.azurewebsites.net';
 
+export const MAPBOX_API_URL = 'https://api.mapbox.com'
+
+// https://api.mapbox.com/{endpoint}?access_token={your_access_token}
+// https://api.mapbox.com/directions/v5/mapbox/driving/-79.944185,-2.217567;%20-79.940730,-2.215659
+// 	?access_token=sk.eyJ1IjoibWlndWVscXVvIiwiYSI6ImNraGYyeGZ1eTA1bHkzMHBhZnpwcWV2YzQifQ.-DgT0S5tfdVKQuPHcVv9-A
 
 export const ENCRYPTOR_KEY = 'MIIEowIBAAKA2LCcVqUelTOc6TwslUAm8vxnoCAQEt3hhlv8FjvjmZGqJ';
 export const MAPBOX_TOKEN = 'sk.eyJ1IjoibWlndWVscXVvIiwiYSI6ImNraGYyeGZ1eTA1bHkzMHBhZnpwcWV2YzQifQ.-DgT0S5tfdVKQuPHcVv9-A'

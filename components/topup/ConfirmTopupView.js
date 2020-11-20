@@ -38,7 +38,7 @@ class ConfirmTopupView extends React.Component {
             if (!card.save) {
                Fetch.delete('/payment/user/card/', card)
                   .then((_res) => console.log(_res))
-                  .catch((err) => console.log('on delete::::', err))
+                  .catch((err) => console.error('on delete::::', err))
                   .finally(() => this.setState({ sending: false }));
             } else {
                this.setState({ sending: false });

@@ -76,7 +76,7 @@ export default class BuyView extends React.Component {
             });
          })
          .catch((err) => {
-            console.log(err);
+            console.error(err);
             this.setState({ showBuying: false, showBuyDone: false, showConfirm: false });
             SimpleToast.showWithGravity(
                'No se pudo completar la transacción, reintente',

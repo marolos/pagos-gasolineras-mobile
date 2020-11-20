@@ -7,9 +7,9 @@ import { REST_API_URL } from './constants';
  * Also allow to set custom http headers and interceptor funtions
  * Author: @miguelquo
  */
-class FetchClass {
-   constructor() {
-      this.baseURL = REST_API_URL;
+export class FetchClass {
+   constructor(baseURL) {
+      this.baseURL = baseURL;
       this.headers = {
          'Content-Type': 'application/json',
          Accept: 'application/json',
@@ -89,7 +89,7 @@ class FetchClass {
 
    handleResponse = async (response) => {
       const contentType = response.headers.map['content-type'];
-      if (contentType !== 'application/json') {
+      if (!contentType.includes('application/json')) {
          throw { body: { msg: 'No JSON' }, status: response.status };
       }
       const body = await response.json();
@@ -106,12 +106,17 @@ class FetchClass {
    };
 
    normalizeUrl = (url, params) => {
-      const fullURL = (this.baseURL + url).replace(/([^:]\/)\/+/g, '$1');
+      let fullURL;
+      if (this.baseURL) {
+         fullURL = (this.baseURL + url).replace(/([^:]\/)\/+/g, '$1');
+      } else {
+         fullURL = url.replace(/([^:]\/)\/+/g, '$1');
+      }
       if (params) return `${fullURL}?${new URLSearchParams(params).toString()}`;
       return fullURL;
    };
 }
 
-const Fetch = new FetchClass();
+const Fetch = new FetchClass(REST_API_URL);
 
 export default Fetch;

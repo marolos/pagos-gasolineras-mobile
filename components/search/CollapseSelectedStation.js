@@ -10,6 +10,7 @@ import Fetch from '../utils/Fetch';
 import FastImage from 'react-native-fast-image';
 import StarIcon from '../icons/StarIcon';
 
+
 class CollapseSelectedStation extends React.Component {
    constructor(props) {
       super(props);
@@ -20,7 +21,13 @@ class CollapseSelectedStation extends React.Component {
       };
    }
 
-   componentDidUpdate(prevProps, prevState) {
+   componentDidMount() {
+      if (this.props.station) {
+         this.loadData();
+      }
+   }
+
+   componentDidUpdate(prevProps) {
       if (prevProps.station.id !== this.props.station.id) {
          this.loadData();
       }
@@ -42,7 +49,6 @@ class CollapseSelectedStation extends React.Component {
             this.setState({ hasCredit: balance && balance.total > 0 });
          })
          .catch((err) => {
-            console.log(err);
             this.setState({ hasCredit: false });
          });
    };
@@ -78,7 +84,7 @@ class CollapseSelectedStation extends React.Component {
    onFeedback = () => {
       this.props.navigation.navigate('feedback', {
          screen: 'feedbackView',
-         params: { station: station },
+         params: { station: this.props.station },
       });
    };
 

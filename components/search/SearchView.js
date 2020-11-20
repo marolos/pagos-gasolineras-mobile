@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import { FULL_HIGHT, FULL_WIDTH, MAPBOX_TOKEN, MAP_CENTER } from '../utils/constants';
 import MapboxGL from '@react-native-mapbox-gl/maps';
@@ -7,6 +7,7 @@ import CollapseSelectedStation from './CollapseSelectedStation';
 import Fetch from '../utils/Fetch';
 import SimpleToast from 'react-native-simple-toast';
 import pointImg from '../../assets/icons/point.png';
+import { getMapboxRoute, sleep } from '../utils/utils';
 
 MapboxGL.setAccessToken(MAPBOX_TOKEN);
 MapboxGL.setTelemetryEnabled(false);
@@ -24,6 +25,8 @@ class SearchView extends React.Component {
          showCollapse: false,
          pointers: [],
          selectedStation: null,
+         showRoute: false,
+         route: [],
       };
    }
 
@@ -33,12 +36,22 @@ class SearchView extends React.Component {
       }, 90);
    }
 
+   loadRoute = (end) => {
+      getMapboxRoute(this.state.userLocation, end)
+         .then((routeResult) => {
+            this.setState({ showRoute: true, route: routeResult });
+         })
+         .catch((err) => {
+            console.error(err);
+            this.setState({ showRoute: false });
+         });
+   };
+
    getUserLocation = async () => {
       try {
          const granted = await MapboxGL.requestAndroidLocationPermissions();
-         if (granted) {
-            this.setState({ showLocation: granted });
-         }
+         this.setState({ showLocation: granted });
+         await sleep(200);
          return granted;
       } catch (err) {
          console.error(err);
@@ -54,9 +67,12 @@ class SearchView extends React.Component {
    };
 
    onSelectPointer = (station, event) => {
+      if (this.state.showLocation) {
+         this.loadRoute([[station.longitude, station.latitude]]);
+      }
       this.setState({
          selectedStation: station,
-         center: [station.longitude, station.latitude],
+         center: [station.longitude, station.latitude - 0.005],
          showCollapse: true,
       });
    };
@@ -68,9 +84,13 @@ class SearchView extends React.Component {
             const {
                userLocation: [longitude, latitude],
             } = this.state;
-            this.setState({ showLocation: true });
+            this.setState({ center: [longitude, latitude] });
             const response = await Fetch.get('/company/search/gs/nearto/', { longitude, latitude });
-            this.setState({ pointers: response.body.result, zoom: 13 });
+            this.setState({
+               pointers: response.body.result,
+               zoom: 13,
+               center: [longitude, latitude],
+            });
          } catch (error) {
             this.setState({ pointers: [] });
          }
@@ -88,14 +108,25 @@ class SearchView extends React.Component {
          selectedStation: station,
          pointers: [station],
          zoom: 14,
-         center: [station.longitude, station.latitude],
+         center: [station.longitude, station.latitude - 0.005],
          showCollapse: true,
-         showLocation: false,
       });
+      if (this.state.showLocation) {
+         this.loadRoute([[station.longitude, station.latitude]]);
+      }
    };
 
    render() {
-      const { center, zoom, showLocation, pointers, selectedStation, showCollapse } = this.state;
+      const {
+         center,
+         zoom,
+         showLocation,
+         pointers,
+         selectedStation,
+         showCollapse,
+         showRoute,
+         route,
+      } = this.state;
       return (
          <View>
             <SearchBox onSelectResult={this.onSelectResult} onSearchNear={this.onSearchNear} />
@@ -106,6 +137,7 @@ class SearchView extends React.Component {
                      {showLocation && (
                         <MapboxGL.UserLocation onUpdate={this.updateUserLocation} animated />
                      )}
+                     {showRoute && <RouteShape route={route} />}
                      {pointers.map((station) => (
                         <Pointer
                            key={station.id}
@@ -145,6 +177,28 @@ function Pointer({ id, coord, label, onPress }) {
    );
 }
 
+function RouteShape({ route }) {
+   return (
+      <MapboxGL.ShapeSource id={'dirs'} shape={getRouteConf(route)}>
+         <MapboxGL.LineLayer id={'linedir'} style={{ lineColor: '#0E7490', lineWidth: 3 }} />
+      </MapboxGL.ShapeSource>
+   );
+}
+
+function getRouteConf(route) {
+   return {
+      type: 'FeatureCollection',
+      features: route.map((direction) => ({
+         type: 'Feature',
+         properties: {},
+         geometry: {
+            type: 'LineString',
+            coordinates: direction,
+         },
+      })),
+   };
+}
+
 function getShape(id, coord) {
    return {
       id: id.toString(),
@@ -162,7 +216,7 @@ function getTextStyle(label) {
       textAllowOverlap: false,
       textIgnorePlacement: true,
       textTranslate: [18, -15],
-      textSize: 13,
+      textSize: 14,
       textColor: '#222',
       textMaxWidth: 20,
       textAnchor: 'left',

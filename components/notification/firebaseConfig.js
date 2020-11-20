@@ -45,11 +45,11 @@ export async function getDeviceInfo() {
    Fetch.post('/notification/user/token/', { device_info })
       .then((res) => {})
       .catch((err) => {
-         console.log('again:::::');
+			console.error(err)
          Fetch.post('/notification/user/token/', { device_info })
-            .then((res) => {})
+            .then((res) => {res})
             .catch((_err) => {
-               _err;
+               console.error(_err)
             });
       });
 }
