@@ -69,6 +69,7 @@ class SearchView extends React.Component {
    };
 
    onSearchNear = async () => {
+      this.setState({ updateCount: 0 });
       const granted = await this.getUserLocation();
       if (granted) {
          try {
@@ -76,7 +77,7 @@ class SearchView extends React.Component {
                userLocation: [longitude, latitude],
             } = this.state;
             const response = await Fetch.get('/company/search/gs/nearto/', { longitude, latitude });
-            this.setState({ pointers: response.body.result, zoom: 13, updateCount: 0 });
+            this.setState({ pointers: response.body.result, zoom: 13 });
          } catch (error) {
             this.setState({ pointers: [] });
          }
