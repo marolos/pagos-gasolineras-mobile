@@ -1,80 +1,105 @@
 import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View, Text, ScrollView } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Ripple from 'react-native-material-ripple';
 import tailwind from 'tailwind-rn';
 import Fetch from '../utils/Fetch';
 import { shadowStyle, typefaces } from '../utils/styles';
+import { makeCancelable } from '../utils/utils';
 import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
 
 export default function CompanySelector({ onChange }) {
-   const [selected, setSelected] = React.useState(null);
-   const [options, setOptions] = React.useState([]);
-   const [loading, setLoading] = React.useState(false);
    const [open, setOpen] = React.useState(false);
+   const [options, setOptions] = React.useState([]);
+   const [selected, setSelected] = React.useState(null);
+   const [loading, setLoading] = React.useState(false);
 
    React.useEffect(() => {
       setLoading(true);
-      Fetch.get('/users/vehicles/')
-         .then((res) => {
-            if (res.body.vehicles.length) {
-               setOptions(res.body.vehicles || []);
-               setSelected(res.body.vehicles[0]);
-            }
-         })
-         .catch((err) => {
-            err;
-         })
-         .finally(() => setLoading(false));
+      const req = makeCancelable(
+         Fetch.get('/company/all/'),
+         (res) => {
+            setOptions(res.body);
+            setLoading(false);
+         },
+         (err) => {
+            if (!err.isCanceled) setLoading(false);
+         },
+      );
+      return () => req.cancel();
    }, []);
 
    React.useEffect(() => {
-      onChange(selected);
+      if (onChange) onChange(selected);
    }, [selected]);
 
+   const onSelect = React.useCallback((item) => {
+      setSelected(item);
+      setOpen(false);
+   }, []);
+
    return (
-      <View style={tailwind('flex flex-row justify-between mt-6')}>
-         <Text style={[tailwind('text-base'), typefaces.pm]}>Placa: </Text>
-         <Ripple
-            style={tailwind(
-               'flex flex-row items-center justify-between w-1/2 px-4 py-2 border border-gray-400 rounded',
-            )}
-            onPress={() => setOpen(!open)}
-         >
+      <View style={tailwind('flex flex-row justify-between mt-3 items-center')}>
+         <Text style={[tailwind('text-sm'), typefaces.pm]}>Empresa: </Text>
+         <Ripple style={styles.ripple} onPress={() => setOpen(!open)}>
             {loading ? (
                <ActivityIndicator size="small" animating color="black" style={tailwind('mb-1')} />
             ) : (
-               <Text style={[tailwind('text-sm'), typefaces.pr]}>
-                  {selected ? selected.number : 'seleccionar'}
-               </Text>
+               <View style={tailwind('flex flex-row')}>
+                  {selected && (
+                     <FastImage
+                        source={{ uri: selected.company_logo_path }}
+                        style={{ width: 20, height: 20 }}
+                     />
+                  )}
+                  <Text style={[tailwind('text-sm ml-1 mr-2'), typefaces.pr]}>
+                     {selected ? selected.business_name : 'seleccionar'}
+                  </Text>
+               </View>
             )}
             <AnimatedArrowIcon change={open} />
          </Ripple>
          {open && !loading && (
-            <View style={styles.list}>
+            <ScrollView style={styles.list}>
                {options.map((item) => (
                   <Ripple
                      key={item.id}
-                     style={tailwind('px-4 py-3')}
-                     onPress={() => {
-                        setSelected(item);
-                        setOpen(false);
-                     }}
+                     style={tailwind('px-3 py-3')}
+                     onPress={() => onSelect(item)}
                   >
-                     <Text>
-                        {item.number} {item.alias}
-                     </Text>
+                     <Item item={item} />
                   </Ripple>
                ))}
-            </View>
+            </ScrollView>
          )}
       </View>
    );
 }
 
+function Item({ item }) {
+   return (
+      <View style={tailwind('flex flex-row justify-between')}>
+         <View style={tailwind('flex flex-row')}>
+            <FastImage
+               source={{ uri: item.company_logo_path }}
+               style={{ width: 20, height: 20 }}
+            />
+            <Text style={tailwind('ml-2')}>{item.business_name}</Text>
+         </View>
+      </View>
+   );
+}
+
 const styles = {
+   ripple: [
+      tailwind(
+         'flex flex-row items-center justify-between px-4 w-40 py-1 border border-gray-400 rounded',
+      ),
+      { minWidth: 130 },
+   ],
    list: [
-      tailwind('absolute bg-white w-40 border rounded-sm border-white'),
-      { top: 41, left: 120, zIndex: 10 },
+      tailwind('absolute bg-white w-32 border rounded-sm border-white'),
+      { top: 41, right: 0, zIndex: 10 },
       shadowStyle,
    ],
 };

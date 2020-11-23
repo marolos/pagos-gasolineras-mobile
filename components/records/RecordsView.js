@@ -26,7 +26,14 @@ import ClockIcon from '../icons/ClockIcon';
 import CalendarIcon from '../icons/CalendarIcon';
 import CompanySelector from './CompanySelector';
 import GasStationSelector from './GasStationSelector';
+import emptyImage from '../../assets/background/empty.png';
+import SimpleToast from 'react-native-simple-toast';
 
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+   const paddingToBottom = 20;
+   return layoutMeasurement.height + contentOffset.y >= 
+      contentSize.height - paddingToBottom;
+}
 
 class RecordsView extends React.Component{
    constructor(props){
@@ -37,16 +44,25 @@ class RecordsView extends React.Component{
          loading: true, 
          loadMore: false,  
          refreshing: false,
-         filterExpanded: false
-      }
+         filterExpanded: false,
+         isEndPage: false,
+         fromDateTime: null,
+         toDateTime: null,
+         gasStation: null
+      };
       if(Platform.OS == 'android'){
          UIManager.setLayoutAnimationEnabledExperimental(true);
       }
    }
 
    componentDidMount(){
+      this.loadData({ page: this.state.page});
+   }
+
+   loadData(filters){
+      this.setState({loading: true})
       this.cancelControl = makeCancelable(
-         Fetch.get("/purchase/user/", { page: this.state.page }),
+         Fetch.get("/purchase/user/", filters),
          (value) => {
             this.setState({ purchases: value.body, loading: false });
          },
@@ -57,22 +73,25 @@ class RecordsView extends React.Component{
       );   
    }
    
-   loadMoreData(){
-      this.cancelControl = makeCancelable(
-         Fetch.get("/purchase/user/", { page: this.state.page }),
-         (value) => {
-            let data = this.state.purchases;
-            if(value.body.length > 0){
-               data.push(value.body);
-            }
-            console.log(data);
-            this.setState({ purchases: data, loadMore: false });
-         },
-         (err) => {
-            if (err.isCanceled) return;
-            this.setState({ purchases: this.state.purchases, loadMore: false });
-         },
-      );   
+   loadMoreData(filters){
+      if(!this.state.isEndPage){
+         this.cancelControl = makeCancelable(
+            Fetch.get("/purchase/user/", filters),
+            (value) => {
+               if(value.body.length > 0){
+                  for(var i in value.body){
+                     this.state.purchases.push(value.body[i]);
+                  }
+               }else{
+                  this.setState({ purchases: data, loadMore: false, isEndPage: true });
+               }
+            },
+            (err) => {
+               if (err.isCanceled) return;
+               this.setState({ purchases: this.state.purchases, loadMore: false });
+            },
+         );   
+      }
    }
 
    componentWillUnmount(){
@@ -82,9 +101,9 @@ class RecordsView extends React.Component{
    onRefresh = () => {
       this.setState({ refreshing: true });
       this.cancelControl = makeCancelable(
-         Fetch.get('/purchase/user/', { page: this.state.page }),
+         Fetch.get('/purchase/user/', { page: 0 }),
          (res) => {
-            this.setState({ purchases: res.body, loading: false, refreshing: false });
+            this.setState({ purchases: res.body, loading: false, refreshing: false, isEndPage: false, page: 0 });
          },
          (err) => {
             this.setState({ loading: false, refreshing: false });
@@ -97,38 +116,66 @@ class RecordsView extends React.Component{
       this.setState({ filterExpanded: !this.state.filterExpanded });
    }
 
-   onFilter = (fromDate, toDate, gasStation) => {
-
+   onFilter = (fromDatetime, toDatetime, gasStation) => {
+      /* let filters = { page: this.state.page };
+      if(fromDatetime && toDatetime){
+         filters['from'] = formatISODate(fromDatetime, "yyyy-MM-dd");
+         filters['to'] = formatISODate(fromDatetime, "yyyy-MM-dd");
+         this.setState({fromDateTime: fromDatetime, toDateTime: toDatetime, gasStation: null});
+      }
+      else if(gasStation){
+         filters['gas'] = gasStation.id;
+         this.setState({fromDateTime: null, toDateTime: null, gasStation: gasStation});
+      }else{
+         this.setState({fromDateTime: null, toDateTime: null, gasStation: null});
+      }
+      
+      this.loadData(filters) */
+      console.log(fromDatetime);
+      console.log(toDatetime);
    };
 
-   onScroll = (evt) => {
-      this.setState({loadMore: true, page: this.state.page+1});
-      this.loadMoreData();
+   onItemTap = (purchase) => {
+      //this.props.navigation.push('purchaseDetail', purchase);
    }
 
    render(){
       return (
          <ScrollView
-            onMomentumScrollEnd={this.onScroll}
+            scrollEventThrottle={400}
+            onScroll={({nativeEvent}) => {
+               if(isCloseToBottom(nativeEvent)){
+                  this.setState({loadMore: true, page: ++this.state.page});
+                  let filters = { page: this.state.page };
+                  if(this.state.fromDateTime && this.state.toDateTime){
+                    filters['to'] = this.state.toDateTime;
+                    filters['from'] = this.state.fromDateTime;
+                  }else if(this.state.gasStation){
+                     filters['gas'] = this.state.gasStation;
+                  }
+                  this.loadMoreData(filters);
+               }
+            }}
             refreshControl={
                <RefreshControl onRefresh={this.onRefresh} refreshing={this.state.refreshing} />
             }>
 
             <View>
-               <View style={tailwind('my-3 mx-2')}>
+               <View style={[tailwind('my-3 mx-2'), { zIndex: 10 }]}>
                   <ExpandedFilter 
                      expanded={this.state.filterExpanded} 
                      onAction={this.onAction}
-                     onFilter={this.onFilter}/>
+                     onFilter={(fdt, tdt, g) => this.onFilter(fdt, tdt, g)}/>
                </View>
             {this.state.loading ? 
                   <View style={[tailwind('flex flex-row justify-center'), { height: 200 }]}>
                      <ActivityIndicator animating color="black" size="large" />
                   </View>
                : this.state.purchases.length == 0 ? <EmptyMessage/> :
-               <View>
+               <View style={{ zIndex: -1 }}>
                   <Text style={tailwind('mx-2')}>Resultados: </Text>
                   <PurchasesList 
+                     onItemTap={this.onItemTap}
                      data={this.state.purchases} 
                      onRefresh={this.onRefresh}
                      refreshing={this.state.refreshing}
@@ -152,26 +199,17 @@ function PurchasesList({data, onItemTap}){
       {
          data.map((item) => 
             <View key={'p'+item.id}>
-               <PurchaseItem purchase={item}></PurchaseItem>
+               <PurchaseItem purchase={item} onTap={() => onItemTap(item)}></PurchaseItem>
             </View>
          )
       }
       </View>
    );
-   {/* <ScrollView 
-         refreshControl={
-            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-         }>
-         <FlatList 
-            data={data}
-            renderItem={({item}) => <PurchaseItem purchase={item}></PurchaseItem>}
-         />
-      </ScrollView > */}
 }
 
-function PurchaseItem({purchase}){
+function PurchaseItem({purchase, onTap}){
    return (
-      <Ripple onPress={()=> {}} style={tailwind('mx-2 my-1')}>
+      <Ripple onPress={()=> {}} style={tailwind('mx-2 my-1')} onPress={()=>onTap()}>
          <View style={tailwind('flex rounded-md py-2 px-3 border border-gray-300')}>
             <View style={tailwind('flex flex-row')}> 
                <View style={tailwind('mt-1 mr-1')}>
@@ -226,30 +264,44 @@ function EmptyMessage(props) {
 
 function ExpandedFilter({expanded, onAction, onFilter}){
    
-   const [value, setValue] = React.useState("datetime");
-
+   const [state, setState] = React.useState({
+      value: "datetime",
+      filter: false
+   });
+   
    function changeLayout(){
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       onAction();
    }
 
    const onCheck = (value) => {
-      setValue(value);
-      console.log(value);
+      setState({ ...state, value: value });
    };
 
+   const onInvalidInput = (msg) => {
+      setState({...state, filter: false});
+      SimpleToast.show(msg);
+   }
+
+   const onValidInput = (from_datetime, to_datetime) => {
+      SimpleToast.show("Filtrando...");
+      setState({...state, filter: true});
+      onFilter(from_datetime, to_datetime, null);
+   }
+
+   
    return (
       <View style={[tailwind('flex'), { minHeight: 20 }]}>
          <TouchableOpacity activeOpacity={0.8} onPress={changeLayout}>
          <View style={tailwind('flex flex-row items-center h-8')}>
-            <Text>Filtros </Text>
+            <Text>Filtros{state.filter ? '*' : ''} </Text>
             <AnimatedArrowIcon change={expanded}/>
          </View>
          </TouchableOpacity>
          <View style={{ height: expanded ? null : 0, overflow: 'hidden' }}>
             <View style={tailwind('flex items-center m-2')}>
                <RadioGroup
-                  initValue={value}
+                  initValue={state.value}
                   onCheck={onCheck}
                   radios={[
                      {label: "Fecha y hora", value: "datetime"},
@@ -258,8 +310,15 @@ function ExpandedFilter({expanded, onAction, onFilter}){
                />
                <View>
                   {
-                     value == "datetime" ?
-                     <DateTimeFilter date={new Date()} time={new Date()}/> : <GasFilter></GasFilter>
+                     state.value == "datetime" ?
+                     <DateTimeFilter 
+                        date={new Date()} 
+                        time={new Date()}
+                        onInvalidInput={onInvalidInput}
+                        onValidInput={(fdt, tdt) => onValidInput(fdt, tdt)}
+                        onClear={()=>setState({ ...state, filter: false })}
+                        /> : 
+                     <GasFilter onFilter={(item)=> console.log(item)}></GasFilter>
                   }
                </View>
             </View>
@@ -269,7 +328,7 @@ function ExpandedFilter({expanded, onAction, onFilter}){
    );
 }
 
-function DateTimeFilter({date, time, onValidInput, onInvalidInput}){
+function DateTimeFilter({date, time, onValidInput, onInvalidInput, onClear}){
    const [state, setState] = React.useState({
       visible: false,
       timeVisible: false,
@@ -285,24 +344,59 @@ function DateTimeFilter({date, time, onValidInput, onInvalidInput}){
       selectFromTime: false
    });
 
+   const isValid = () => {
+      const selectedRangeDate = state.selectFromDate && state.selectToDate;
+      const selectedRangeTime = state.selectFromTime && state.selectToTime;
+      if(selectedRangeDate && selectedRangeTime){
+         let fromDatetime = 
+                  new Date(state.fromDate.getFullYear, 
+                        state.fromDate.getMonth, 
+                        state.fromDate.getDate, 
+                        state.fromTime.getHours, 
+                        state.fromTime.getMinutes)
+         let toDatetime = 
+                  new Date(state.toDate.getFullYear, 
+                        state.toDate.getMonth, 
+                        state.toDate.getDate, 
+                        state.toTime.getHours, 
+                        state.toTime.getMinutes)
+         console.log(fromDatetime.getTime());
+         console.log(toDatetime);
+         if(fromDatetime > toDatetime){
+            onInvalidInput('Rango de fechas incorrecto');
+         }else{
+            onValidInput(fromDatetime, toDatetime);
+         }
+      }else{
+         onClear();
+      }
+   }
+
    const showDatePicker = (param) => {
-      console.log(param);
       setState({...state, paramDate: param, visible: true});
    }
 
    const hideDatePicker = () => {
-      setState({...state, visible: false, selectFromDate: false, selectToDate: false})
+      if(state.paramDate == "toDate"){
+         setState({...state, visible: false, selectToDate: false})
+      }else if(state.paramDate == "fromDate"){
+         setState({...state, visible: false, selectFromDate: false})
+      }
+      
    }
 
    const handleConfirm = (date) => {
       if(state.paramDate != ''){
          if(state.paramDate == "toDate"){
             setState({...state, toDate: date, visible: false, selectToDate: true});
+            isValid();
          }else if (state.paramDate == "fromDate"){
             setState({...state, fromDate: date, visible: false, selectFromDate: true});
+            isValid();
          }
       }else{
          setState({...state, visible: false});
+         isValid();
       }
    }
 
@@ -311,19 +405,25 @@ function DateTimeFilter({date, time, onValidInput, onInvalidInput}){
    }
 
    const hideTimePicker = () => {
-      setState({...state, timeVisible: false, selectFromTime: false, selectToTime: false})
+      if(state.paramTime == "toTime"){
+         setState({...state, timeVisible: false, selectToTime: false})
+      }else if(state.paramTime == "fromTime"){
+         setState({...state, timeVisible: false, selectFromTime: false})
+      }
    }
 
    const handleConfirmTime = (time) => {
-      console.log(formatISODate(time));
       if(state.paramTime != ''){
          if(state.paramTime == "toTime"){
             setState({...state, toTime: time, timeVisible: false, selectToTime: true});
+            isValid();
          }else if (state.paramTime == "fromTime"){
             setState({...state, fromTime: time, timeVisible: false, selectFromTime: true});
+            isValid();
          }
       }else{
          setState({...state, timeVisible: false});
+         isValid();
       }
    }
 
@@ -419,10 +519,11 @@ function DateTimeFilter({date, time, onValidInput, onInvalidInput}){
 }
 
 function GasFilter({onFilter}){
+   const [company, setCompany] = React.useState(null);
    return (
       <View>
-         <GasStationSelector onChange={(item)=> console.log(item)}></GasStationSelector>
-         <GasStationSelector onChange={(item)=> console.log(item)}></GasStationSelector>
+         <CompanySelector onChange={(item) => setCompany(item)}></CompanySelector>
+         <GasStationSelector id={1} onChange={(item)=> onFilter(item)}></GasStationSelector>
       </View>
    );
 }

@@ -6,37 +6,40 @@ import Fetch from '../utils/Fetch';
 import { shadowStyle, typefaces } from '../utils/styles';
 import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
 
-export default function GasStationSelector({ onChange }) {
+export default function GasStationSelector({ onChange, id }) {
    const [selected, setSelected] = React.useState(null);
    const [options, setOptions] = React.useState([]);
    const [loading, setLoading] = React.useState(false);
    const [open, setOpen] = React.useState(false);
-
-   React.useEffect(() => {
-      setLoading(true);
-      Fetch.get('/users/vehicles/')
-         .then((res) => {
-            if (res.body.vehicles.length) {
-               setOptions(res.body.vehicles || []);
-               setSelected(res.body.vehicles[0]);
-            }
-         })
-         .catch((err) => {
-            err;
-         })
-         .finally(() => setLoading(false));
-   }, []);
+   if(id != null){
+      React.useEffect(() => {
+            setLoading(true);
+            Fetch.get('/company/stations/'+id+"/")
+               .then((res) => {
+                  console.log(res.body);
+                  setOptions(res.body || []);
+                  setLoading(false)
+               })
+               .catch((err) => {
+                  err;
+               })
+               .finally(() => setLoading(false));
+      }, []);
+   }else{
+      setOptions([]);
+   }
 
    React.useEffect(() => {
       onChange(selected);
    }, [selected]);
 
+
    return (
-      <View style={tailwind('flex flex-row justify-between mt-6')}>
-         <Text style={[tailwind('text-base'), typefaces.pm]}>Placa: </Text>
+      <View style={tailwind('flex flex-row justify-between mt-3 items-center')}>
+         <Text style={[tailwind('text-sm'), typefaces.pm]}>Estación: </Text>
          <Ripple
             style={tailwind(
-               'flex flex-row items-center justify-between w-1/2 px-4 py-2 border border-gray-400 rounded',
+               'flex flex-row items-center justify-between w-40 px-4 py-1 border border-gray-400 rounded',
             )}
             onPress={() => setOpen(!open)}
          >
@@ -44,7 +47,7 @@ export default function GasStationSelector({ onChange }) {
                <ActivityIndicator size="small" animating color="black" style={tailwind('mb-1')} />
             ) : (
                <Text style={[tailwind('text-sm'), typefaces.pr]}>
-                  {selected ? selected.number : 'seleccionar'}
+                  {selected ? selected.name : 'seleccionar'}
                </Text>
             )}
             <AnimatedArrowIcon change={open} />
@@ -61,7 +64,7 @@ export default function GasStationSelector({ onChange }) {
                      }}
                   >
                      <Text>
-                        {item.number} {item.alias}
+                        {item.name}
                      </Text>
                   </Ripple>
                ))}
