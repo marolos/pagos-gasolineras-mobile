@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function ArrowUpRightIcon(props) {
@@ -18,4 +18,4 @@ function ArrowUpRightIcon(props) {
    );
 }
 
-export default ArrowUpRightIcon;
+export default memo(ArrowUpRightIcon);

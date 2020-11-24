@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import Svg, { Circle, Path } from "react-native-svg"
 
 function SubstractIcon(props) {
@@ -10,4 +10,4 @@ function SubstractIcon(props) {
   )
 }
 
-export default SubstractIcon
+export default memo(SubstractIcon)

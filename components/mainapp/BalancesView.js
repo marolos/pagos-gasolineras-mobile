@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Image, RefreshControl } from 'react-native';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import AdsPaginator from './AdsPaginator';
 import tailwind from 'tailwind-rn';
 import BalanceCard from './BalanceCard';
@@ -13,80 +13,91 @@ import emptyImage from '../../assets/background/empty.png';
 import { setActiveTab } from '../redux/actions';
 import { TabOptions } from '../redux/reducers';
 
-function BalancesView(props) {
-	const dispatch = useDispatch()
-   const [refreshing, setRefreshing] = React.useState(false);
-   const [state, setState] = React.useState({
-      selectedStation: null,
-      modalVisible: false,
-      balances: [],
-      loading: true,
-   });
+class BalancesView extends React.Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         selectedStation: null,
+         modalVisible: false,
+         balances: [],
+         loading: true,
+         refreshing: false,
+      };
+   }
 
-   React.useEffect(() => {
-		dispatch(setActiveTab(TabOptions.GAS))
-      const req = loadData(state, setState);
-      return () => req.cancel();
-   }, []);
+   componentDidMount() {
+      this.reqCancelControl = this.loadData();
+      this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
+         this.props.dispatch(setActiveTab(TabOptions.GAS));
+      });
+   }
 
-   const onRefresh = React.useCallback(() => {
-      setRefreshing(true);
-      const req = loadData(state, setState, () => setRefreshing(false));
-      return () => req.cancel();
-   }, [state.balances]);
+   componentWillUnmount() {
+      if (this.reqCancelControl) this.reqCancelControl.cancel();
+      if (this.unsubscribeFocus) this.unsubscribeFocus();
+   }
 
-   const onPressStation = React.useCallback((item) => {
-      setState((value) => ({
-         ...value,
+   loadData = (cb) => {
+      const cancelControl = makeCancelable(
+         Fetch.get('/users/balances/'),
+         (res) => {
+            this.setState({ balances: res.body.balances, loading: false });
+            if (cb) cb();
+         },
+         (err) => {
+            if (err.isCanceled) return;
+            this.setState({ balances: [], loading: false });
+            if (cb) cb();
+         },
+      );
+
+      return cancelControl;
+   };
+
+   onRefresh = () => {
+      this.setState({ refreshing: true });
+      this.reqCancelControl = this.loadData(() => this.setState({ refreshing: false }));
+   };
+
+   onPressStation = (item) => {
+      this.setState({
          selectedStation: item,
          modalVisible: true,
-      }));
-   }, []);
+      });
+   };
 
-   return (
-      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-         <View>
-            <AdsPaginator />
-         </View>
-         {state.balances.length > 0 && (
-            <View style={tailwind('mt-4 px-6')}>
-               <Text style={[tailwind('text-black text-sm'), typefaces.pm]}>Gasolineras</Text>
-               <Line style={tailwind('bg-gray-400 w-full mb-2')} />
+   render() {
+      const { balances, refreshing, loading, selectedStation, modalVisible } = this.state;
+      return (
+         <ScrollView
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
+         >
+            <View>
+               <AdsPaginator />
             </View>
-         )}
-         <View>
-            <GasStationList
-               loading={state.loading}
-               data={state.balances}
-               onItemPress={onPressStation}
-            />
-         </View>
-         {state.balances.length > 0 && state.selectedStation && (
-            <CollapseModalOptions
-               visible={state.modalVisible}
-               station={state.selectedStation}
-               closeCollapse={() => setState((value) => ({ ...value, modalVisible: false }))}
-            />
-         )}
-      </ScrollView>
-   );
-}
-
-function loadData(state, setState, cb) {
-   const cancelControl = makeCancelable(
-      Fetch.get('/users/balances/'),
-      (res) => {
-         setState({ ...state, balances: res.body.balances, loading: false });
-         if (cb) cb();
-      },
-      (err) => {
-         if (err.isCanceled) return;
-         setState({ ...state, balances: [], loading: false });
-         if (cb) cb();
-      },
-   );
-
-   return cancelControl;
+            {balances.length > 0 && (
+               <View style={tailwind('mt-4 px-6')}>
+                  <Text style={[tailwind('text-black text-sm'), typefaces.pm]}>Gasolineras</Text>
+                  <Line style={tailwind('bg-gray-400 w-full mb-2')} />
+               </View>
+            )}
+            <View>
+               <GasStationList
+                  loading={loading}
+                  data={balances}
+                  onItemPress={this.onPressStation}
+               />
+            </View>
+            {balances.length > 0 && selectedStation && (
+               <CollapseModalOptions
+                  visible={modalVisible}
+                  station={selectedStation}
+                  closeCollapse={() => this.setState({ modalVisible: false })}
+               />
+            )}
+         </ScrollView>
+      );
+   }
 }
 
 function GasStationList({ data, onItemPress, loading }) {

@@ -3,8 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import BalancesView from './BalancesView';
-import NotificationsView from './NotificationsView';
-import { setActiveTab } from '../redux/actions';
 import { TabOptions } from '../redux/reducers';
 import tailwind from 'tailwind-rn';
 import DispenserIcon from '../icons/DispenserIcon';
@@ -13,6 +11,7 @@ import NotificationIcon from '../icons/NotificationIcon';
 import Ripple from 'react-native-material-ripple';
 import { typefaces, shadowStyle } from '../utils/styles';
 import SearchView from '../search/SearchView';
+import NotificationsView from '../notification/NotificationsView';
 
 const Tab = createBottomTabNavigator();
 
@@ -78,21 +77,16 @@ const TabButtonNotifications = ({ navigation }) => {
 const mapStateToProps = (state) => ({
    activeTab: state.activeTab,
 });
-const mapDispatchToProps = (dispatch) => ({
-   setActive: (activeTab) => dispatch(setActiveTab(activeTab)),
-});
 
 const TabButton = connect(
    mapStateToProps,
-   mapDispatchToProps,
-)(({ navigateTo, activeTab, setActive, label, tabOption, icon, navigation }) => {
+)(({ navigateTo, activeTab, label, icon, navigation }) => {
    const Icon = icon;
    const focused = activeTab.label === label.trim();
    return (
       <Ripple
          onPress={() => {
             navigation.navigate(navigateTo);
-            setActive(tabOption);
          }}
          style={styles.tabButton.ripple}
          rippleCentered={true}

@@ -8,6 +8,9 @@ import Fetch from '../utils/Fetch';
 import SimpleToast from 'react-native-simple-toast';
 import pointImg from '../../assets/icons/point.png';
 import { getMapboxRoute, sleep } from '../utils/utils';
+import { connect } from 'react-redux';
+import { TabOptions } from '../redux/reducers';
+import { setActiveTab } from '../redux/actions';
 
 MapboxGL.setAccessToken(MAPBOX_TOKEN);
 MapboxGL.setTelemetryEnabled(false);
@@ -16,7 +19,6 @@ class SearchView extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
-         loaded: false,
          perm: false,
          center: MAP_CENTER,
          zoom: 12,
@@ -31,10 +33,14 @@ class SearchView extends React.Component {
    }
 
    componentDidMount() {
-      setTimeout(() => {
-         this.setState({ loaded: true });
-      }, 90);
-   }
+      this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
+         this.props.dispatch(setActiveTab(TabOptions.SEARCH));
+      });
+	}
+	
+	componentWillUnmount(){
+		if (this.unsubscribeFocus) this.unsubscribeFocus();
+	}
 
    loadRoute = (end) => {
       getMapboxRoute(this.state.userLocation, end)
@@ -131,24 +137,22 @@ class SearchView extends React.Component {
          <View>
             <SearchBox onSelectResult={this.onSelectResult} onSearchNear={this.onSearchNear} />
             <View style={styles.map.view}>
-               {this.state.loaded && (
-                  <MapboxGL.MapView style={styles.map.map} rotateEnabled={false}>
-                     <MapboxGL.Camera centerCoordinate={center} zoomLevel={zoom} />
-                     {showLocation && (
-                        <MapboxGL.UserLocation onUpdate={this.updateUserLocation} animated />
-                     )}
-                     {showRoute && <RouteShape route={route} />}
-                     {pointers.map((station) => (
-                        <Pointer
-                           key={station.id}
-                           id={station.id}
-                           coord={[station.longitude, station.latitude]}
-                           onPress={(event) => this.onSelectPointer(station, event)}
-                           label={station.name}
-                        />
-                     ))}
-                  </MapboxGL.MapView>
-               )}
+               <MapboxGL.MapView style={styles.map.map} rotateEnabled={false}>
+                  <MapboxGL.Camera centerCoordinate={center} zoomLevel={zoom} />
+                  {showLocation && (
+                     <MapboxGL.UserLocation onUpdate={this.updateUserLocation} animated />
+                  )}
+                  {showRoute && <RouteShape route={route} />}
+                  {pointers.map((station) => (
+                     <Pointer
+                        key={station.id}
+                        id={station.id}
+                        coord={[station.longitude, station.latitude]}
+                        onPress={(event) => this.onSelectPointer(station, event)}
+                        label={station.name}
+                     />
+                  ))}
+               </MapboxGL.MapView>
             </View>
             {selectedStation && (
                <CollapseSelectedStation
@@ -231,4 +235,4 @@ const styles = {
    iconLayer: { iconImage: pointImg, iconSize: 0.7, iconTranslate: [0, -10] },
 };
 
-export default SearchView;
+export default connect()(SearchView);

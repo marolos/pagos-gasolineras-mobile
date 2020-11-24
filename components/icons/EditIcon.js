@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function EditIcon(props) {
@@ -22,4 +22,4 @@ function EditIcon(props) {
    );
 }
 
-export default EditIcon;
+export default memo(EditIcon);

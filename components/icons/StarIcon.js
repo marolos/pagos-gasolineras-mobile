@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function StarIcon({ width = 24, height = 24, fill = '#FDE047', stroke = '#FDE047' }) {
@@ -19,4 +19,4 @@ function StarIcon({ width = 24, height = 24, fill = '#FDE047', stroke = '#FDE047
    );
 }
 
-export default StarIcon;
+export default memo(StarIcon);

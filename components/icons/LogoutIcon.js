@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function LogoutIcon(props) {
@@ -16,4 +16,4 @@ function LogoutIcon(props) {
    );
 }
 
-export default LogoutIcon;
+export default memo(LogoutIcon);

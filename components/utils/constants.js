@@ -5,16 +5,13 @@ export const REST_API_URL =
       ? 'http://localhost:8000'
       : 'https://fuelpay.azurewebsites.net';
 
-export const MAPBOX_API_URL = 'https://api.mapbox.com'
-
-// https://api.mapbox.com/{endpoint}?access_token={your_access_token}
-// https://api.mapbox.com/directions/v5/mapbox/driving/-79.944185,-2.217567;%20-79.940730,-2.215659
-// 	?access_token=sk.eyJ1IjoibWlndWVscXVvIiwiYSI6ImNraGYyeGZ1eTA1bHkzMHBhZnpwcWV2YzQifQ.-DgT0S5tfdVKQuPHcVv9-A
+export const MAPBOX_API_URL = 'https://api.mapbox.com';
 
 export const ENCRYPTOR_KEY = 'MIIEowIBAAKA2LCcVqUelTOc6TwslUAm8vxnoCAQEt3hhlv8FjvjmZGqJ';
-export const MAPBOX_TOKEN = 'sk.eyJ1IjoibWlndWVscXVvIiwiYSI6ImNraGYyeGZ1eTA1bHkzMHBhZnpwcWV2YzQifQ.-DgT0S5tfdVKQuPHcVv9-A'
+export const MAPBOX_TOKEN =
+   'sk.eyJ1IjoibWlndWVscXVvIiwiYSI6ImNraGYyeGZ1eTA1bHkzMHBhZnpwcWV2YzQifQ.-DgT0S5tfdVKQuPHcVv9-A';
 //export const MAPBOX_TOKEN = 'pk.eyJ1IjoiZnVlbHBheSIsImEiOiJja2hibTd2bmgwMTRuMnNxamQ5eThheWttIn0.8oO_NxO2GcZDbOi4YvJF_w'
-export const MAP_CENTER =[ -79.891971, -2.171499]
+export const MAP_CENTER = [-79.891971, -2.171499];
 
 export const theme = {
    dark: false,
@@ -49,3 +46,12 @@ export const AMEX_REGEX = /^3[47]/;
 
 export const IVA_RATE = 12;
 export const COMMISION = 0.25;
+
+export const NotificationType = {
+   CHANGE_PRIVACY_POLICES: 'change_privacy_polices', 
+   PURCHASE_DONE: 'purchase_done', 
+   TIP: 'tip', 
+   ADVERTISEMENT: 'advertisement', 
+   DISABLE_USER: 'disable_user', 
+   TRANSFER: 'trasfer', 
+};

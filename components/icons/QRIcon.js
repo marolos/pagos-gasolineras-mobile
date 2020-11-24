@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function QRIcon(props) {
@@ -12,4 +12,4 @@ function QRIcon(props) {
    );
 }
 
-export default QRIcon;
+export default memo(QRIcon);
