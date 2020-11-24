@@ -21,6 +21,8 @@ export function getMessaging() {
    return MessagingApp;
 }
 
+
+
 // Request permission notifications for ios devices
 export async function requestUserPermission() {
    const authStatus = await getMessaging().requestPermission();
