@@ -68,8 +68,21 @@ class LoginView extends React.Component {
       );
    };
 
-   onChange = (option)  => {
-      this.setState();
+   onChangeEmail = (text) => {
+      this.setState((state) => ({
+         credentials: { ...state.credentials, identifier: text },
+         hasEmailError: !EMAIL_REGEX.test(text) && state.sent1,
+      }));
+   };
+
+   onChangePassword = (text) => {
+      this.setState((state) => ({
+         credentials: { ...state.credentials, password: text },
+      }));
+   };
+
+   onChange = (option) => {
+      //this.setState();
       this.props.navigation.push(option);
    };
 
@@ -90,12 +103,7 @@ class LoginView extends React.Component {
                         typefaces.pm,
                      ]}
                      placeholder="email"
-                     onChangeText={(text) => {
-                        this.setState((state) => ({
-                           credentials: { ...state.credentials, identifier: text },
-                           hasEmailError: !EMAIL_REGEX.test(text) && state.sent1,
-                        }));
-                     }}
+                     onChangeText={this.onChangeEmail}
                   />
                </View>
                <View style={tailwind('flex flex-row')}>
@@ -104,11 +112,7 @@ class LoginView extends React.Component {
                      style={[tailwind('bg-gray-200 rounded-md w-64 m-2 pl-5'), typefaces.pm]}
                      placeholder="contraseña"
                      secureTextEntry={true}
-                     onChangeText={(text) =>
-                        this.setState((state) => ({
-                           credentials: { ...state.credentials, password: text },
-                        }))
-                     }
+                     onChangeText={this.onChangePassword}
                   />
                </View>
                <View style={tailwind('mt-8')}>
@@ -119,7 +123,11 @@ class LoginView extends React.Component {
                   />
                </View>
                <View style={tailwind('mt-8')}>
-                  <TextButton text="¿Olvidaste tu contraseña?" onPress={() => this.onChange('resetpass')} style={{ textDecorationLine: 'underline' }}/>
+                  <TextButton
+                     text="¿Olvidaste tu contraseña?"
+                     onPress={() => this.onChange('resetpass')}
+                     style={{ textDecorationLine: 'underline' }}
+                  />
                </View>
                <View style={tailwind('flex flex-row items-center mt-4')}>
                   <Text style={[typefaces.pr, { marginRight: 10 }]}>¿No tienes cuenta?</Text>

@@ -10,7 +10,6 @@ import Fetch from '../utils/Fetch';
 import FastImage from 'react-native-fast-image';
 import StarIcon from '../icons/StarIcon';
 
-
 class CollapseSelectedStation extends React.Component {
    constructor(props) {
       super(props);
@@ -56,6 +55,8 @@ class CollapseSelectedStation extends React.Component {
    onTopup = () => {
       const { company } = this.state;
       const { closeCollapse, station, navigation } = this.props;
+      console.log('company::::', company);
+      console.log('station::::', station);
       closeCollapse();
       setTimeout(
          () =>
@@ -63,13 +64,15 @@ class CollapseSelectedStation extends React.Component {
                gas_station: station,
                company,
             }),
-         200,
+         100,
       );
    };
 
    onBuy = () => {
       const { company } = this.state;
       const { closeCollapse, station, navigation } = this.props;
+      console.log('company::::', company);
+      console.log('station::::', station);
       closeCollapse();
       setTimeout(
          () =>
@@ -77,7 +80,7 @@ class CollapseSelectedStation extends React.Component {
                gas_station: station,
                company,
             }),
-         200,
+         100,
       );
    };
 
@@ -110,12 +113,13 @@ class CollapseSelectedStation extends React.Component {
                </Ripple>
                <View style={tailwind('pt-1 px-6')}>
                   <View style={styles.title}>
-                     {loaded ? <></> : <ActivityIndicator color="black" size="small" animating />}
-                     {loaded && (
+                     {loaded ? (
                         <FastImage
                            source={{ uri: company.company_logo_path }}
                            style={styles.image}
                         />
+                     ) : (
+                        <ActivityIndicator color="black" size="small" animating />
                      )}
                      <View>
                         <Text style={styles.titleText}>{station.name}</Text>
@@ -143,8 +147,12 @@ class CollapseSelectedStation extends React.Component {
                      </Ripple>
                   </View>
                   <View style={styles.options}>
-                     <Button text={'recargar'} onPress={this.onTopup} primary={!hasCredit} />
-                     {hasCredit && <Button text={'comprar'} onPress={this.onBuy} />}
+                     {loaded && (
+                        <React.Fragment>
+                           <Button text={'recargar'} onPress={this.onTopup} primary={!hasCredit} />
+                           {hasCredit && <Button text={'comprar'} onPress={this.onBuy} />}
+                        </React.Fragment>
+                     )}
                   </View>
                </View>
             </View>

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { G, Path } from 'react-native-svg';
 
-export default function RadioIcon({ selected }) {
+function RadioIcon({ selected }) {
    return (
       <Svg width={24} height={24} viewBox="0 0 24 24">
          <G data-name="Layer 2">
@@ -19,3 +19,5 @@ export default function RadioIcon({ selected }) {
       </Svg>
    );
 }
+
+export default memo(RadioIcon)

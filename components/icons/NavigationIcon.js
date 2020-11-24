@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { G, Path, Defs, ClipPath } from 'react-native-svg';
 
 function NavigationIcon({ width = 14, height = 14, stroke = '#333' }) {
@@ -22,4 +22,4 @@ function NavigationIcon({ width = 14, height = 14, stroke = '#333' }) {
    );
 }
 
-export default NavigationIcon;
+export default memo(NavigationIcon);

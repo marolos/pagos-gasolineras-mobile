@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function MapPinIcon({width=14, height=16, stroke="#000"}) {
@@ -22,4 +22,4 @@ function MapPinIcon({width=14, height=16, stroke="#000"}) {
    );
 }
 
-export default MapPinIcon;
+export default memo(MapPinIcon);

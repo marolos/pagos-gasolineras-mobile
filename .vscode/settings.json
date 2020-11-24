@@ -10,6 +10,12 @@
       ".vscode/": false,
       ".git/": true,
    },
+   "search.exclude": {
+		"node_modules/": true,
+      ".build/**": true,
+      ".git/*": true,
+		"out/**": true,
+	},
    "[javascript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.detectIndentation": false,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function ArrowLeftDownIcon(props) {
@@ -18,4 +18,4 @@ function ArrowLeftDownIcon(props) {
    );
 }
 
-export default ArrowLeftDownIcon;
+export default memo(ArrowLeftDownIcon);

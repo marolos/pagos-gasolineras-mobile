@@ -33,7 +33,8 @@ function HomeNavigator({ navigation }) {
                navigation.navigate('profile');
             }
          });
-   }, []);
+	}, []);
+	
    return (
       <Stack.Navigator
          screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}

@@ -20,7 +20,7 @@ export default function RecordsNavigator({ navigation }) {
          }}
       >
          <Stack.Screen
-            name="profileView"
+            name="recordsView"
             component={RecordsView}
             options={({ navigation }) => ({
                headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,

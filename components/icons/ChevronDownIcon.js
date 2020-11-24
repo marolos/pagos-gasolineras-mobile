@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 function ChevronDownIcon(props) {
@@ -15,4 +15,4 @@ function ChevronDownIcon(props) {
    );
 }
 
-export default ChevronDownIcon;
+export default memo(ChevronDownIcon);
