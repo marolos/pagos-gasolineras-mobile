@@ -138,7 +138,7 @@ class RecordsView extends React.Component{
    };
 
    onItemTap = (purchase) => {
-      //this.props.navigation.push('purchaseDetail', purchase);
+      this.props.navigation.navigate('purchaseDetail', purchase);
    }
    
    onScroll = (nativeEvent) => {
@@ -241,7 +241,7 @@ function PurchaseItem({purchase, onTap}){
                <Text style={[tailwind('text-xs')]}>{
                   purchase?.is_done ? 
                   <Text style={tailwind('text-red-500')}>(efectuado)</Text> :
-                     new Date(purchase?.code_expiry_date) < new Date() ? 
+                     new Date(purchase?.code_expiry_date) > new Date() ? 
                         <Text style={tailwind('text-yellow-500')}>(en proceso)</Text> :
                      <Text style={tailwind('text-gray-700')}>(expirada)</Text>
                }</Text>
@@ -259,7 +259,7 @@ function EmptyMessage(props) {
          </View>
          <View style={tailwind('px-12')}>
             <Text style={[tailwind('text-gray-700 text-lg text-center'), typefaces.pm]}>
-               No haz realizado ninguna compra.
+               No hay compras para mostrar.
             </Text>
          </View>
       </View>
