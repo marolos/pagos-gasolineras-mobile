@@ -4,22 +4,22 @@ import Ripple from 'react-native-material-ripple';
 import { FULL_WIDTH } from '../utils/constants';
 
 export default function Notification({ title }) {
-   return (
-      <Ripple style={styles.item} rippleSize={FULL_WIDTH} >
+	return (
+		<Ripple style={styles.item} rippleSize={FULL_WIDTH} >
 			<View>
 
 			</View>
 			<Text style={styles.title}>{title}</Text>
-      </Ripple>
-   );
+		</Ripple>
+	);
 }
 
 const styles = StyleSheet.create({
-   item: {
+	item: {
 		padding: 20,
 		backgroundColor: 'white'
-   },
-   title: {
-      fontSize: 32,
-   },
+	},
+	title: {
+		fontSize: 32,
+	},
 });

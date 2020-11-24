@@ -138,7 +138,7 @@ class RecordsView extends React.Component{
    };
 
    onItemTap = (purchase) => {
-      this.props.navigation.navigate('purchaseDetail', purchase);
+      this.props.navigation.push('purchaseDetail', purchase);
    }
    
    onScroll = (nativeEvent) => {
@@ -216,7 +216,7 @@ function PurchasesList({data, onItemTap}){
 
 function PurchaseItem({purchase, onTap}){
    return (
-      <Ripple onPress={()=> {}} style={tailwind('mx-2 my-1')} onPress={()=>onTap()}>
+      <Ripple style={tailwind('mx-2 my-1')} onPress={()=>onTap()}>
          <View style={tailwind('flex rounded-md py-2 px-3 border border-gray-300')}>
             <View style={tailwind('flex flex-row')}> 
                <View style={tailwind('mt-1 mr-1')}>

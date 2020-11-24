@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Image, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import AdsPaginator from './AdsPaginator';
@@ -100,7 +100,7 @@ class BalancesView extends React.Component {
    }
 }
 
-function GasStationList({ data, onItemPress, loading }) {
+const GasStationList = memo(({ data, onItemPress, loading }) => {
    if (loading) {
       return (
          <View style={[tailwind('flex flex-row justify-center'), { height: 200 }]}>
@@ -128,7 +128,7 @@ function GasStationList({ data, onItemPress, loading }) {
          ))}
       </View>
    );
-}
+});
 
 function EmptyMessage(props) {
    return (

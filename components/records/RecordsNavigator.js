@@ -16,7 +16,6 @@ export default function RecordsNavigator({ navigation }) {
       <Stack.Navigator
          screenOptions={{
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
          }}
       >
          <Stack.Screen

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import Modal from 'react-native-modal';
@@ -78,4 +78,4 @@ const styles = {
    options: tailwind('flex flex-row justify-evenly mt-6'),
 };
 
-export default CollapseModalOptions;
+export default memo(CollapseModalOptions);

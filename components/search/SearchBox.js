@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, TextInput, Keyboard, ActivityIndicator, Text } from 'react-native';
 import { FULL_HIGHT, FULL_WIDTH } from '../utils/constants';
 import tailwind from 'tailwind-rn';
@@ -81,7 +81,7 @@ class SearchBox extends React.Component {
    };
 
    selectResult = (station) => {
-      Keyboard.dismiss()
+      Keyboard.dismiss();
       if (this.props.onSelectResult) {
          this.props.onSelectResult(station);
       }
@@ -97,13 +97,13 @@ class SearchBox extends React.Component {
    };
 
    render() {
-      const { loading, open } = this.state;
+      const { loading, open, results } = this.state;
       return (
          <View style={styles.view}>
             <ScrollView keyboardShouldPersistTaps="handled" style={styles.boxScrollView}>
                <View style={styles.box}>
                   <TextInput
-                     style={tailwind('w-56')}
+                     style={styles.textInput}
                      placeholder="nombre, dirección"
                      onChangeText={this.onChangeText}
                   />
@@ -112,12 +112,12 @@ class SearchBox extends React.Component {
             </ScrollView>
             {open && (
                <ResultList
-                  results={this.state.results}
+                  results={results}
                   onPressItem={this.selectResult}
                   onSearchNear={this.onSearchNear}
                />
             )}
-            <AnimatedBackground show={this.state.open} />
+            <AnimatedBackground show={open} />
          </View>
       );
    }
@@ -129,7 +129,7 @@ function AnimatedBackground({ show }) {
    React.useEffect(() => {
       Animated.timing(value, {
          toValue: show ? FULL_HIGHT : 0,
-         duration: 150,
+         duration: 200,
          easing: Easing.circle,
       }).start();
    }, [show]);
@@ -139,23 +139,19 @@ function AnimatedBackground({ show }) {
 
 function ResultList({ results = [], onPressItem = () => {}, onSearchNear = () => {} }) {
    return (
-      <ScrollView keyboardShouldPersistTaps="handled" style={styles.resultList}>
+      <ScrollView keyboardShouldPersistTaps="handled" style={styles.resultList.scroll}>
          <SearchNearButton onPress={onSearchNear} />
          {results.map((station) => (
             <Ripple
                key={station.id}
-               style={tailwind('flex flex-row items-center justify-between px-6 pt-1 pb-2')}
+               style={styles.resultList.ripple}
                onPress={() => onPressItem(station)}
             >
-               <View style={tailwind('flex flex-row items-center')}>
+               <View style={styles.resultList.view0}>
                   <MapPinIcon />
-                  <View style={tailwind('ml-3')}>
-                     <Text style={[tailwind('text-sm'), typefaces.pm]}>{station.name}</Text>
-                     <Text
-                        style={[tailwind('text-sm text-gray-700'), { maxWidth: 200 }, typefaces.pr]}
-                     >
-                        {station.address}
-                     </Text>
+                  <View style={styles.resultList.view1}>
+                     <Text style={styles.resultList.text0}>{station.name}</Text>
+                     <Text style={styles.resultList.text1}>{station.address}</Text>
                   </View>
                </View>
                <ArrowUpLeftIcon />
@@ -167,13 +163,11 @@ function ResultList({ results = [], onPressItem = () => {}, onSearchNear = () =>
 
 function SearchNearButton({ onPress }) {
    return (
-      <Ripple onPress={onPress} style={tailwind('flex flex-row items-center mb-3 px-4 py-2')}>
-         <View
-            style={tailwind('flex rounded-full w-8 h-8 bg-gray-300 items-center justify-center')}
-         >
+      <Ripple onPress={onPress} style={styles.nearButton.ripple}>
+         <View style={styles.nearButton.view}>
             <NavigationIcon width={15} height={15} />
          </View>
-         <Text style={[tailwind('ml-3 mt-2'), typefaces.pr]}>Cerca de mí</Text>
+         <Text style={styles.nearButton.text}>Cerca de mí</Text>
       </Ripple>
    );
 }
@@ -192,8 +186,21 @@ const styles = {
       top: -20,
       zIndex: 4,
       ...tailwind('rounded-b-full'),
+	},
+	textInput: tailwind('w-56'),
+   resultList: {
+      scroll: [tailwind('absolute w-full'), { zIndex: 5, top: 85 }],
+      ripple: tailwind('flex flex-row items-center justify-between px-6 pt-1 pb-2'),
+      view0: tailwind('flex flex-row items-center'),
+      view1: tailwind('ml-3'),
+      text0: [tailwind('text-sm'), typefaces.pm],
+      text1: [tailwind('text-sm text-gray-700'), { maxWidth: 200 }, typefaces.pr],
    },
-   resultList: [tailwind('absolute w-full'), { zIndex: 5, top: 85 }],
+   nearButton: {
+      ripple: tailwind('flex flex-row items-center mb-3 px-4 py-2 bg-white'),
+      view: tailwind('flex rounded-full w-8 h-8 bg-gray-300 items-center justify-center'),
+      text: [tailwind('ml-3 mt-2'), typefaces.pr],
+   },
 };
 
-export default SearchBox;
+export default memo(SearchBox);
