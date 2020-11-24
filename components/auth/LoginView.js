@@ -68,9 +68,9 @@ class LoginView extends React.Component {
       );
    };
 
-   onSignup = () => {
+   onChange = (option)  => {
       this.setState();
-      this.props.navigation.push('signup');
+      this.props.navigation.push(option);
    };
 
    render() {
@@ -119,13 +119,13 @@ class LoginView extends React.Component {
                   />
                </View>
                <View style={tailwind('mt-8')}>
-                  <TextButton text="¿Olvidaste tu contraseña?" onPress={() => {}} />
+                  <TextButton text="¿Olvidaste tu contraseña?" onPress={() => this.onChange('resetpass')} style={{ textDecorationLine: 'underline' }}/>
                </View>
                <View style={tailwind('flex flex-row items-center mt-4')}>
                   <Text style={[typefaces.pr, { marginRight: 10 }]}>¿No tienes cuenta?</Text>
                   <TextButton
                      text="Regístrate"
-                     onPress={this.onSignup}
+                     onPress={() => this.onChange('signup')}
                      style={{ textDecorationLine: 'underline' }}
                   />
                </View>
