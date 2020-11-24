@@ -12,7 +12,6 @@ import {
    TouchableOpacity,
 } from "react-native";
 import RadioGroup from '../shared/RadioGroup'
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Fetch from '../utils/Fetch';
 import tailwind from 'tailwind-rn';
 import { makeCancelable } from '../utils/utils';
@@ -22,12 +21,11 @@ import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
 import InfoIcon from '../icons/InfoIcon';
 import { typefaces } from '../utils/styles';
 import { formatISODate } from '../buy/utils';
-import ClockIcon from '../icons/ClockIcon';
-import CalendarIcon from '../icons/CalendarIcon';
 import CompanySelector from './CompanySelector';
 import GasStationSelector from './GasStationSelector';
 import emptyImage from '../../assets/background/empty.png';
 import SimpleToast from 'react-native-simple-toast';
+import DateTimeFilter from './DateTimeFilter';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
    const paddingToBottom = 20;
@@ -99,9 +97,16 @@ class RecordsView extends React.Component{
    }
 
    onRefresh = () => {
-      this.setState({ refreshing: true });
+      this.setState({refreshing: true, page: 0});
+      let filters = { page: 0 };
+      if(this.state.fromDateTime && this.state.toDateTime){
+         filters['to'] = formatISODate(this.state.toDateTime, "yyyy-MM-dd HH:mm");
+         filters['from'] = formatISODate(this.state.fromDateTime, "yyyy-MM-dd HH:mm");
+      }else if(this.state.gasStation){
+         filters['gas'] = this.state.gasStation;
+      }
       this.cancelControl = makeCancelable(
-         Fetch.get('/purchase/user/', { page: 0 }),
+         Fetch.get('/purchase/user/', filters),
          (res) => {
             this.setState({ purchases: res.body, loading: false, refreshing: false, isEndPage: false, page: 0 });
          },
@@ -117,45 +122,48 @@ class RecordsView extends React.Component{
    }
 
    onFilter = (fromDatetime, toDatetime, gasStation) => {
-      /* let filters = { page: this.state.page };
+      let filters = { page: 0 };
       if(fromDatetime && toDatetime){
-         filters['from'] = formatISODate(fromDatetime, "yyyy-MM-dd");
-         filters['to'] = formatISODate(fromDatetime, "yyyy-MM-dd");
-         this.setState({fromDateTime: fromDatetime, toDateTime: toDatetime, gasStation: null});
+         filters['from'] = formatISODate(fromDatetime, "yyyy-MM-dd HH:mm");
+         filters['to'] = formatISODate(toDatetime, "yyyy-MM-dd HH:mm");
+         this.setState({fromDateTime: fromDatetime, toDateTime: toDatetime, gasStation: null, page: 0});
       }
       else if(gasStation){
          filters['gas'] = gasStation.id;
-         this.setState({fromDateTime: null, toDateTime: null, gasStation: gasStation});
+         this.setState({fromDateTime: null, toDateTime: null, gasStation: gasStation,  page: 0});
       }else{
-         this.setState({fromDateTime: null, toDateTime: null, gasStation: null});
+         this.setState({fromDateTime: null, toDateTime: null, gasStation: null,  page: 0});
       }
-      
-      this.loadData(filters) */
-      console.log(fromDatetime);
-      console.log(toDatetime);
+      this.loadData(filters)
    };
 
    onItemTap = (purchase) => {
       //this.props.navigation.push('purchaseDetail', purchase);
+   }
+   
+   onScroll = (nativeEvent) => {
+      if(isCloseToBottom(nativeEvent)){
+         this.setState({loadMore: true, page: ++this.state.page});
+         let filters = { page: this.state.page };
+         if(this.state.fromDateTime && this.state.toDateTime){
+           filters['to'] = formatISODate(this.state.toDateTime, "yyyy-MM-dd HH:mm");
+           filters['from'] = formatISODate(this.state.fromDateTime, "yyyy-MM-dd HH:mm");
+         }else if(this.state.gasStation){
+            filters['gas'] = this.state.gasStation;
+         }
+         this.loadMoreData(filters);
+      }
+   }
+
+   onClearDateTime = () => {
+      this.setState({fromDateTime: null, toDateTime: null});
    }
 
    render(){
       return (
          <ScrollView
             scrollEventThrottle={400}
-            onScroll={({nativeEvent}) => {
-               if(isCloseToBottom(nativeEvent)){
-                  this.setState({loadMore: true, page: ++this.state.page});
-                  let filters = { page: this.state.page };
-                  if(this.state.fromDateTime && this.state.toDateTime){
-                    filters['to'] = this.state.toDateTime;
-                    filters['from'] = this.state.fromDateTime;
-                  }else if(this.state.gasStation){
-                     filters['gas'] = this.state.gasStation;
-                  }
-                  this.loadMoreData(filters);
-               }
-            }}
+            onScroll={({nativeEvent}) => this.onScroll(nativeEvent)}
             refreshControl={
                <RefreshControl onRefresh={this.onRefresh} refreshing={this.state.refreshing} />
             }>
@@ -165,7 +173,8 @@ class RecordsView extends React.Component{
                   <ExpandedFilter 
                      expanded={this.state.filterExpanded} 
                      onAction={this.onAction}
-                     onFilter={(fdt, tdt, g) => this.onFilter(fdt, tdt, g)}/>
+                     onFilter={(fdt, tdt, g) => this.onFilter(fdt, tdt, g)}
+                     onClearDateTime={() => this.onClearDateTime()}/>
                </View>
             {this.state.loading ? 
                   <View style={[tailwind('flex flex-row justify-center'), { height: 200 }]}>
@@ -177,8 +186,6 @@ class RecordsView extends React.Component{
                   <PurchasesList 
                      onItemTap={this.onItemTap}
                      data={this.state.purchases} 
-                     onRefresh={this.onRefresh}
-                     refreshing={this.state.refreshing}
                   />
                   {this.state.loadMore ? 
                   <View style={[tailwind('flex flex-row justify-center'), { height: 30 }]}>
@@ -224,12 +231,9 @@ function PurchaseItem({purchase, onTap}){
                   </Text>
                </Text>
             </View>
-            <View style={tailwind('flex flex-row justify-end')}>
-               <Text style={[tailwind('text-gray-700 text-xs'), typefaces.pm]}>Factura</Text>
-               <View style={tailwind('ml-1')}>
-                  <InfoIcon width={14} height={14} fill={'#555'}></InfoIcon>
-               </View>
-               
+            <View style={tailwind('flex flex-row justify-end items-center')}>
+               <Text style={[tailwind('text-gray-700 text-xs mr-1'), typefaces.pm]}>Factura</Text>
+               <InfoIcon width={14} height={14} fill={'#555'}></InfoIcon>
             </View>
             <View style={tailwind('flex flex-row ml-4')}>
                <Text style={[tailwind('text-gray-700 text-xs'), typefaces.pm]}>
@@ -262,7 +266,7 @@ function EmptyMessage(props) {
    );
 }
 
-function ExpandedFilter({expanded, onAction, onFilter}){
+function ExpandedFilter({expanded, onAction, onFilter, onClearDateTime}){
    
    const [state, setState] = React.useState({
       value: "datetime",
@@ -287,6 +291,11 @@ function ExpandedFilter({expanded, onAction, onFilter}){
       SimpleToast.show("Filtrando...");
       setState({...state, filter: true});
       onFilter(from_datetime, to_datetime, null);
+   }
+
+   const onClearFilterDateTime = () => {
+      setState({ ...state, filter: false })
+      onClearDateTime();
    }
 
    
@@ -316,7 +325,7 @@ function ExpandedFilter({expanded, onAction, onFilter}){
                         time={new Date()}
                         onInvalidInput={onInvalidInput}
                         onValidInput={(fdt, tdt) => onValidInput(fdt, tdt)}
-                        onClear={()=>setState({ ...state, filter: false })}
+                        onClear={()=> onClearFilterDateTime()}
                         /> : 
                      <GasFilter onFilter={(item)=> console.log(item)}></GasFilter>
                   }
@@ -328,195 +337,6 @@ function ExpandedFilter({expanded, onAction, onFilter}){
    );
 }
 
-function DateTimeFilter({date, time, onValidInput, onInvalidInput, onClear}){
-   const [state, setState] = React.useState({
-      visible: false,
-      timeVisible: false,
-      paramDate: '',
-      paramTime: '',
-      toDate: date,
-      fromDate: date,
-      toTime: time,
-      fromTime: time,
-      selectToDate: false,
-      selectFromDate: false,
-      selectToTime: false,
-      selectFromTime: false
-   });
-
-   const isValid = () => {
-      const selectedRangeDate = state.selectFromDate && state.selectToDate;
-      const selectedRangeTime = state.selectFromTime && state.selectToTime;
-      if(selectedRangeDate && selectedRangeTime){
-         let fromDatetime = 
-                  new Date(state.fromDate.getFullYear, 
-                        state.fromDate.getMonth, 
-                        state.fromDate.getDate, 
-                        state.fromTime.getHours, 
-                        state.fromTime.getMinutes)
-         let toDatetime = 
-                  new Date(state.toDate.getFullYear, 
-                        state.toDate.getMonth, 
-                        state.toDate.getDate, 
-                        state.toTime.getHours, 
-                        state.toTime.getMinutes)
-         console.log(fromDatetime.getTime());
-         console.log(toDatetime);
-         if(fromDatetime > toDatetime){
-            onInvalidInput('Rango de fechas incorrecto');
-         }else{
-            onValidInput(fromDatetime, toDatetime);
-         }
-      }else{
-         onClear();
-      }
-   }
-
-   const showDatePicker = (param) => {
-      setState({...state, paramDate: param, visible: true});
-   }
-
-   const hideDatePicker = () => {
-      if(state.paramDate == "toDate"){
-         setState({...state, visible: false, selectToDate: false})
-      }else if(state.paramDate == "fromDate"){
-         setState({...state, visible: false, selectFromDate: false})
-      }
-      
-   }
-
-   const handleConfirm = (date) => {
-      if(state.paramDate != ''){
-         if(state.paramDate == "toDate"){
-            setState({...state, toDate: date, visible: false, selectToDate: true});
-            isValid();
-         }else if (state.paramDate == "fromDate"){
-            setState({...state, fromDate: date, visible: false, selectFromDate: true});
-            isValid();
-         }
-      }else{
-         setState({...state, visible: false});
-         isValid();
-      }
-   }
-
-   const showTimePicker = (param) => {
-      setState({...state, paramTime: param, timeVisible: true});
-   }
-
-   const hideTimePicker = () => {
-      if(state.paramTime == "toTime"){
-         setState({...state, timeVisible: false, selectToTime: false})
-      }else if(state.paramTime == "fromTime"){
-         setState({...state, timeVisible: false, selectFromTime: false})
-      }
-   }
-
-   const handleConfirmTime = (time) => {
-      if(state.paramTime != ''){
-         if(state.paramTime == "toTime"){
-            setState({...state, toTime: time, timeVisible: false, selectToTime: true});
-            isValid();
-         }else if (state.paramTime == "fromTime"){
-            setState({...state, fromTime: time, timeVisible: false, selectFromTime: true});
-            isValid();
-         }
-      }else{
-         setState({...state, timeVisible: false});
-         isValid();
-      }
-   }
-
-   return (
-      <View style={tailwind('mt-4')}>
-         <View>
-            <DateTimePickerModal
-               isVisible={state.visible}
-               mode="date"
-               date={
-                  state.paramDate != '' ? 
-                     state.paramDate == 'toDate'? 
-                        state.toDate : 
-                     state.paramDate == 'fromDate' ?
-                        state.fromDate :
-                     date : 
-                  date
-               }
-               onConfirm={handleConfirm}
-               onCancel={hideDatePicker}
-            />
-            <DateTimePickerModal
-               isVisible={state.timeVisible}
-               mode="time"
-               date={
-                  state.paramTime != '' ? 
-                     state.paramTime == 'toTime'? 
-                        state.toTime : 
-                     state.paramTime == 'fromTime' ?
-                        state.fromTime :
-                     time : 
-                  time
-               }
-               onConfirm={handleConfirmTime}
-               onCancel={hideTimePicker}
-            />
-         </View>
-         <View>
-            <View style={tailwind('flex flex-row items-center justify-between')}>
-               <Text>Desde:</Text>
-               <View style={tailwind('mx-2')}></View>
-               <View style={tailwind('flex rounded-md py-1 px-1 w-24 border border-gray-300')}>
-                  <TouchableOpacity onPress={() => showDatePicker("fromDate")}>
-                     <View style={tailwind('flex flex-row items-center')}>
-                        <CalendarIcon></CalendarIcon>
-                        <Text style={tailwind('text-gray-600 text-xs')}>{ state.selectFromDate ?
-                         ' ' + formatISODate(state.fromDate, 'dd/MM/yyyy') : ' Día'}
-                        </Text>
-                     </View>
-                  </TouchableOpacity>
-               </View>
-               <View style={tailwind('mx-1')}></View>
-               <View style={tailwind('flex rounded-md py-1 px-1 w-20 border border-gray-300')}>
-                  <TouchableOpacity onPress={() => showTimePicker("fromTime")}>
-                     <View style={tailwind('flex flex-row items-center')}>
-                        <ClockIcon></ClockIcon>
-                        <Text style={tailwind('text-gray-600 text-xs')}>{
-                           state.selectFromTime ? ' ' + formatISODate(state.fromTime, 'HH:mm') :
-                         ' Hora'}</Text>
-                     </View>
-                  </TouchableOpacity>
-               </View>
-            </View>
-            <View style={tailwind('my-1')}></View>
-            <View style={tailwind('flex flex-row items-center justify-between')}>
-               <Text>Hasta:</Text>
-               <View style={tailwind('mx-2')}></View>
-               <View style={tailwind('flex rounded-md py-1 px-1 w-24 border border-gray-300')}>
-                  <TouchableOpacity onPress={() => showDatePicker("toDate")}>
-                     <View style={tailwind('flex flex-row items-center')}>
-                        <CalendarIcon></CalendarIcon>
-                        <Text style={tailwind('text-gray-600 text-xs')}>{ state.selectToDate ?
-                         ' ' + formatISODate(state.toDate, 'dd/MM/yyyy') : ' Día'}
-                        </Text>
-                     </View>
-                  </TouchableOpacity>
-               </View>
-               <View style={tailwind('mx-1')}></View>
-               <View style={tailwind('flex rounded-md py-1 px-1 w-20 border border-gray-300')}>
-                  <TouchableOpacity onPress={() => showTimePicker("toTime")}>
-                     <View style={tailwind('flex flex-row items-center')}>
-                        <ClockIcon></ClockIcon>
-                        <Text style={tailwind('text-gray-600 text-xs')}>{
-                           state.selectToTime ? ' ' + formatISODate(state.toTime, 'HH:mm') :
-                         ' Hora'}</Text>
-                     </View>
-                  </TouchableOpacity>
-               </View>
-            </View>
-         </View>
-      </View>
-   )
-}
 
 function GasFilter({onFilter}){
    const [company, setCompany] = React.useState(null);
