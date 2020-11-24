@@ -1,7 +1,7 @@
 import {
-   CardStyleInterpolators,
-   createStackNavigator,
-   HeaderBackButton,
+	CardStyleInterpolators,
+	createStackNavigator,
+	HeaderBackButton,
 } from '@react-navigation/stack';
 import React from 'react';
 import tailwind from 'tailwind-rn';
@@ -11,22 +11,22 @@ import ProfileView from './ProfileView';
 const Stack = createStackNavigator();
 
 export default function ProfileNavigator({ navigation }) {
-   return (
-      <Stack.Navigator
-         screenOptions={{
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
-         }}
-      >
-         <Stack.Screen
-            name="profileView"
-            component={ProfileView}
-            options={() => ({
-               headerTitle: () => (
-                  <Label text={'Perfil'} style={tailwind('text-base mt-1')} focused={true} />
-               ),
-            })}
-         />
-      </Stack.Navigator>
-   );
+	return (
+		<Stack.Navigator
+			screenOptions={{
+				cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+			}}
+		>
+			<Stack.Screen
+				name="profileView"
+				component={ProfileView}
+				options={() => ({
+					headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
+					headerTitle: () => (
+						<Label text={'Perfil'} style={tailwind('text-base mt-1')} focused={true} />
+					),
+				})}
+			/>
+		</Stack.Navigator>
+	);
 }

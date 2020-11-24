@@ -15,13 +15,13 @@ export default function PaymentMethodsNavigator({ navigation }) {
       <Stack.Navigator
          screenOptions={{
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
          }}
       >
          <Stack.Screen
             name="paymentMethodsView"
             component={PaymentMethodsView}
             options={() => ({
+               headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
                headerTitle: () => (
                   <Label text={'Metodos de pagos'} style={tailwind('text-base mt-1')} focused />
                ),
