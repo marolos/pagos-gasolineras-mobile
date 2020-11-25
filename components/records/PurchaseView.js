@@ -12,6 +12,9 @@ import Modal from 'react-native-modal';
 import QRIcon from '../icons/QRIcon';
 import CheckRoundedIcon from '../icons/CheckRoundedIcon';
 import Button from '../shared/Button';
+import LoadingModal from '../shared/LoadingModal';
+import SimpleToast from 'react-native-simple-toast';
+import InfoIcon from '../icons/InfoIcon';
 
 class PurchaseView extends React.Component {
 
@@ -27,7 +30,9 @@ class PurchaseView extends React.Component {
 			expired: !in_process && !this.props.route.params.is_done,
 			qr: null,
 			generating: false,
-			showDelete: false
+         showDelete: false,
+         showLoading: false,
+         showDone: false
 		};
 	}
 
@@ -47,7 +52,12 @@ class PurchaseView extends React.Component {
 				this.setState({ loading: false });
 			},
 		); 
-	}
+   }
+   
+   componentWillUnmount() {
+      if (this.cancelControl) this.cancelControl.cancel();
+      if (this.cancelDelete) this.cancelDelete.cancel();
+   }
 
 	fullName = () => {
 		const user = this.state.purchase.user;
@@ -70,10 +80,27 @@ class PurchaseView extends React.Component {
 
 	close = () => {
 		this.setState({ showDelete: false });
-	}
+   }
+   
+   closePage = () => {
+      this.setState({ showDone: false }, () => {
+         this.props.navigation.reset({ index: 0, key: null, routes: [{ name: 'home' }] });
+      });
+   };
 
 	deletePurchase = () => {
-
+      this.setState({ showDelete: false, showLoading: true });
+      this.cancelDelete = makeCancelable(
+			Fetch.delete("/purchase/delete/" + this.state.purchase.id + '/'),
+			(value) => {
+				this.setState({ showLoading: false, showDone: true });
+			},
+			(err) => {
+            console.log(err);
+            this.setState({ showLoading: false });
+				SimpleToast.show("No se pudo cancelar la compra.");
+			},
+		); 
 	}
 
 	render(){
@@ -161,6 +188,8 @@ class PurchaseView extends React.Component {
 							</View>: <View></View>
 					}
 				</View>}
+            <LoadingModal show={this.state.showLoading} text="Cancelando compra." />
+            <PurchaseCancelDoneModal show={this.state.showDone} onClose={this.closePage}/>
 				<DeletePurchaseModal
 					show={this.state.showDelete}
 					onCancel={this.close}
@@ -217,5 +246,31 @@ const DeletePurchaseModal = memo(({ show, onCancel, onConfirm }) => {
 		</Modal>
 	);
 });
+
+const PurchaseCancelDoneModal = ({ show, onClose }) => {
+   return (
+      <Modal
+         isVisible={show}
+         animationIn="fadeIn"
+         animationOut="fadeOut"
+         backdropTransitionOutTiming={0}
+         style={tailwind('flex items-center')}
+      >
+         <View style={tailwind('w-full bg-white rounded-lg')}>
+            <View style={tailwind('p-6 rounded-md')}>
+               <View style={tailwind('flex flex-row')}>
+                  <InfoIcon />
+                  <Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>
+                     Se canceló la compra con éxito
+                  </Text>
+               </View>
+               <View style={tailwind('flex flex-row justify-evenly mt-8')}>
+                  <Button text={'Aceptar'} onPress={onClose} style={{ width: 100 }} />
+               </View>
+            </View>
+         </View>
+      </Modal>
+   );
+};
 
 export default PurchaseView;
