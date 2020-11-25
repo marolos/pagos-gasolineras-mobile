@@ -4,8 +4,8 @@ import Svg, { Path } from 'react-native-svg';
 function ClockIcon(props) {
    return (
       <Svg
-         width="16"
-         height="16"
+         width="18"
+         height="18"
          viewBox="0 0 12 12"
          fill="none"
          xmlns="http://www.w3.org/2000/svg"

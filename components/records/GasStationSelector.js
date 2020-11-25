@@ -1,83 +1,118 @@
-import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import React, { memo } from 'react';
+import { View, Text, ActivityIndicator, ScrollView } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import tailwind from 'tailwind-rn';
 import Fetch from '../utils/Fetch';
 import { shadowStyle, typefaces } from '../utils/styles';
+import { makeCancelable } from '../utils/utils';
 import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
+import Modal from 'react-native-modal';
 
-export default function GasStationSelector({ onChange, id }) {
-   const [selected, setSelected] = React.useState(null);
-   const [options, setOptions] = React.useState([]);
-   const [loading, setLoading] = React.useState(false);
-   const [open, setOpen] = React.useState(false);
-   if(id != null){
-      React.useEffect(() => {
-            setLoading(true);
-            Fetch.get('/company/stations/'+id+"/")
-               .then((res) => {
-                  console.log(res.body);
-                  setOptions(res.body || []);
-                  setLoading(false)
-               })
-               .catch((err) => {
-                  err;
-               })
-               .finally(() => setLoading(false));
-      }, []);
-   }else{
-      setOptions([]);
+export default class GasStationSelector extends React.Component {
+   constructor(props){
+      super(props);
+      this.state = {
+         selected: null,
+         options: [],
+         loading: false,
+         open: false
+      }
    }
 
-   React.useEffect(() => {
-      onChange(selected);
-   }, [selected]);
+   loadData(company){
+      if(company){
+         this.setState({ loading: true });
+         this.cancelControl = makeCancelable(   
+            Fetch.get('/company/stations/'+company.id+"/")
+            .then((res) => {
+               this.props.onChange(null);
+               this.setState({ options: res.body, loading: false, selected: null });
+            })
+            .catch((err) => {
+               err;
+            })
+            .finally(() => this.setState({ loading: false, selected: null }))
+         ); 
+      }else {
+         this.setState({ options: [], selected: null });
+      } 
+   }
 
-
-   return (
-      <View style={tailwind('flex flex-row justify-between mt-3 items-center')}>
-         <Text style={[tailwind('text-sm'), typefaces.pm]}>Estación: </Text>
-         <Ripple
-            style={tailwind(
-               'flex flex-row items-center justify-between w-40 px-4 py-1 border border-gray-400 rounded',
-            )}
-            onPress={() => setOpen(!open)}
-         >
-            {loading ? (
-               <ActivityIndicator size="small" animating color="black" style={tailwind('mb-1')} />
-            ) : (
-               <Text style={[tailwind('text-sm'), typefaces.pr]}>
-                  {selected ? selected.name : 'seleccionar'}
-               </Text>
-            )}
-            <AnimatedArrowIcon change={open} />
-         </Ripple>
-         {open && !loading && (
-            <View style={styles.list}>
-               {options.map((item) => (
-                  <Ripple
-                     key={item.id}
-                     style={tailwind('px-4 py-3')}
-                     onPress={() => {
-                        setSelected(item);
-                        setOpen(false);
+   componentWillUnmount() {
+      if (this.cancelControl) this.cancelControl.cancel();
+   }
+   
+   render(){
+      return (
+         <View style={tailwind('flex flex-row justify-between mt-3 items-center')}>
+            <Text style={typefaces.pm}>Estación: </Text>
+            <Ripple
+               style={tailwind(
+                  'flex flex-row items-center justify-between w-48 px-4 py-1 border border-gray-400 rounded',
+               )}
+               onPress={() => this.setState({ open: !this.state.open })}
+            >
+               {this.state.loading ? (
+                  <ActivityIndicator size="small" animating color="black" style={tailwind('mb-1')} />
+               ) : (
+                  <Text style={[tailwind('text-sm ml-1 mr-2'), typefaces.pr]}>
+                     {this.state.selected ? this.state.selected.name : 'seleccionar'}
+                  </Text>
+               )}
+               <AnimatedArrowIcon change={this.state.open} />
+            </Ripple>
+            {this.state.open && !this.state.loading && this.state.options.length > 0 ?
+               <GasStationOptions
+                     show={this.state.open}
+                     onCancel={()=> {
+                        this.setState({ open: false });
                      }}
-                  >
-                     <Text>
-                        {item.name}
-                     </Text>
-                  </Ripple>
-               ))}
-            </View>
-         )}
-      </View>
-   );
+                     options={this.state.options}
+                     onConfirm={(item)=>{
+                        this.setState({ selected: item, open: false });
+                        this.props.onChange(this.state.selected);
+                     }}
+               />
+            : <View/>}
+         </View>
+      );
+   }
+
 }
+
+
+const GasStationOptions = memo(({ show, onCancel, onConfirm, options }) => {
+	return (
+		<Modal
+			isVisible={show}
+			animationIn="fadeIn"
+			animationOut="fadeOut"
+         backdropTransitionOutTiming={0}
+         onBackdropPress={onCancel}
+			style={tailwind('flex items-center')}
+		>
+			<ScrollView style={styles.list}>
+            {options.map((item) => (
+               <Ripple
+                  key={item.id}
+                  style={tailwind('px-4 py-3')}
+                  onPress={() => {
+                     onConfirm(item);
+                  }}
+               >
+                  <Text>
+                     {item.name}
+                  </Text>
+               </Ripple>
+            ))}
+         </ScrollView>
+		</Modal>
+	);
+});
 
 const styles = {
    list: [
-      tailwind('absolute bg-white w-40 border rounded-sm border-white'),
-      { top: 41, left: 120, zIndex: 10 },
+      tailwind('absolute bg-white w-48 border rounded-sm border-white'),
       shadowStyle,
    ],
 };

@@ -8,73 +8,76 @@ import { shadowStyle, typefaces } from '../utils/styles';
 import { makeCancelable } from '../utils/utils';
 import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
 
-export default function CompanySelector({ onChange }) {
-   const [open, setOpen] = React.useState(false);
-   const [options, setOptions] = React.useState([]);
-   const [selected, setSelected] = React.useState(null);
-   const [loading, setLoading] = React.useState(false);
+export default class CompanySelector extends React.Component{
+   constructor(props){
+      super(props);
+      this.state = {
+         open: false,
+         options: [],
+         selected: null,
+         loading: false
+      }
+   }
 
-   React.useEffect(() => {
-      setLoading(true);
-      const req = makeCancelable(
+   componentDidMount(){
+      this.setState({ loading: true });
+      this.cancelControl = makeCancelable(   
          Fetch.get('/company/all/'),
          (res) => {
-            setOptions(res.body);
-            setLoading(false);
+            this.setState({ options: res.body, loading: false });
          },
          (err) => {
-            if (!err.isCanceled) setLoading(false);
-         },
-      );
-      return () => req.cancel();
-   }, []);
+            if (!err.isCanceled) this.setState({ loading: false });
+      });
+   }
 
-   React.useEffect(() => {
-      if (onChange) onChange(selected);
-   }, [selected]);
+   componentWillUnmount() {
+      if (this.cancelControl) this.cancelControl.cancel();
+   }
 
-   const onSelect = React.useCallback((item) => {
-      setSelected(item);
-      setOpen(false);
-   }, []);
-
-   return (
-      <View style={tailwind('flex flex-row justify-between mt-3 items-center')}>
-         <Text style={[tailwind('text-sm'), typefaces.pm]}>Empresa: </Text>
-         <Ripple style={styles.ripple} onPress={() => setOpen(!open)}>
-            {loading ? (
-               <ActivityIndicator size="small" animating color="black" style={tailwind('mb-1')} />
-            ) : (
-               <View style={tailwind('flex flex-row')}>
-                  {selected && (
-                     <FastImage
-                        source={{ uri: selected.company_logo_path }}
-                        style={{ width: 20, height: 20 }}
-                     />
-                  )}
-                  <Text style={[tailwind('text-sm ml-1 mr-2'), typefaces.pr]}>
-                     {selected ? selected.business_name : 'seleccionar'}
-                  </Text>
-               </View>
+   render() {
+      return (
+         <View style={tailwind('flex flex-row justify-between mt-4 items-center')}>
+            <Text style={typefaces.pm}>Empresa: </Text>
+            <Ripple style={styles.ripple} onPress={() => this.setState({ open: !this.state.open })}>
+               {this.state.loading ? (
+                  <ActivityIndicator size="small" animating color="black" style={tailwind('mb-1')} />
+               ) : (
+                  <View style={tailwind('flex flex-row')}>
+                     {this.state.selected && (
+                        <FastImage
+                           source={{ uri: this.state.selected.company_logo_path }}
+                           style={{ width: 20, height: 20 }}
+                        />
+                     )}
+                     <Text style={[tailwind('text-sm ml-1 mr-2'), typefaces.pr]}>
+                        {this.state.selected ? this.state.selected.business_name : 'seleccionar'}
+                     </Text>
+                  </View>
+               )}
+               <AnimatedArrowIcon change={this.state.open} />
+            </Ripple>
+            {this.state.open && !this.state.loading && (
+               <ScrollView style={styles.list}>
+                  {this.state.options.map((item) => (
+                     <Ripple
+                        key={item.id}
+                        style={tailwind('px-3 py-3')}
+                        onPress={() => {;
+                           this.setState({ selected: item, open: false });
+                           this.props.onChange(this.state.selected);
+                        }}
+                     >
+                        <Item item={item} />
+                     </Ripple>
+                  ))}
+               </ScrollView>
             )}
-            <AnimatedArrowIcon change={open} />
-         </Ripple>
-         {open && !loading && (
-            <ScrollView style={styles.list}>
-               {options.map((item) => (
-                  <Ripple
-                     key={item.id}
-                     style={tailwind('px-3 py-3')}
-                     onPress={() => onSelect(item)}
-                  >
-                     <Item item={item} />
-                  </Ripple>
-               ))}
-            </ScrollView>
-         )}
-      </View>
-   );
+         </View>
+      );
+   }
 }
+
 
 function Item({ item }) {
    return (
@@ -93,13 +96,13 @@ function Item({ item }) {
 const styles = {
    ripple: [
       tailwind(
-         'flex flex-row items-center justify-between px-4 w-40 py-1 border border-gray-400 rounded',
+         'flex flex-row items-center justify-between px-4 w-48 py-1 border border-gray-400 rounded',
       ),
       { minWidth: 130 },
    ],
    list: [
-      tailwind('absolute bg-white w-32 border rounded-sm border-white'),
+      tailwind('absolute bg-white w-48 border rounded-sm border-white'),
       { top: 41, right: 0, zIndex: 10 },
-      shadowStyle,
+      shadowStyle
    ],
 };
