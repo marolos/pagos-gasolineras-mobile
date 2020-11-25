@@ -20,11 +20,11 @@ function CollapseModalFilters({ visible, closeCollapse, onFilter, onClearDateTim
 
 
    const onValidInput = (fromDatetime, toDatetime, gasStation) => {
-      setState({ ...state, fromDatetime: fromDatetime, toDatetime: toDatetime, gasStation: gasStation })
+      setState({ errorMsg: null, fromDatetime: fromDatetime, toDatetime: toDatetime, gasStation: gasStation });
    }
 
    const onInvalidInput = (msg) => {
-      setState({ ...state, errorMsg: msg })
+      setState({ errorMsg: msg, fromDatetime: null, toDatetime: null, gasStation: null })
    }
 
    const onValidate = ()=> {
@@ -33,9 +33,9 @@ function CollapseModalFilters({ visible, closeCollapse, onFilter, onClearDateTim
       else if(state.fromDatetime && state.toDatetime){
          onFilter(state.fromDatetime, state.toDatetime, null);
       }else if(state.gasStation){
-         onFilter(null, null, state.gasStation)
+         onFilter(null, null, state.gasStation);
       }else{
-         SimpleToast.show("No ha seleccionado ningún filtro.")
+         SimpleToast.show("No ha seleccionado ningún filtro.");
       }
       
    }
@@ -55,8 +55,7 @@ function CollapseModalFilters({ visible, closeCollapse, onFilter, onClearDateTim
             <View style={tailwind('my-3 mx-2')}>
                <ExpandedFilter 
                   onInvalidInput={(msg) => onInvalidInput(msg)}
-                  onValidInput={(fdt, tdt, g) => onValidInput(fdt, tdt, g)}
-                  onClearDateTime={() => onClearDateTime()}/>
+                  onValidInput={(fdt, tdt, g) => onValidInput(fdt, tdt, g)}/>
             </View>
             <View style={tailwind('flex flex-row justify-center')}>
 						<Button text={'cancelar'} primary={false} onPress={onCancel} style={{ width: 100 }} />
@@ -80,7 +79,7 @@ const styles = {
    options: tailwind('flex flex-row justify-evenly mt-6'),
 };
 
-function ExpandedFilter({onValidInput, onClearDateTime, filter, onInvalidInput}){
+function ExpandedFilter({onValidInput, filter, onInvalidInput}){
    
    const [state, setState] = React.useState({
       value: "datetime",
@@ -88,6 +87,7 @@ function ExpandedFilter({onValidInput, onClearDateTime, filter, onInvalidInput})
    
 
    const onCheck = (value) => {
+      onValidInput(null, null, null);
       setState({ value: value });
    };
 
@@ -118,9 +118,11 @@ function ExpandedFilter({onValidInput, onClearDateTime, filter, onInvalidInput})
                         time={new Date()}
                         onInvalidInput={(msg) => onInvalidInput(msg)}
                         onValidInput={(fdt, tdt) => onValidInput(fdt, tdt, null)}
-                        onClear={()=> onClearFilterDateTime()}
+                        onClear={()=> {}}
                         /> : 
-                     <GasFilter onFilter={(item)=> console.log(item)}></GasFilter>
+                     <GasFilter 
+                        onValidInput={(gas)=> onValidInput(null, null, gas)}
+                        onInvalidInput={(msg) => onInvalidInput(msg)}/>
                   }
                </View>
             </View>
@@ -131,12 +133,28 @@ function ExpandedFilter({onValidInput, onClearDateTime, filter, onInvalidInput})
 }
 
 
-function GasFilter({onFilter}){
-   const [company, setCompany] = React.useState(null);
+function GasFilter({onInvalidInput, onValidInput}){
+
+   const ref = React.useRef();
+
+   const loadGasStations = (company) => {
+      if(company != null){
+         ref.current.loadData(company);
+      }
+   }
    return (
       <View>
-         <CompanySelector onChange={(item) => setCompany(item)}></CompanySelector>
-         <GasStationSelector id={1} onChange={(item)=> onFilter(item)}></GasStationSelector>
+         <CompanySelector onChange={(item) => {
+               loadGasStations(item);
+            }
+         }></CompanySelector>
+         <GasStationSelector ref={ref} onChange={(gas)=> {
+             if(gas != null){
+               onValidInput(gas);
+             }else {
+                onInvalidInput("No ha seleccionado una estación.");
+             }
+         }}></GasStationSelector>
       </View>
    );
 }

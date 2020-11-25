@@ -160,7 +160,7 @@ class PurchaseView extends React.Component {
 							</Text>
 						</View> : <View></View>
 					}
-					<View style={tailwind('flex justify-center items-center mt-4')}>
+					<View style={tailwind('flex justify-center items-center mt-4 mb-2')}>
 						{this.state.qr == null && this.state.in_process ? 
 							<QRButton text={'Generar QR'} onPress={()=> this.onGenerate()}/>: 
 						this.state.generating ?
@@ -173,14 +173,14 @@ class PurchaseView extends React.Component {
 								</Text>
 								<Image
 									source={{ uri: this.state.qr }}
-									style={{ width: FULL_WIDTH - 100, height: FULL_WIDTH - 100 }}
+									style={{ width: FULL_WIDTH - 130, height: FULL_WIDTH - 130 }}
 								/>
 							</View> : <View></View>
 						}
 					</View>
 					{
 						this.state.in_process ?
-							<View style={[tailwind('absolute w-full'), { bottom: 0 }]}>
+							<View style={[tailwind('absolute w-full mt-2'), { bottom: 0 }]}>
 								<View style={{borderBottomColor: 'black', borderWidth: 1, borderColor: 'red', borderBottomColor: 'red' }}/>
 								<TouchableOpacity style={tailwind('mt-2')} onPress={() => this.setState({ showDelete: true })}>
 									<Text style={tailwind('text-center text-red-500')}>CANCELAR COMPRA</Text>

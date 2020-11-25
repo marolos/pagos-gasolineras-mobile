@@ -20,7 +20,10 @@ import { formatISODate } from '../buy/utils';
 import emptyImage from '../../assets/background/empty.png';
 import FloatingButton from '../shared/FloatingButton'
 import FilterIcon from '../icons/FilterIcon'
+import ExclamationIcon from '../icons/ExclamationIcon';
 import CollapseModalFilters from './CollapseModalFilters'
+import SimpleToast from 'react-native-simple-toast';
+import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
    const paddingToBottom = 20;
@@ -44,7 +47,8 @@ class RecordsView extends React.Component{
          initfbtn: 0,
          endfbtn: 0,
          showFbtn: false,
-         fitersVisible: false
+         fitersVisible: false,
+         filterActive: false
       };
       if(Platform.OS == 'android'){
          UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -116,15 +120,19 @@ class RecordsView extends React.Component{
    };
 
    onFilter = (fromDatetime, toDatetime, gasStation) => {
+      this.setState({ fitersVisible: false });
+      SimpleToast.show("Filtrando...");
       let filters = { page: 0 };
       if(fromDatetime && toDatetime){
          filters['from'] = formatISODate(fromDatetime, "yyyy-MM-dd HH:mm");
          filters['to'] = formatISODate(toDatetime, "yyyy-MM-dd HH:mm");
-         this.setState({fromDateTime: fromDatetime, toDateTime: toDatetime, gasStation: null, page: 0});
+         this.setState({fromDateTime: fromDatetime, toDateTime: toDatetime, gasStation: gasStation, 
+            page: 0, initfbtn: 0, endfbtn: 1, filterActive: true});
       }
       else if(gasStation){
          filters['gas'] = gasStation.id;
-         this.setState({fromDateTime: null, toDateTime: null, gasStation: gasStation,  page: 0});
+         this.setState({fromDateTime: null, toDateTime: null, gasStation: gasStation,  
+            page: 0, initfbtn: 0, endfbtn: 1, filterActive: true});
       }else{
          this.setState({fromDateTime: null, toDateTime: null, gasStation: null,  page: 0});
       }
@@ -154,20 +162,37 @@ class RecordsView extends React.Component{
    }
 
    onScrollEnd = () => {
-      if(!this.state.showFbtn){
+      if(!this.state.showFbtn && !this.state.filterActive){
          this.setState({ initfbtn: 0, endfbtn: 1, showFbtn: true });
          setTimeout(()=>this.setState({ initfbtn: 1, endfbtn: 0, showFbtn: false }), 5000);
       }
    }
 
+   onFilterPress = () => {
+      if(!this.state.filterActive){
+         this.setState({ fitersVisible: true, endfbtn: 0, initfbtn: 1, showFbtn: false });
+      }else{
+         this.setState({ fitersVisible: true });
+      }
+   }
+
    render(){
       return (
-         <View>
+         <View style={{ height: FULL_HIGHT - 60, width: FULL_WIDTH }}>
             <FloatingButton 
-               icon={<FilterIcon/>}
+               icon={
+                  !this.state.filterActive ?
+                     <FilterIcon/>
+                  : <View style={{alignItems: 'center'}}>
+                     <FilterIcon/>
+                     <View style={[tailwind('absolute'), { top: 20, left: 20 }]}>
+                        <ExclamationIcon/>
+                     </View>
+                  </View>
+               }
                init={this.state.initfbtn}
                end={this.state.endfbtn}
-               onPress={() => this.setState({ fitersVisible: true, endfbtn: 0, initfbtn: 1, showFbtn: false })}
+               onPress={() => this.onFilterPress()}
             />
             <ScrollView
                scrollEventThrottle={400}
