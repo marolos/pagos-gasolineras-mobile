@@ -1,29 +1,23 @@
 {
-   "files.watcherExclude": {
-      ".git/**": true,
-      "node_modules/**": true,
-      "android/": true,
-      "ios/": true
-   },
-   "files.exclude": {
-      "node_modules/": true,
-      ".vscode/": false,
-      ".git/": true,
-   },
-   "search.exclude": {
-		"node_modules/": true,
-      ".build/**": true,
-      ".git/*": true,
-		"out/**": true,
+	"files.watcherExclude": {
+		".git/**": true,
+		"node_modules/**": true,
+		"android/": true,
+		"ios/": true
 	},
-   "[javascript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.detectIndentation": false,
-      "editor.tabSize": 3
-   },
-   "[typescript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.detectIndentation": false,
-      "editor.tabSize": 3
-   }
+	"files.exclude": {
+		"node_modules/": true,
+		".vscode/": false,
+		".git/": true
+	},
+	"search.exclude": {
+		"node_modules/": true,
+		".build/**": true,
+		".git/*": true,
+		"out/**": true
+	},
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.detectIndentation": false,
+	"editor.tabSize": 3,
+	"editor.insertSpaces": false
 }

@@ -1,28 +1,28 @@
 import { Dimensions } from 'react-native';
 
 export const REST_API_URL =
-   process.env.NODE_ENV === 'development'
-      ? 'http://localhost:8000'
-      : 'https://fuelpay.azurewebsites.net';
+	process.env.NODE_ENV === 'development'
+		? 'http://localhost:8000'
+		: 'https://fuelpay.azurewebsites.net';
 
 export const MAPBOX_API_URL = 'https://api.mapbox.com';
 
 export const ENCRYPTOR_KEY = 'MIIEowIBAAKA2LCcVqUelTOc6TwslUAm8vxnoCAQEt3hhlv8FjvjmZGqJ';
 export const MAPBOX_TOKEN =
-   'sk.eyJ1IjoibWlndWVscXVvIiwiYSI6ImNraGYyeGZ1eTA1bHkzMHBhZnpwcWV2YzQifQ.-DgT0S5tfdVKQuPHcVv9-A';
+	'sk.eyJ1IjoibWlndWVscXVvIiwiYSI6ImNraGYyeGZ1eTA1bHkzMHBhZnpwcWV2YzQifQ.-DgT0S5tfdVKQuPHcVv9-A';
 //export const MAPBOX_TOKEN = 'pk.eyJ1IjoiZnVlbHBheSIsImEiOiJja2hibTd2bmgwMTRuMnNxamQ5eThheWttIn0.8oO_NxO2GcZDbOi4YvJF_w'
 export const MAP_CENTER = [-79.891971, -2.171499];
 
 export const theme = {
-   dark: false,
-   colors: {
-      primary: '#000',
-      background: '#fff',
-      card: '#fff',
-      text: '#000',
-      border: '#efefef',
-      notification: 'rgb(255, 69, 58)',
-   },
+	dark: false,
+	colors: {
+		primary: '#000',
+		background: '#fff',
+		card: '#fff',
+		text: '#000',
+		border: '#efefef',
+		notification: 'rgb(255, 69, 58)',
+	},
 };
 
 export const FULL_WIDTH = Dimensions.get('window').width;
@@ -48,10 +48,10 @@ export const IVA_RATE = 12;
 export const COMMISION = 0.25;
 
 export const NotificationType = {
-   CHANGE_PRIVACY_POLICES: 'change_privacy_polices', 
-   PURCHASE_DONE: 'purchase_done', 
-   TIP: 'tip', 
-   ADVERTISEMENT: 'advertisement', 
-   DISABLE_USER: 'disable_user', 
-   TRANSFER: 'trasfer', 
+	CHANGE_PRIVACY_POLICES: 'change_privacy_polices',
+	PURCHASE_DONE: 'purchase_done',
+	TIP: 'tip',
+	ADVERTISEMENT: 'advertisement',
+	DISABLE_USER: 'disable_user',
+	TRANSFER: 'trasfer',
 };

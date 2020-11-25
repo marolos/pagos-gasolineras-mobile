@@ -16,31 +16,31 @@ enableScreens();
 initFirebase();
 
 function App({ user, dispatch }) {
-   React.useEffect(() => {
-      getGenericPassword()
-         .then((credentials) => {
-            Fetch.setAuthToken(credentials.password);
-            Fetch.addInterceptor(unauthorizedInterceptor(dispatch));
-         })
-         .catch((error) => {
-            Fetch.removeAuthToken();
-            Fetch.removeInterceptor('unauthorized');
-            resetGenericPassword()
-               .then(() => {})
-               .catch((err) => {
-                  err;
-               });
-         });
-   }, []);
+	React.useEffect(() => {
+		getGenericPassword()
+			.then((credentials) => {
+				Fetch.setAuthToken(credentials.password);
+				Fetch.addInterceptor(unauthorizedInterceptor(dispatch));
+			})
+			.catch((error) => {
+				Fetch.removeAuthToken();
+				Fetch.removeInterceptor('unauthorized');
+				resetGenericPassword()
+					.then(() => { })
+					.catch((err) => {
+						err;
+					});
+			});
+	}, []);
 
-   return (
-      <React.Fragment>
-         <StatusBar hidden={false} backgroundColor="black" />
-         <NavigationContainer theme={theme}>
-            {user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />}
-         </NavigationContainer>
-      </React.Fragment>
-   );
+	return (
+		<React.Fragment>
+			<StatusBar hidden={false} backgroundColor="black" />
+			<NavigationContainer theme={theme}>
+				{user.loggedIn ? <AppDrawerNavigator /> : <AuthFlowNavigator />}
+			</NavigationContainer>
+		</React.Fragment>
+	);
 }
 
 const mapStateToProps = (state) => ({ user: state.user });

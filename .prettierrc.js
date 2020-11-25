@@ -5,5 +5,6 @@ module.exports = {
 	trailingComma: 'all',
 	printWidth: 100,
 	tabWidth: 3,
-	useTab: true,
+	useTabs: true,
+	indentStyle: 'tab'
 };

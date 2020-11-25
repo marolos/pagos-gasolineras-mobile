@@ -29,175 +29,171 @@ import FeedbackNavigator from './feedback/FeedbackNavigator';
 const Drawer = createDrawerNavigator();
 
 function AppDrawerNavigator(props) {
-   const [loadedCredentials, setLoadedCredentials] = React.useState(false);
+	const [loadedCredentials, setLoadedCredentials] = React.useState(false);
 
-   React.useEffect(() => {
-      SplashScreen.hide();
-      getGenericPassword()
-         .then((credentials) => {
-            Fetch.setAuthToken(credentials.password);
-            requestUserPermission()
-               .then((enabled) => {
-                  if (enabled) getDeviceInfo();
-               })
-               .catch((err) => {
-                  err;
-               });
-            setLoadedCredentials(true);
-         })
-         .catch((error) => {
-            Fetch.removeAuthToken();
-            resetGenericPassword()
-               .then(() => {})
-               .catch((err) => {
-                  err;
-               });
-         });
-   }, []);
+	React.useEffect(() => {
+		SplashScreen.hide();
+		getGenericPassword()
+			.then((credentials) => {
+				Fetch.setAuthToken(credentials.password);
+				requestUserPermission()
+					.then((enabled) => {
+						if (enabled) getDeviceInfo();
+					})
+					.catch((err) => {
+						err;
+					});
+				setLoadedCredentials(true);
+			})
+			.catch((error) => {
+				Fetch.removeAuthToken();
+				resetGenericPassword()
+					.then(() => { })
+					.catch((err) => {
+						err;
+					});
+			});
+	}, []);
 
-   return loadedCredentials ? (
-      <Drawer.Navigator
-         drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}
+	return loadedCredentials ? (
+		<Drawer.Navigator
+			drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}
 			initialRouteName={'home'}
-      >
-         <Drawer.Screen
-            name="home"
-            component={HomeNavigator}
-            options={{ drawerLabel: () => null }}
-         />
-         <Drawer.Screen name="profile" component={ProfileNavigator} />
-         <Drawer.Screen name="records" component={RecordsNavigator} />
-         <Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
-         <Drawer.Screen name="transfers" component={TransferNavigator} />
-         <Drawer.Screen name="logout" component={LogoutView} />
-         <Drawer.Screen name="loggingOut" component={LoggingOutView} />
-         <Drawer.Screen name="handleNotification" component={HandleNotification} />
-         <Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}}/>
-      </Drawer.Navigator>
-   ) : (
-      <View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>
-         <ActivityIndicator animating color="black" size="large" />
-      </View>
-   );
+		>
+			<Drawer.Screen name="home" component={HomeNavigator} />
+			<Drawer.Screen name="profile" component={ProfileNavigator} />
+			<Drawer.Screen name="records" component={RecordsNavigator} />
+			<Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
+			<Drawer.Screen name="transfers" component={TransferNavigator} />
+			<Drawer.Screen name="logout" component={LogoutView} />
+			<Drawer.Screen name="loggingOut" component={LoggingOutView} />
+			<Drawer.Screen name="handleNotification" component={HandleNotification} />
+			<Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}} />
+		</Drawer.Navigator>
+	) : (
+			<View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>
+				<ActivityIndicator animating color="black" size="large" />
+			</View>
+		);
 }
 
 const DrawerContent = memo(({ navigation }) => {
-   return (
-      <View>
-         <ProfileInfo />
-         <Line style={{ height: 1.5 }} />
-         <View>
-            <DrawerItem
-               icon={<ProfileIcon fill="#333" />}
-               text="Perfil"
-               style={tailwind('pt-1')}
-               navigation={navigation}
-               navigateTo="profile"
-            />
-            <DrawerItem
-               icon={<BookIcon />}
-               text="Historial"
-               navigation={navigation}
-               navigateTo="records"
-            />
-            <DrawerItem
-               icon={<TransferIcon width={20} />}
-               text="Transferencias"
-               style={tailwind('pb-1')}
-               navigation={navigation}
-               navigateTo="transfers"
-            />
-         </View>
-         <Line style={{ height: 1.5 }} />
-         <View>
-            <DrawerItem
-               icon={<CardIcon />}
-               text="Métodos de pagos"
-               style={tailwind('py-1')}
-               navigation={navigation}
-               navigateTo="paymentMethods"
-            />
-         </View>
-         <Line style={{ height: 1.5 }} />
-         <View>
-            <DrawerItemText
-               text="Sugerencias y reclamos"
-               style={tailwind('pt-2')}
-               navigation={navigation}
-               navigateTo="feedbackView"
-            />
-            <DrawerItemText text="Políticas de servicios" navigation={navigation} />
-            <DrawerItemText text="Contácto" navigation={navigation} />
-            <LogoutItem navigation={navigation} />
-         </View>
-      </View>
-   );
+	return (
+		<View>
+			<ProfileInfo />
+			<Line style={{ height: 1.5 }} />
+			<View>
+				<DrawerItem
+					icon={<ProfileIcon fill="#333" />}
+					text="Perfil"
+					style={tailwind('pt-1')}
+					navigation={navigation}
+					navigateTo="profile"
+				/>
+				<DrawerItem
+					icon={<BookIcon />}
+					text="Historial"
+					navigation={navigation}
+					navigateTo="records"
+				/>
+				<DrawerItem
+					icon={<TransferIcon width={20} />}
+					text="Transferencias"
+					style={tailwind('pb-1')}
+					navigation={navigation}
+					navigateTo="transfers"
+				/>
+			</View>
+			<Line style={{ height: 1.5 }} />
+			<View>
+				<DrawerItem
+					icon={<CardIcon />}
+					text="Métodos de pagos"
+					style={tailwind('py-1')}
+					navigation={navigation}
+					navigateTo="paymentMethods"
+				/>
+			</View>
+			<Line style={{ height: 1.5 }} />
+			<View>
+				<DrawerItemText
+					text="Sugerencias y reclamos"
+					style={tailwind('pt-2')}
+					navigation={navigation}
+					navigateTo="feedbackView"
+				/>
+				<DrawerItemText text="Políticas de servicios" navigation={navigation} />
+				<DrawerItemText text="Contácto" navigation={navigation} />
+				<LogoutItem navigation={navigation} />
+			</View>
+		</View>
+	);
 });
 
 const ProfileInfo = connect((state) => ({ user: state.user }))(({ user }) => {
-   return (
-      <View style={tailwind('p-6')}>
-         <Text style={styles.title}>
-            {user.data.first_name} {user.data.last_name}
-         </Text>
-         <Text style={styles.info}>{user.data.email}</Text>
-         <Text style={styles.info}>Id: {user.data.cedula}</Text>
-         {user.data.is_active ? (
-            <Text style={styles.status}>activo</Text>
-         ) : (
-            <Text style={styles.statusInactive}>inactivo</Text>
-         )}
-      </View>
-   );
+	return (
+		<View style={tailwind('p-6')}>
+			<Text style={styles.title}>
+				{user.data.first_name} {user.data.last_name}
+			</Text>
+			<Text style={styles.info}>{user.data.email}</Text>
+			<Text style={styles.info}>Id: {user.data.cedula}</Text>
+			{user.data.is_active ? (
+				<Text style={styles.status}>activo</Text>
+			) : (
+					<Text style={styles.statusInactive}>inactivo</Text>
+				)}
+		</View>
+	);
 });
 
 function DrawerItem({ icon, text, style = {}, navigation, navigateTo }) {
-   return (
-      <Ripple style={style} onPress={() => navigation.navigate(navigateTo)}>
-         <View style={styles.itemCont}>
-            {icon && <View style={styles.itemIconCont}>{icon}</View>}
-            <Text style={styles.itemText}>{text}</Text>
-         </View>
-      </Ripple>
-   );
+	return (
+		<Ripple style={style} onPress={() => navigation.navigate(navigateTo)}>
+			<View style={styles.itemCont}>
+				{icon && <View style={styles.itemIconCont}>{icon}</View>}
+				<Text style={styles.itemText}>{text}</Text>
+			</View>
+		</Ripple>
+	);
 }
 
 function DrawerItemText({ text, style = {}, navigation, navigateTo }) {
-   return (
-      <Ripple onPress={navigateTo && (() => navigation.navigate(navigateTo))} style={style}>
-         <View style={tailwind('py-2 px-3')}>
-            <Text style={styles.itemTextText}>{text}</Text>
-         </View>
-      </Ripple>
-   );
+	return (
+		<Ripple onPress={navigateTo && (() => navigation.navigate(navigateTo))} style={style}>
+			<View style={tailwind('py-2 px-3')}>
+				<Text style={styles.itemTextText}>{text}</Text>
+			</View>
+		</Ripple>
+	);
 }
 
 function LogoutItem({ style, navigation }) {
-   function onPress() {
-      navigation.navigate('logout', {});
-   }
-   return (
-      <Ripple style={style} onPress={onPress}>
-         <View style={tailwind('flex flex-row items-center py-2 px-3')}>
-            <Text style={[styles.itemTextText, { marginRight: 15 }]}>Cerrar Sesión</Text>
-            <LogoutIcon />
-         </View>
-      </Ripple>
-   );
+	function onPress() {
+		navigation.navigate('logout', {});
+	}
+	return (
+		<Ripple style={style} onPress={onPress}>
+			<View style={tailwind('flex flex-row items-center py-2 px-3')}>
+				<Text style={[styles.itemTextText, { marginRight: 15 }]}>Cerrar Sesión</Text>
+				<LogoutIcon />
+			</View>
+		</Ripple>
+	);
 }
 
 const styles = {
-   itemCont: tailwind('flex flex-row px-4 py-3'),
-   itemIconCont: tailwind('w-8'),
-   itemText: [tailwind('text-base text-gray-700'), typefaces.pm],
-   title: [tailwind('text-lg'), typefaces.pm],
-   info: [tailwind('text-sm text-gray-700'), typefaces.pm],
-   status: [tailwind('text-sm text-green-600'), typefaces.pm],
-   statusInactive: [tailwind('text-sm text-red-500'), typefaces.pm],
-   itemTextText: [tailwind('text-base text-gray-700'), typefaces.pr],
-   modal: {
-      bg: {},
-   },
+	itemCont: tailwind('flex flex-row px-4 py-3'),
+	itemIconCont: tailwind('w-8'),
+	itemText: [tailwind('text-base text-gray-700'), typefaces.pm],
+	title: [tailwind('text-lg'), typefaces.pm],
+	info: [tailwind('text-sm text-gray-700'), typefaces.pm],
+	status: [tailwind('text-sm text-green-600'), typefaces.pm],
+	statusInactive: [tailwind('text-sm text-red-500'), typefaces.pm],
+	itemTextText: [tailwind('text-base text-gray-700'), typefaces.pr],
+	modal: {
+		bg: {},
+	},
 };
 
 export default AppDrawerNavigator;

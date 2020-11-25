@@ -12,85 +12,85 @@ import { connect } from 'react-redux';
 import Fetch from '../utils/Fetch';
 
 const initialState = {
-   cards: [],
-   selectedCard: {},
-   loading: false,
+	cards: [],
+	selectedCard: {},
+	loading: false,
 };
 
 const reducer = (state, action) => {
-   switch (action.type) {
-      case 'select':
-         return { ...state, selectedCard: action.value };
-      case 'set_cards':
-         return { cards: action.value, loading: false, selectedCard: action.value[0] };
-      case 'loading':
-         return { ...state, loading: true };
-      case 'end_loading':
-         return { ...state, loading: false };
-      default:
-         throw new Error('there are not default case');
-   }
+	switch (action.type) {
+		case 'select':
+			return { ...state, selectedCard: action.value };
+		case 'set_cards':
+			return { cards: action.value, loading: false, selectedCard: action.value[0] };
+		case 'loading':
+			return { ...state, loading: true };
+		case 'end_loading':
+			return { ...state, loading: false };
+		default:
+			throw new Error('there are not default case');
+	}
 };
 
 function ChooseCardView({ user, navigation, route }) {
-   const [state, dispatch] = React.useReducer(reducer, initialState);
+	const [state, dispatch] = React.useReducer(reducer, initialState);
 
-   React.useEffect(() => {
-      dispatch({ type: 'loading' });
-      Fetch.get('/payment/user/card/')
-         .then((res) => dispatch({ type: 'set_cards', value: res.body.cards }))
-         .catch((err) => {});
-   }, []);
+	React.useEffect(() => {
+		dispatch({ type: 'loading' });
+		Fetch.get('/payment/user/card/')
+			.then((res) => dispatch({ type: 'set_cards', value: res.body.cards }))
+			.catch((err) => {});
+	}, []);
 
-   function next() {
-      navigation.push('confirmTopup', {
-         ...route.params,
-         card: { ...state.selectedCard, save: true },
-      });
-   }
+	function next() {
+		navigation.push('confirmTopup', {
+			...route.params,
+			card: { ...state.selectedCard, save: true },
+		});
+	}
 
-   return (
-      <View style={{ flex: 1 }}>
-         <View style={tailwind('m-4')}>
-            <Text style={[tailwind('mb-4 ml-2'), typefaces.pm]}>Tarjetas guardadas:</Text>
-            <View>
-               {state.loading && <ActivityIndicator animating color="black" />}
-               {state.cards.map((card, index) => (
-                  <CardItem
-                     {...card}
-                     key={index.toString()}
-                     holderName={card.holder_name}
-                     type={card.type}
-                     selected={state.selectedCard.token === card.token}
-                     onPress={() => dispatch({ type: 'select', value: card })}
-                  />
-               ))}
-            </View>
-         </View>
-         <Line style={tailwind('bg-gray-300 w-full mt-2 mb-1')} />
-         <View style={tailwind('items-center mt-12')}>
-            <Ripple
-               onPress={() => navigation.push('addCard', { ...route.params })}
-               style={tailwind('w-48 bg-white border rounded border-gray-300')}
-            >
-               <View style={tailwind('flex flex-row justify-between items-center px-6 py-3')}>
-                  <Text style={[typefaces.pm, tailwind('mr-4 ')]}>Usar otra tarjeta</Text>
-                  <ArrowRightIcon />
-               </View>
-            </Ripple>
-         </View>
+	return (
+		<View style={{ flex: 1 }}>
+			<View style={tailwind('m-4')}>
+				<Text style={[tailwind('mb-4 ml-2'), typefaces.pm]}>Tarjetas guardadas:</Text>
+				<View>
+					{state.loading && <ActivityIndicator animating color="black" />}
+					{state.cards.map((card, index) => (
+						<CardItem
+							{...card}
+							key={index.toString()}
+							holderName={card.holder_name}
+							type={card.type}
+							selected={state.selectedCard.token === card.token}
+							onPress={() => dispatch({ type: 'select', value: card })}
+						/>
+					))}
+				</View>
+			</View>
+			<Line style={tailwind('bg-gray-300 w-full mt-2 mb-1')} />
+			<View style={tailwind('items-center mt-12')}>
+				<Ripple
+					onPress={() => navigation.push('addCard', { ...route.params })}
+					style={tailwind('w-48 bg-white border rounded border-gray-300')}
+				>
+					<View style={tailwind('flex flex-row justify-between items-center px-6 py-3')}>
+						<Text style={[typefaces.pm, tailwind('mr-4 ')]}>Usar otra tarjeta</Text>
+						<ArrowRightIcon />
+					</View>
+				</Ripple>
+			</View>
 
-         <View style={tailwind('absolute bottom-0 right-0')}>
-            <LoadingButton
-               icon={<NextIcon />}
-               iconPos={'right'}
-               text="continuar"
-               style={tailwind('w-48 self-end mr-6 mb-12')}
-               onPress={next}
-            />
-         </View>
-      </View>
-   );
+			<View style={tailwind('absolute bottom-0 right-0')}>
+				<LoadingButton
+					icon={<NextIcon />}
+					iconPos={'right'}
+					text="continuar"
+					style={tailwind('w-48 self-end mr-6 mb-12')}
+					onPress={next}
+				/>
+			</View>
+		</View>
+	);
 }
 
 export default connect((state) => ({ user: state.user.data }))(ChooseCardView);

@@ -25,10 +25,10 @@ export default function BasicInput({
             maxLength={maxLength}
             style={[
                styles.input,
+               typefaces.pm,
                style ? style : {},
                editing ? styles.editing : styles.noEditing,
                hasErrors ? styles.hasErrors : {},
-               typefaces.pm,
             ]}
             onChangeText={(text) => {
                if (text.length > maxLength) return;
