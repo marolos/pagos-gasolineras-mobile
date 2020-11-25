@@ -193,11 +193,11 @@ class DateTimeFilter extends React.Component{
 
 function DateTimeField({showDateTimePicker, param, icon, content}){
    return (
-      <View style={tailwind('flex rounded-md py-1 px-1 w-24 border border-gray-300')}>
+      <View style={tailwind('flex rounded-md py-1 px-1 w-32 border border-gray-300')}>
          <TouchableOpacity onPress={() => showDateTimePicker(param)}>
-            <View style={tailwind('flex flex-row items-center')}>
+            <View style={tailwind('flex flex-row items-center ml-1')}>
                {icon}
-               <Text style={tailwind('text-gray-600 text-xs')}>
+               <Text style={tailwind('text-gray-600 my-1 mr-1')}>
                   {content}
                </Text>
             </View>

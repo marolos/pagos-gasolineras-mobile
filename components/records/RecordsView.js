@@ -7,25 +7,20 @@ import {
    RefreshControl, 
    Image,
    Platform,
-   UIManager,
-   LayoutAnimation,
-   TouchableOpacity,
+   UIManager
 } from "react-native";
-import RadioGroup from '../shared/RadioGroup'
 import Fetch from '../utils/Fetch';
 import tailwind from 'tailwind-rn';
 import { makeCancelable } from '../utils/utils';
 import Ripple from 'react-native-material-ripple';
 import ScheduleIcon from '../icons/ScheduleIcon';
-import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
 import InfoIcon from '../icons/InfoIcon';
 import { typefaces } from '../utils/styles';
 import { formatISODate } from '../buy/utils';
-import CompanySelector from './CompanySelector';
-import GasStationSelector from './GasStationSelector';
 import emptyImage from '../../assets/background/empty.png';
-import SimpleToast from 'react-native-simple-toast';
-import DateTimeFilter from './DateTimeFilter';
+import FloatingButton from '../shared/FloatingButton'
+import FilterIcon from '../icons/FilterIcon'
+import CollapseModalFilters from './CollapseModalFilters'
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
    const paddingToBottom = 20;
@@ -42,11 +37,14 @@ class RecordsView extends React.Component{
          loading: true, 
          loadMore: false,  
          refreshing: false,
-         filterExpanded: false,
          isEndPage: false,
          fromDateTime: null,
          toDateTime: null,
-         gasStation: null
+         gasStation: null,
+         initfbtn: 0,
+         endfbtn: 0,
+         showFbtn: false,
+         fitersVisible: false
       };
       if(Platform.OS == 'android'){
          UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -117,10 +115,6 @@ class RecordsView extends React.Component{
       );
    };
 
-   onAction = () => {
-      this.setState({ filterExpanded: !this.state.filterExpanded });
-   }
-
    onFilter = (fromDatetime, toDatetime, gasStation) => {
       let filters = { page: 0 };
       if(fromDatetime && toDatetime){
@@ -159,43 +153,56 @@ class RecordsView extends React.Component{
       this.setState({fromDateTime: null, toDateTime: null});
    }
 
+   onScrollEnd = () => {
+      if(!this.state.showFbtn){
+         this.setState({ initfbtn: 0, endfbtn: 1, showFbtn: true });
+         setTimeout(()=>this.setState({ initfbtn: 1, endfbtn: 0, showFbtn: false }), 5000);
+      }
+   }
+
    render(){
       return (
-         <ScrollView
-            scrollEventThrottle={400}
-            onScroll={({nativeEvent}) => this.onScroll(nativeEvent)}
-            refreshControl={
-               <RefreshControl onRefresh={this.onRefresh} refreshing={this.state.refreshing} />
-            }>
+         <View>
+            <FloatingButton 
+               icon={<FilterIcon/>}
+               init={this.state.initfbtn}
+               end={this.state.endfbtn}
+               onPress={() => this.setState({ fitersVisible: true, endfbtn: 0, initfbtn: 1, showFbtn: false })}
+            />
+            <ScrollView
+               scrollEventThrottle={400}
+               onScroll={({nativeEvent}) => this.onScroll(nativeEvent)}
+               onScrollEndDrag={() => this.onScrollEnd()}
+               refreshControl={
+                  <RefreshControl onRefresh={this.onRefresh} refreshing={this.state.refreshing} />
+               }>
 
-            <View>
-               <View style={[tailwind('my-3 mx-2'), { zIndex: 10 }]}>
-                  <ExpandedFilter 
-                     expanded={this.state.filterExpanded} 
-                     onAction={this.onAction}
-                     onFilter={(fdt, tdt, g) => this.onFilter(fdt, tdt, g)}
-                     onClearDateTime={() => this.onClearDateTime()}/>
-               </View>
-            {this.state.loading ? 
-                  <View style={[tailwind('flex flex-row justify-center'), { height: 200 }]}>
-                     <ActivityIndicator animating color="black" size="large" />
+               <View>
+                  {this.state.loading ? 
+                     <View style={[tailwind('flex flex-row justify-center'), { height: 200 }]}>
+                        <ActivityIndicator animating color="black" size="large" />
+                     </View>
+                  : this.state.purchases.length == 0 ? <EmptyMessage/> :
+                  <View>
+                     <PurchasesList 
+                        onItemTap={this.onItemTap}
+                        data={this.state.purchases} 
+                     />
+                     {this.state.loadMore ? 
+                     <View style={[tailwind('flex flex-row justify-center'), { height: 30 }]}>
+                        <ActivityIndicator animating color="black" size="large" />
+                     </View>
+                     : <View></View>}
                   </View>
-               : this.state.purchases.length == 0 ? <EmptyMessage/> :
-               <View style={{ zIndex: -1 }}>
-                  <Text style={tailwind('mx-2')}>Resultados: </Text>
-                  <PurchasesList 
-                     onItemTap={this.onItemTap}
-                     data={this.state.purchases} 
-                  />
-                  {this.state.loadMore ? 
-                  <View style={[tailwind('flex flex-row justify-center'), { height: 30 }]}>
-                     <ActivityIndicator animating color="black" size="large" />
-                  </View>
-                  : <View></View>}
+                  }
                </View>
-               }
-            </View>
-         </ScrollView>
+               <CollapseModalFilters
+                  visible={this.state.fitersVisible}
+                  onFilter={this.onFilter}
+                  closeCollapse={()=> this.setState({ fitersVisible: false })}
+               />
+            </ScrollView>
+         </View>
        );
    }
 }
@@ -266,89 +273,5 @@ function EmptyMessage(props) {
    );
 }
 
-function ExpandedFilter({expanded, onAction, onFilter, onClearDateTime}){
-   
-   const [state, setState] = React.useState({
-      value: "datetime",
-      filter: false
-   });
-   
-   function changeLayout(){
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      onAction();
-   }
-
-   const onCheck = (value) => {
-      setState({ ...state, value: value });
-   };
-
-   const onInvalidInput = (msg) => {
-      setState({...state, filter: false});
-      SimpleToast.show(msg);
-   }
-
-   const onValidInput = (from_datetime, to_datetime) => {
-      SimpleToast.show("Filtrando...");
-      setState({...state, filter: true});
-      onFilter(from_datetime, to_datetime, null);
-   }
-
-   const onClearFilterDateTime = () => {
-      setState({ ...state, filter: false })
-      onClearDateTime();
-   }
-
-   
-   return (
-      <View style={[tailwind('flex'), { minHeight: 20 }]}>
-         <TouchableOpacity activeOpacity={0.8} onPress={changeLayout}>
-         <View style={tailwind('flex flex-row items-center h-8')}>
-            <Text>Filtros{state.filter ? '*' : ''} </Text>
-            <AnimatedArrowIcon change={expanded}/>
-         </View>
-         </TouchableOpacity>
-         <View style={{ height: expanded ? null : 0, overflow: 'hidden' }}>
-            <View style={tailwind('flex items-center m-2')}>
-               <RadioGroup
-                  initValue={state.value}
-                  onCheck={onCheck}
-                  radios={[
-                     {label: "Fecha y hora", value: "datetime"},
-                     {label: "Estación", value: "gas_station"}
-                  ]}
-               />
-               <View>
-                  {
-                     state.value == "datetime" ?
-                     <DateTimeFilter 
-                        date={new Date()} 
-                        time={new Date()}
-                        onInvalidInput={onInvalidInput}
-                        onValidInput={(fdt, tdt) => onValidInput(fdt, tdt)}
-                        onClear={()=> onClearFilterDateTime()}
-                        /> : 
-                     <GasFilter onFilter={(item)=> console.log(item)}></GasFilter>
-                  }
-               </View>
-            </View>
-         </View>
-         
-      </View>
-   );
-}
-
-
-function GasFilter({onFilter}){
-   const [company, setCompany] = React.useState(null);
-   return (
-      <View>
-         <CompanySelector onChange={(item) => setCompany(item)}></CompanySelector>
-         <GasStationSelector id={1} onChange={(item)=> onFilter(item)}></GasStationSelector>
-      </View>
-   );
-}
 
 export default RecordsView;
-
-   
-
