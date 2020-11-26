@@ -183,7 +183,7 @@ class RecordsView extends React.Component{
 
    render(){
       return (
-         <View style={{ height: FULL_HIGHT - 60, width: FULL_WIDTH }}>
+         <View style={{ height: FULL_HIGHT - 80, width: FULL_WIDTH }}>
             <FloatingButton 
                icon={
                   !this.state.filterActive ?
@@ -226,7 +226,8 @@ class RecordsView extends React.Component{
                   </View>
                   }
                </View>
-               <CollapseModalFilters
+            </ScrollView>
+				<CollapseModalFilters
                   visible={this.state.filtersVisible}
 						onFilter={this.onFilter}
 						initFromDateTime={this.state.fromDateTime}
@@ -241,7 +242,6 @@ class RecordsView extends React.Component{
 							}
 						}}
                />
-            </ScrollView>
          </View>
        );
    }

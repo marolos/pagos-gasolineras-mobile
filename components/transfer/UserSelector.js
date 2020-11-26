@@ -10,8 +10,9 @@ import Button from '../shared/Button';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import Fetch from '../utils/Fetch';
 import { ScrollView } from 'react-native-gesture-handler';
+import { connect } from 'react-redux';
 
-export default class UserSelector extends React.Component {
+class UserSelector extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
@@ -49,7 +50,8 @@ export default class UserSelector extends React.Component {
 
       this.searchDebounced(input)
          .then((res) => {
-            this.setState({ results: res.body.results });
+				const data = res.body.results.filter((v) => v.email != this.props.user.email);
+            this.setState({ results: data });
          })
          .catch((err) => {
             err;
@@ -137,3 +139,6 @@ const styles = {
    itemRipple: tailwind('px-2 py-1'),
    scroll: {},
 };
+const mapStateToProps = (state) => ({ user: state.user.data });
+
+export default connect(mapStateToProps)(UserSelector);
