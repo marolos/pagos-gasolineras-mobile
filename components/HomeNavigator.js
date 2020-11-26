@@ -24,23 +24,8 @@ class HomeNavigator extends React.Component {
 		super(props);
 	}
 
-	componentDidMount() {
-		getMessaging().onNotificationOpenedApp((message) => {
-			console.log('::from opened::', message);
-			navigation.navigate('handleNotification');
-		});
-		getMessaging()
-			.getInitialNotification()
-			.then((message) => {
-				if (message) {
-					console.log('::from exited::', message);
-					navigation.navigate('profile');
-				}
-			});
-	}
-
-	shouldComponentUpdate() {
-		return false;
+	shouldComponentUpdate(){
+		return false
 	}
 
 	render() {

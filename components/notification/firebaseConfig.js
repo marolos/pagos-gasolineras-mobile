@@ -1,4 +1,4 @@
-import { Alert, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import Fetch from '../utils/Fetch';
 
@@ -7,10 +7,10 @@ let MessagingApp = null;
 export function initFirebase() {
 	MessagingApp = getMessaging();
 	MessagingApp.onMessage((message) => {
-		Alert.alert(message.notification.title, message.notification.body);
+		console.log('onMessage', message.data)
 	});
 	MessagingApp.setBackgroundMessageHandler(async (message) => {
-		Alert.alert('A new FCM message arrived!', JSON.stringify(message.data));
+		console.log('background', message.data)
 	});
 }
 

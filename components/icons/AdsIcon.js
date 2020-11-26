@@ -1,5 +1,5 @@
-import React, { memo } from "react"
-import Svg, { G, Path } from "react-native-svg"
+import React, { memo } from 'react';
+import Svg, { G, Path } from 'react-native-svg';
 
 function AdsIcon({ width = 20, height = 14 }) {
 	return (
@@ -16,7 +16,7 @@ function AdsIcon({ width = 20, height = 14 }) {
 				<Path fill="#fff" d="M0 0h20v14H0z" />
 			</G>
 		</Svg>
-	)
+	);
 }
 
-export default memo(AdsIcon)
+export default memo(AdsIcon);

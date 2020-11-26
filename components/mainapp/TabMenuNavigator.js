@@ -12,10 +12,25 @@ import Ripple from 'react-native-material-ripple';
 import { typefaces, shadowStyle } from '../utils/styles';
 import SearchView from '../search/SearchView';
 import NotificationsView from '../notification/NotificationsView';
+import { getMessaging } from '../notification/firebaseConfig';
 
 const Tab = createBottomTabNavigator();
 
-function TabMenuNavigator(props) {
+function TabMenuNavigator({navigation}) {
+	React.useEffect(() => {
+		getMessaging().onNotificationOpenedApp((message) => {
+			console.log('::from opened::', message);
+			navigation.navigate('tabMenu', { screen: 'notifications', params: message });
+		});
+		getMessaging()
+			.getInitialNotification()
+			.then((message) => {
+				if (message) {
+					console.log('::from exited::', message);
+					navigation.navigate('tabMenu', { screen: 'notifications', params: message });
+				}
+			});
+	}, []);
 	return (
 		<Tab.Navigator tabBar={CustomTabBar}>
 			<Tab.Screen name="balances" component={BalancesView} />

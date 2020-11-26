@@ -8,8 +8,8 @@ import Line from '../shared/Line';
 import Notification from './Notification';
 import emptyImage from '../../assets/background/empty.png';
 import { typefaces } from '../utils/styles';
-import { makeCancelable } from '../utils/utils';
 import Fetch from '../utils/Fetch';
+import NotificationModal from './NotificationModal';
 
 class NotificationsView extends React.Component {
 	constructor(props) {
@@ -17,10 +17,19 @@ class NotificationsView extends React.Component {
 		this.state = {
 			refreshing: false,
 			loadingMore: false,
+			modalVisible: false,
+			selectedItem: null,
 		};
 	}
 	componentDidMount() {
-		const { navigation, dispatch } = this.props;
+		const { navigation, dispatch, route } = this.props;
+		if (route.params) {
+			const { data, notification, sentTime } = route.params;
+			this.setState({
+				selectedItem: { data, ...notification, created_at: new Date(sentTime).toISOString() },
+				modalVisible: true,
+			});
+		}
 		this.unsubscribeFocus = navigation.addListener('focus', () => {
 			dispatch(setActiveTab(TabOptions.NOTIFICATIONS));
 		});
@@ -31,39 +40,72 @@ class NotificationsView extends React.Component {
 		if (this.unsubscribeFocus) this.unsubscribeFocus();
 	}
 
-	onEndReached = () => {
-		this.setState({ loadingMore: true });
-		setTimeout(() => this.setState({ loadingMore: false }), 1500);
-	};
-
-	keyExtractor = (item) => item.id + '';
-
 	loadNew = () => {
 		if (this.state.refreshing) return;
 		this.setState({ refreshing: true });
 		Fetch.get('/notification/')
 			.then((res) => {
-				this.props.dispatch({ type: 'SET_NOTIFICATION', value: res.body.notifications });
+				this.props.dispatch({ type: 'SET_NOTIFICATIONS', value: res.body.notifications });
 			})
 			.catch((err) => console.error(err))
 			.finally(() => this.setState({ refreshing: false }));
 	};
 
+	onEndReached = () => {
+		if (this.state.loadingMore) return;
+		this.setState({ loadingMore: true });
+		const last = this.getLastId();
+		Fetch.get('/notification/old/', { last })
+			.then((res) => {
+				this.props.dispatch({ type: 'PUSH_NOTIFICATIONS', value: res.body.notifications });
+			})
+			.catch((err) => console.error(err))
+			.finally(() => this.setState({ loadingMore: false }));
+	};
+
+	getLastId = () => {
+		const { notifications } = this.props;
+		const last = notifications[notifications.length - 1];
+		return last ? last.id : null;
+	};
+
+	renderItem = (props) => <Notification {...props} onSelect={this.onSelectItem} />;
+
+	keyExtractor = (item) => item.id + '';
+
+	onSelectItem = (item) => {
+		this.setState({ modalVisible: true, selectedItem: item });
+	};
+
+	closeCollapse = () => {
+		this.setState({ modalVisible: false });
+	};
+
 	render() {
-		const { refreshing, loadingMore } = this.state;
+		const { refreshing, loadingMore, modalVisible, selectedItem } = this.state;
 		return (
-			<FlatList
-				ListEmptyComponent={EmptyMessage}
-				refreshing={refreshing}
-				onRefresh={this.loadNew}
-				data={this.props.notifications}
-				renderItem={Notification}
-				keyExtractor={this.keyExtractor}
-				ItemSeparatorComponent={Line}
-				ListFooterComponent={<ListFooter loading={loadingMore} />}
-				onEndReached={this.onEndReached}
-				onEndReachedThreshold={0.3}
-			/>
+			<React.Fragment>
+				<FlatList
+					ListEmptyComponent={EmptyMessage}
+					refreshing={refreshing}
+					onRefresh={this.loadNew}
+					data={this.props.notifications}
+					renderItem={this.renderItem}
+					tou
+					keyExtractor={this.keyExtractor}
+					ItemSeparatorComponent={Line}
+					ListFooterComponent={<ListFooter loading={loadingMore} />}
+					onEndReached={this.onEndReached}
+					onEndReachedThreshold={0.3}
+				/>
+				{selectedItem && (
+					<NotificationModal
+						visible={modalVisible}
+						onClose={this.closeCollapse}
+						selectedItem={selectedItem}
+					/>
+				)}
+			</React.Fragment>
 		);
 	}
 }

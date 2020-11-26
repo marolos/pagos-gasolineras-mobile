@@ -1,8 +1,8 @@
 export const notifications = (state = [], action) => {
 	const { type, value } = action;
 	switch (type) {
-		case 'SET_NOTIFICATION':
-			return value;
+		case 'SET_NOTIFICATIONS':
+			return [...value];
 		case 'UNSHIFT_NOTIFICATION':
 			state.unshift(value);
 			return state;

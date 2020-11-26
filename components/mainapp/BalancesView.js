@@ -68,7 +68,7 @@ class BalancesView extends React.Component {
 				this.setState({
 					modalVisible: true,
 				}),
-			80,
+			50,
 		);
 	};
 

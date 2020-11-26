@@ -1,20 +1,15 @@
-import React, { memo } from "react"
-import Svg, { Path } from "react-native-svg"
+import React, { memo } from 'react';
+import Svg, { Path } from 'react-native-svg';
 
-function PoliticIcon({ width = 20, height = 20 }) {
+function PoliticIcon({ width = 20, height = 20, stroke = '#444' }) {
 	return (
-		<Svg
-			width={width}
-			height={height}
-			viewBox="0 0 20 20"
-			fill="none"
-		>
+		<Svg width={width} height={height} viewBox="0 0 20 20" fill="none">
 			<Path
 				d="M13.045 15.565l4.714-4.715a.833.833 0 000-1.178l-2.357-2.357a.833.833 0 00-1.179 0l-.589.59L10.1 4.368l.59-.59a.833.833 0 000-1.178L8.33.244a.833.833 0 00-1.179 0L2.44 4.958a.833.833 0 000 1.179l2.357 2.357a.833.833 0 001.178 0l.59-.59 1.178 1.179-7.69 7.689 1.18 1.179 7.688-7.69 1.18 1.18-.59.588a.833.833 0 000 1.179l2.357 2.357a.833.833 0 001.178 0zm-7.66-8.84L4.207 5.549l3.535-3.536L8.92 3.19 6.916 5.195l-.942.941-.003.004-.586.586zm2.71-.352l.826-.826 3.535 3.536-1.178 1.178-3.536-3.535.353-.353zm6.718 2.71l1.179 1.178-3.536 3.536-1.178-1.178 3.535-3.536zM19.115 18.333h-7.5a.833.833 0 100 1.667h7.5a.833.833 0 000-1.667zM14.115 15.833a.833.833 0 100 1.667h2.5a.833.833 0 000-1.667h-2.5z"
-				fill="#000"
+				fill={stroke}
 			/>
 		</Svg>
-	)
+	);
 }
 
-export default memo(PoliticIcon)
+export default memo(PoliticIcon);
