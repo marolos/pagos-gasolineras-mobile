@@ -16,8 +16,10 @@
 		".git/*": true,
 		"out/**": true
 	},
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.detectIndentation": false,
-	"editor.tabSize": 3,
-	"editor.insertSpaces": false
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.detectIndentation": false,
+		"editor.tabSize": 3,
+		"editor.insertSpaces": false
+	}
 }

@@ -48,18 +48,22 @@ function AppDrawerNavigator(props) {
 			.catch((error) => {
 				Fetch.removeAuthToken();
 				resetGenericPassword()
-					.then(() => { })
+					.then(() => {})
 					.catch((err) => {
 						err;
 					});
 			});
 	}, []);
 
-	return loadedCredentials ? (
-		<Drawer.Navigator
-			drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}
-			initialRouteName={'home'}
-		>
+	if (!loadedCredentials) {
+		return (
+			<View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>
+				<ActivityIndicator animating color="black" size="large" />
+			</View>
+		);
+	}
+	return (
+		<Drawer.Navigator drawerContent={DrawerContent} initialRouteName={'home'}>
 			<Drawer.Screen name="home" component={HomeNavigator} />
 			<Drawer.Screen name="profile" component={ProfileNavigator} />
 			<Drawer.Screen name="records" component={RecordsNavigator} />
@@ -70,14 +74,12 @@ function AppDrawerNavigator(props) {
 			<Drawer.Screen name="handleNotification" component={HandleNotification} />
 			<Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}} />
 		</Drawer.Navigator>
-	) : (
-			<View style={[tailwind('flex flex-row justify-center'), { height: FULL_HIGHT }]}>
-				<ActivityIndicator animating color="black" size="large" />
-			</View>
-		);
+	);
 }
 
-const DrawerContent = memo(({ navigation }) => {
+const DrawerContent = ({ navigation }) => <DrawerContentMemoized navigation={navigation} />;
+
+const DrawerContentMemoized = memo(({ navigation }) => {
 	return (
 		<View>
 			<ProfileInfo />
@@ -130,22 +132,24 @@ const DrawerContent = memo(({ navigation }) => {
 	);
 });
 
-const ProfileInfo = connect((state) => ({ user: state.user }))(({ user }) => {
-	return (
-		<View style={tailwind('p-6')}>
-			<Text style={styles.title}>
-				{user.data.first_name} {user.data.last_name}
-			</Text>
-			<Text style={styles.info}>{user.data.email}</Text>
-			<Text style={styles.info}>Id: {user.data.cedula}</Text>
-			{user.data.is_active ? (
-				<Text style={styles.status}>activo</Text>
-			) : (
+const ProfileInfo = connect((state) => ({ user: state.user }))(
+	memo(({ user }) => {
+		return (
+			<View style={tailwind('p-6')}>
+				<Text style={styles.title}>
+					{user.data.first_name} {user.data.last_name}
+				</Text>
+				<Text style={styles.info}>{user.data.email}</Text>
+				<Text style={styles.info}>Id: {user.data.cedula}</Text>
+				{user.data.is_active ? (
+					<Text style={styles.status}>activo</Text>
+				) : (
 					<Text style={styles.statusInactive}>inactivo</Text>
 				)}
-		</View>
-	);
-});
+			</View>
+		);
+	}),
+);
 
 function DrawerItem({ icon, text, style = {}, navigation, navigateTo }) {
 	return (
@@ -169,11 +173,8 @@ function DrawerItemText({ text, style = {}, navigation, navigateTo }) {
 }
 
 function LogoutItem({ style, navigation }) {
-	function onPress() {
-		navigation.navigate('logout', {});
-	}
 	return (
-		<Ripple style={style} onPress={onPress}>
+		<Ripple style={style} onPress={() => navigation.navigate('logout', {})}>
 			<View style={tailwind('flex flex-row items-center py-2 px-3')}>
 				<Text style={[styles.itemTextText, { marginRight: 15 }]}>Cerrar Sesión</Text>
 				<LogoutIcon />

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import AdsIcon from '../icons/AdsIcon';
@@ -7,13 +7,12 @@ import PoliticIcon from '../icons/PoliticIcon';
 import TransferIcon from '../icons/TransferIcon';
 import { FULL_WIDTH, NotificationType } from '../utils/constants';
 
-export default function Notification({ title }) {
+export default function Notification({ item }) {
 	return (
-		<Ripple style={styles.item} rippleSize={FULL_WIDTH} >
+		<Ripple style={styles.item} rippleSize={FULL_WIDTH}>
 			<View>
-
+				<Text>{item.title}</Text>
 			</View>
-			<Text style={styles.title}>{title}</Text>
 		</Ripple>
 	);
 }
@@ -21,22 +20,19 @@ export default function Notification({ title }) {
 function getIcon(type) {
 	switch (type) {
 		case NotificationType.ADVERTISEMENT:
-			return <AdsIcon />
+			return <AdsIcon />;
 		case NotificationType.CHANGE_PRIVACY_POLICES:
-			return <PoliticIcon />
+			return <PoliticIcon />;
 		case NotificationType.TRANSFER:
-			return <TransferIcon />
+			return <TransferIcon />;
 		case NotificationType.PURCHASE_DONE:
-			return <BookIcon />
+			return <BookIcon />;
 	}
 }
 
 const styles = StyleSheet.create({
 	item: {
 		padding: 20,
-		backgroundColor: 'white'
-	},
-	title: {
-		fontSize: 32,
+		backgroundColor: 'white',
 	},
 });

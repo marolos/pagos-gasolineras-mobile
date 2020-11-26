@@ -1,52 +1,62 @@
 import React, { memo } from 'react';
-import { View, FlatList, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator, Image, Text } from 'react-native';
 import { connect } from 'react-redux';
 import tailwind from 'tailwind-rn';
 import { setActiveTab } from '../redux/actions';
 import { TabOptions } from '../redux/reducers';
 import Line from '../shared/Line';
 import Notification from './Notification';
+import emptyImage from '../../assets/background/empty.png';
+import { typefaces } from '../utils/styles';
+import { makeCancelable } from '../utils/utils';
+import Fetch from '../utils/Fetch';
 
 class NotificationsView extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			refreshing: false,
-			notifications: [],
 			loadingMore: false,
 		};
 	}
 	componentDidMount() {
-		this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
-			this.props.dispatch(setActiveTab(TabOptions.NOTIFICATIONS));
+		const { navigation, dispatch } = this.props;
+		this.unsubscribeFocus = navigation.addListener('focus', () => {
+			dispatch(setActiveTab(TabOptions.NOTIFICATIONS));
 		});
-		this.setState({ refreshing: true });
-		setTimeout(() => this.setState({ refreshing: false, notifications: noti }), 1000);
+		this.loadNew();
 	}
 
 	componentWillUnmount() {
 		if (this.unsubscribeFocus) this.unsubscribeFocus();
 	}
 
-	onRefresh = () => {
-		this.setState({ refreshing: true });
-		setTimeout(() => this.setState({ refreshing: false }), 1500);
-	};
-
 	onEndReached = () => {
 		this.setState({ loadingMore: true });
 		setTimeout(() => this.setState({ loadingMore: false }), 1500);
 	};
 
-	keyExtractor = (item) => item.id;
+	keyExtractor = (item) => item.id + '';
+
+	loadNew = () => {
+		if (this.state.refreshing) return;
+		this.setState({ refreshing: true });
+		Fetch.get('/notification/')
+			.then((res) => {
+				this.props.dispatch({ type: 'SET_NOTIFICATION', value: res.body.notifications });
+			})
+			.catch((err) => console.error(err))
+			.finally(() => this.setState({ refreshing: false }));
+	};
 
 	render() {
-		const { refreshing, notifications, loadingMore } = this.state;
+		const { refreshing, loadingMore } = this.state;
 		return (
 			<FlatList
+				ListEmptyComponent={EmptyMessage}
 				refreshing={refreshing}
-				onRefresh={this.onRefresh}
-				data={notifications}
+				onRefresh={this.loadNew}
+				data={this.props.notifications}
 				renderItem={Notification}
 				keyExtractor={this.keyExtractor}
 				ItemSeparatorComponent={Line}
@@ -66,19 +76,19 @@ const ListFooter = memo(({ loading }) => {
 	);
 });
 
-const noti = [
-	{
-		id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-		title: 'First Item',
-	},
-	{
-		id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-		title: 'Second Item',
-	},
-	{
-		id: '58694a0f-3da1-471f-bd96-145571e29d72',
-		title: 'Third Item',
-	},
-];
+const EmptyMessage = memo((props) => {
+	return (
+		<View style={tailwind('items-center mb-12 mt-24')}>
+			<View>
+				<Image source={emptyImage} style={tailwind('w-32 h-48')} />
+			</View>
+			<View style={tailwind('px-12')}>
+				<Text style={[tailwind('text-gray-600 text-center mt-4'), typefaces.pm]}>
+					No tienes notificaciones
+				</Text>
+			</View>
+		</View>
+	);
+});
 
-export default connect()(NotificationsView);
+export default connect(({ notifications }) => ({ notifications }))(NotificationsView);
