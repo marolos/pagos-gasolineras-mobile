@@ -14,7 +14,7 @@ export default class CompanySelector extends React.Component{
       this.state = {
          open: false,
          options: [],
-         selected: null,
+         selected: this.props.selected,
          loading: false
       }
    }

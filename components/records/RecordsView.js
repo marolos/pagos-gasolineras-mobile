@@ -5,9 +5,7 @@ import {
    ActivityIndicator, 
    ScrollView, 
    RefreshControl, 
-   Image,
-   Platform,
-   UIManager
+   Image
 } from "react-native";
 import Fetch from '../utils/Fetch';
 import tailwind from 'tailwind-rn';
@@ -47,12 +45,9 @@ class RecordsView extends React.Component{
          initfbtn: 0,
          endfbtn: 0,
          showFbtn: false,
-         fitersVisible: false,
+         filtersVisible: false,
          filterActive: false
       };
-      if(Platform.OS == 'android'){
-         UIManager.setLayoutAnimationEnabledExperimental(true);
-      }
    }
 
    componentDidMount(){
@@ -64,31 +59,37 @@ class RecordsView extends React.Component{
       this.cancelControl = makeCancelable(
          Fetch.get("/purchase/user/", filters),
          (value) => {
-            this.setState({ purchases: value.body, loading: false });
+				if(this.state.filterActive)
+					this.setState({ purchases: value.body, loading: false, 
+						initfbtn: 0, endfbtn: 1, isEndPage: false });
+				else
+					this.setState({ purchases: value.body, loading: false });
          },
          (err) => {
             if (err.isCanceled) return;
-            this.setState({ purchases: [], loading: false });
+            this.setState({ purchases: [], loading: false, filterActive: false });
          },
       );   
    }
    
    loadMoreData(filters){
       if(!this.state.isEndPage){
+			this.setState({loadMore: true, page: ++this.state.page});
          this.cancelControl = makeCancelable(
             Fetch.get("/purchase/user/", filters),
             (value) => {
                if(value.body.length > 0){
                   for(var i in value.body){
                      this.state.purchases.push(value.body[i]);
-                  }
+						}
+						this.setState({ loadMore: false });
                }else{
-                  this.setState({ purchases: data, loadMore: false, isEndPage: true });
+                  this.setState({ loadMore: false, isEndPage: true });
                }
             },
             (err) => {
                if (err.isCanceled) return;
-               this.setState({ purchases: this.state.purchases, loadMore: false });
+               this.setState({ loadMore: false });
             },
          );   
       }
@@ -105,12 +106,13 @@ class RecordsView extends React.Component{
          filters['to'] = formatISODate(this.state.toDateTime, "yyyy-MM-dd HH:mm");
          filters['from'] = formatISODate(this.state.fromDateTime, "yyyy-MM-dd HH:mm");
       }else if(this.state.gasStation){
-         filters['gas'] = this.state.gasStation;
+         filters['gas'] = this.state.gasStation.id;
       }
       this.cancelControl = makeCancelable(
          Fetch.get('/purchase/user/', filters),
          (res) => {
-            this.setState({ purchases: res.body, loading: false, refreshing: false, isEndPage: false, page: 0 });
+				this.setState({ purchases: res.body, loading: false, refreshing: false, 
+					isEndPage: false, page: 0 });
          },
          (err) => {
             this.setState({ loading: false, refreshing: false });
@@ -120,21 +122,22 @@ class RecordsView extends React.Component{
    };
 
    onFilter = (fromDatetime, toDatetime, gasStation) => {
-      this.setState({ fitersVisible: false });
+      this.setState({ filtersVisible: false });
       SimpleToast.show("Filtrando...");
       let filters = { page: 0 };
       if(fromDatetime && toDatetime){
          filters['from'] = formatISODate(fromDatetime, "yyyy-MM-dd HH:mm");
          filters['to'] = formatISODate(toDatetime, "yyyy-MM-dd HH:mm");
-         this.setState({fromDateTime: fromDatetime, toDateTime: toDatetime, gasStation: gasStation, 
-            page: 0, initfbtn: 0, endfbtn: 1, filterActive: true});
+			this.setState({fromDateTime: fromDatetime, toDateTime: toDatetime, 
+				gasStation: gasStation, page: 0, filterActive: true});
       }
       else if(gasStation){
          filters['gas'] = gasStation.id;
-         this.setState({fromDateTime: null, toDateTime: null, gasStation: gasStation,  
-            page: 0, initfbtn: 0, endfbtn: 1, filterActive: true});
+			this.setState({fromDateTime: null, toDateTime: null, 
+				gasStation: gasStation, page: 0, filterActive: true});
       }else{
-         this.setState({fromDateTime: null, toDateTime: null, gasStation: null,  page: 0});
+			this.setState({fromDateTime: null, toDateTime: null, 
+				gasStation: null,  page: 0, filterActive: false});
       }
       this.loadData(filters)
    };
@@ -145,13 +148,12 @@ class RecordsView extends React.Component{
    
    onScroll = (nativeEvent) => {
       if(isCloseToBottom(nativeEvent)){
-         this.setState({loadMore: true, page: ++this.state.page});
-         let filters = { page: this.state.page };
+         let filters = { page: this.state.page+1 };
          if(this.state.fromDateTime && this.state.toDateTime){
            filters['to'] = formatISODate(this.state.toDateTime, "yyyy-MM-dd HH:mm");
            filters['from'] = formatISODate(this.state.fromDateTime, "yyyy-MM-dd HH:mm");
          }else if(this.state.gasStation){
-            filters['gas'] = this.state.gasStation;
+            filters['gas'] = this.state.gasStation.id;
          }
          this.loadMoreData(filters);
       }
@@ -164,17 +166,20 @@ class RecordsView extends React.Component{
    onScrollEnd = () => {
       if(!this.state.showFbtn && !this.state.filterActive){
          this.setState({ initfbtn: 0, endfbtn: 1, showFbtn: true });
-         setTimeout(()=>this.setState({ initfbtn: 1, endfbtn: 0, showFbtn: false }), 5000);
+         setTimeout(()=>this.setState({ initfbtn: 1, endfbtn: 0, showFbtn: false }), 3500);
       }
    }
 
    onFilterPress = () => {
-      if(!this.state.filterActive){
-         this.setState({ fitersVisible: true, endfbtn: 0, initfbtn: 1, showFbtn: false });
-      }else{
-         this.setState({ fitersVisible: true });
-      }
-   }
+      this.setState({ filtersVisible: true, endfbtn: 0, initfbtn: 1, showFbtn: false });
+	}
+	
+	onFilterCancel = () => {
+		this.setState({ filtersVisible: false, filterActive: false, 
+			fromDateTime: null, toDateTime: null, gasStation: null
+		});
+		this.onRefresh();
+	}
 
    render(){
       return (
@@ -222,9 +227,19 @@ class RecordsView extends React.Component{
                   }
                </View>
                <CollapseModalFilters
-                  visible={this.state.fitersVisible}
-                  onFilter={this.onFilter}
-                  closeCollapse={()=> this.setState({ fitersVisible: false })}
+                  visible={this.state.filtersVisible}
+						onFilter={this.onFilter}
+						initFromDateTime={this.state.fromDateTime}
+						initToDateTime={this.state.toDateTime}
+						initGasStation={this.state.gasStation}
+						onCancel={this.onFilterCancel}
+                  closeCollapse={()=> {
+							if(this.state.filterActive){
+								this.setState({ filtersVisible: false, endfbtn: 1, initfbtn: 0, showFbtn: true })	
+							}else{
+								this.setState({ filtersVisible: false })
+							}
+						}}
                />
             </ScrollView>
          </View>

@@ -10,7 +10,15 @@ import GasStationSelector from './GasStationSelector';
 import SimpleToast from 'react-native-simple-toast';
 import DateTimeFilter from './DateTimeFilter';
 
-function CollapseModalFilters({ visible, closeCollapse, onFilter, onClearDateTime, onCancel }) {
+function CollapseModalFilters({ 
+	visible, 
+	closeCollapse, 
+	onFilter, 
+	onCancel,
+	initFromDateTime,
+	initToDateTime,
+	initGasStation
+ }) {
    const [state, setState] = React.useState({
       fromDatetime: null,
       toDatetime: null,
@@ -20,7 +28,8 @@ function CollapseModalFilters({ visible, closeCollapse, onFilter, onClearDateTim
 
 
    const onValidInput = (fromDatetime, toDatetime, gasStation) => {
-      setState({ errorMsg: null, fromDatetime: fromDatetime, toDatetime: toDatetime, gasStation: gasStation });
+		setState({ errorMsg: null, fromDatetime: fromDatetime, 
+			toDatetime: toDatetime, gasStation: gasStation });
    }
 
    const onInvalidInput = (msg) => {
@@ -53,7 +62,10 @@ function CollapseModalFilters({ visible, closeCollapse, onFilter, onClearDateTim
       >
          <View style={styles.view}>
             <View style={tailwind('my-3 mx-2')}>
-               <ExpandedFilter 
+					<ExpandedFilter 
+						initFromDateTime={initFromDateTime}
+						initToDateTime={initToDateTime}
+						initGasStation={initGasStation}
                   onInvalidInput={(msg) => onInvalidInput(msg)}
                   onValidInput={(fdt, tdt, g) => onValidInput(fdt, tdt, g)}/>
             </View>
@@ -79,29 +91,29 @@ const styles = {
    options: tailwind('flex flex-row justify-evenly mt-6'),
 };
 
-function ExpandedFilter({onValidInput, filter, onInvalidInput}){
+function ExpandedFilter({
+	onValidInput, 
+	onInvalidInput,
+	initFromDateTime,
+	initToDateTime,
+	initGasStation
+}){
    
    const [state, setState] = React.useState({
-      value: "datetime",
+      value: initFromDateTime && initToDateTime ? "datetime" : initGasStation ? "gas_station": "datetime"
    });
    
 
    const onCheck = (value) => {
-      onValidInput(null, null, null);
+      onValidInput(initFromDateTime, initToDateTime, initGasStation);
       setState({ value: value });
    };
-
-
-   const onClearFilterDateTime = () => {
-      onClearDateTime();
-   }
-
    
    return (
       <View style={[tailwind('flex'), { minHeight: 20 }]}>
          <View >
             <View style={tailwind('flex items-center m-2')}>
-            <Text style={[tailwind('mb-2 text-lg'), typefaces.pb]} >Filtros{filter ? '*' : ''}</Text>  
+            <Text style={[tailwind('mb-2 text-lg'), typefaces.pb]} >Filtros</Text>  
                <RadioGroup
                   initValue={state.value}
                   onCheck={onCheck}
@@ -114,13 +126,14 @@ function ExpandedFilter({onValidInput, filter, onInvalidInput}){
                   {
                      state.value == "datetime" ?
                      <DateTimeFilter 
-                        date={new Date()} 
-                        time={new Date()}
+                        fromDatetime={initFromDateTime} 
+                        toDatetime={initToDateTime}
                         onInvalidInput={(msg) => onInvalidInput(msg)}
                         onValidInput={(fdt, tdt) => onValidInput(fdt, tdt, null)}
                         onClear={()=> {}}
                         /> : 
-                     <GasFilter 
+							<GasFilter 
+								initGasStation={initGasStation}
                         onValidInput={(gas)=> onValidInput(null, null, gas)}
                         onInvalidInput={(msg) => onInvalidInput(msg)}/>
                   }
@@ -133,18 +146,29 @@ function ExpandedFilter({onValidInput, filter, onInvalidInput}){
 }
 
 
-function GasFilter({onInvalidInput, onValidInput}){
+function GasFilter({
+	initGasStation,
+	onInvalidInput, 
+	onValidInput}){
 
    const ref = React.useRef();
 
    const loadGasStations = (company) => {
       if(company != null){
-         ref.current.loadData(company);
+         ref.current.loadData(company, null);
       }
-   }
+	}
+	
+	React.useEffect(()=>{
+		if(initGasStation){
+			ref.current.loadData(initGasStation.company, initGasStation);
+		}
+	}, []);
+	
+
    return (
       <View>
-         <CompanySelector onChange={(item) => {
+         <CompanySelector selected={initGasStation?.company} onChange={(item) => {
                loadGasStations(item);
             }
          }></CompanySelector>

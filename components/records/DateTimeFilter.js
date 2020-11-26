@@ -13,20 +13,21 @@ import tailwind from 'tailwind-rn';
 class DateTimeFilter extends React.Component{
    
    constructor(props){
-      super(props);
+		super(props);
+		const now = new Date();
       this.state = {
          visible: false,
          timeVisible: false,
          paramDate: '',
          paramTime: '',
-         toDate: this.props.date,
-         fromDate: this.props.date,
-         toTime: this.props.time,
-         fromTime: this.props.time,
-         selectToDate: false,
-         selectFromDate: false,
-         selectToTime: false,
-         selectFromTime: false   
+         toDate: this.props.toDatetime || now,
+         fromDate: this.props.fromDatetime || now,
+         toTime: this.props.toDatetime || now,
+         fromTime: this.props.fromDatetime || now,
+         selectToDate: this.props.toDatetime != null,
+         selectFromDate: this.props.fromDatetime != null,
+         selectToTime: this.props.toDatetime != null,
+         selectFromTime: this.props.fromDatetime != null   
       }
    }
 
@@ -62,12 +63,7 @@ class DateTimeFilter extends React.Component{
    }
 
    hideDatePicker = () => {
-      if(this.state.paramDate == "toDate"){
-         this.setState({ visible: false, selectToDate: false })
-      }else if(this.state.paramDate == "fromDate"){
-         this.setState({ visible: false, selectFromDate: false })
-      }
-      this.props.onClear();
+      this.setState({ visible: false });
    }
 
    handleConfirm = (date) => {
@@ -90,12 +86,7 @@ class DateTimeFilter extends React.Component{
    }
 
    hideTimePicker = () => {
-      if(this.state.paramTime == "toTime"){
-         this.setState({ timeVisible: false, selectToTime: false })
-      }else if(this.state.paramTime == "fromTime"){
-         this.setState({ timeVisible: false, selectFromTime: false })
-      }
-      this.props.onClear();
+      this.setState({ timeVisible: false });
    }
 
    handleConfirmTime = (time) => {

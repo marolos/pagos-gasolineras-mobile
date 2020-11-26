@@ -15,24 +15,23 @@ export default class GasStationSelector extends React.Component {
          selected: null,
          options: [],
          loading: false,
-         open: false
+			open: false, 
+			company: null
       }
    }
 
-   loadData(company){
+   loadData(company, selected){
       if(company){
-         this.setState({ loading: true });
+         this.setState({ loading: true, company: company });
          this.cancelControl = makeCancelable(   
-            Fetch.get('/company/stations/'+company.id+"/")
-            .then((res) => {
-               this.props.onChange(null);
-               this.setState({ options: res.body, loading: false, selected: null });
-            })
-            .catch((err) => {
-               err;
-            })
-            .finally(() => this.setState({ loading: false, selected: null }))
-         ); 
+            Fetch.get('/company/stations/'+company.id+"/"),
+            (res) => {
+               this.props.onChange(selected);
+               this.setState({ options: res.body, loading: false, selected: selected });
+            },
+            (err) => {
+               if (!err.isCanceled) this.setState({ loading: false, selected: null });
+            }); 
       }else {
          this.setState({ options: [], selected: null });
       } 
@@ -69,6 +68,7 @@ export default class GasStationSelector extends React.Component {
                      }}
                      options={this.state.options}
                      onConfirm={(item)=>{
+								item["company"] = this.state.company;
                         this.setState({ selected: item, open: false });
                         this.props.onChange(this.state.selected);
                      }}
