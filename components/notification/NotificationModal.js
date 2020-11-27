@@ -1,15 +1,20 @@
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
-import ArrowDownIcon from '../icons/ArrowDownIcon';
-import Ripple from 'react-native-material-ripple';
 import ReactNativeModal from 'react-native-modal';
 import { getIcon } from './Notification';
 import { FULL_WIDTH, NotificationType } from '../utils/constants';
-import { ScrollView } from 'react-native-gesture-handler';
 import { formatISODate } from '../buy/utils';
 import { typefaces } from '../utils/styles';
-import CloseIcon from '../icons/CloseIcon';
+import {
+	AdsDetail,
+	DisableUserDetail,
+	PolicyDetail,
+	PurchaseDetail,
+	TipDetail,
+	TransferDetail,
+} from './Details';
+import Button from '../shared/Button';
 
 class NotificationModal extends React.Component {
 	constructor(props) {
@@ -33,53 +38,22 @@ class NotificationModal extends React.Component {
 				style={styles.modal}
 			>
 				<View style={styles.view}>
-					<Ripple style={styles.arrow} onPress={onClose} rippleCentered>
-						<CloseIcon width={15} height={15}/>
-					</Ripple>
-					<View style={tailwind('flex flex-row mt-6')}>
+					<View style={tailwind('flex flex-row mt-2')}>
 						<View style={tailwind('mr-4')}>{getIcon(type)}</View>
 						<View>
 							<Text style={[tailwind('text-sm'), typefaces.pm]}>{selectedItem.title}</Text>
 							<Text>{formatISODate(selectedItem.created_at, 'PPP')}</Text>
 						</View>
 					</View>
-					<View style={tailwind('my-4')}>{getDetail(type, selectedItem)}</View>
+					<View style={tailwind('my-4 px-2')}>{getDetail(type, selectedItem)}</View>
+					<View style={tailwind('flex items-center mb-2')}>
+						<Button onPress={onClose} text="cerrar" />
+					</View>
 				</View>
 			</ReactNativeModal>
 		);
 	}
 }
-
-const PolicyDetail = memo(({ data }) => (
-	<ScrollView style={[{ minHeight: 300, marginHorizontal: 16 }]}>
-		<Text>{data.polices}</Text>
-	</ScrollView>
-));
-
-const PurchaseDetail = memo(({ data, body }) => (
-	<View>
-		<Text>{body}</Text>
-		<View style={tailwind('mt-4')}>
-			<Text style={[typefaces.pm]}>
-				Amount: <Text style={[tailwind('text-green-600')]}>${data.amount}</Text>
-			</Text>
-			<Text style={[typefaces.pm]}>
-				Gasolinera: <Text>{data.gas_station}</Text>
-			</Text>
-			<Text style={[typefaces.pm]}>
-				Combustible: <Text>{data.fueltype}</Text>
-			</Text>
-		</View>
-	</View>
-));
-
-const TipDetail = memo(({ data }) => <View></View>);
-
-const AdsDetail = memo(({ data }) => <View></View>);
-
-const DisableUserDetail = memo(({ data }) => <View></View>);
-
-const TransferDetail = memo(({ data }) => <View></View>);
 
 function getDetail(type, item) {
 	switch (type) {
@@ -99,9 +73,9 @@ function getDetail(type, item) {
 }
 
 const styles = {
-	modal: tailwind('items-center rounded'),
-	view: [tailwind('p-4 bg-white rounded-lg'), { width: FULL_WIDTH - 40 }],
-	arrow: tailwind('absolute right-0 p-6'),
+	modal: [tailwind('rounded'), { hight: 500 }],
+	view: [tailwind('p-4 flex bg-white rounded-lg'), { width: FULL_WIDTH - 40 }],
+	close: tailwind('mt-4 p-6'),
 };
 
 export default memo(NotificationModal);

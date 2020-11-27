@@ -24,6 +24,7 @@
     "@react-navigation/stack": "^5.7.0",
     "awesome-debounce-promise": "^2.1.0",
     "date-fns": "^2.16.1",
+    "date-fns-tz": "^1.0.12",
     "qrcode-generator": "^1.4.4",
     "react": "16.13.1",
     "react-native": "0.63.1",

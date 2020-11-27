@@ -69,17 +69,17 @@ class NotificationsView extends React.Component {
 		return last ? last.id : null;
 	};
 
-	renderItem = (props) => <Notification {...props} onSelect={this.onSelectItem} />;
-
-	keyExtractor = (item) => item.id + '';
-
 	onSelectItem = (item) => {
-		this.setState({ modalVisible: true, selectedItem: item });
+		setTimeout(() => this.setState({ modalVisible: true, selectedItem: item }), 50);
 	};
 
 	closeCollapse = () => {
 		this.setState({ modalVisible: false });
 	};
+
+	keyExtractor = (item) => item.id + '';
+
+	renderItem = (props) => <Notification {...props} onSelect={this.onSelectItem} />;
 
 	render() {
 		const { refreshing, loadingMore, modalVisible, selectedItem } = this.state;

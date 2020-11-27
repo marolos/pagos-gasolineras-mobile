@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Ripple from 'react-native-material-ripple';
+import { View, Text, TouchableHighlight } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { formatISODate } from '../buy/utils';
 import AdsIcon from '../icons/AdsIcon';
@@ -12,36 +11,65 @@ import { typefaces } from '../utils/styles';
 
 function Notification({ item, onSelect }) {
 	return (
-		<Ripple style={styles.ripple} rippleSize={FULL_WIDTH} onPress={() => onSelect(item)}>
-			<View style={styles.iconView}>{getIcon(item.data.type)}</View>
-			<View>
-				<Text style={styles.title}>{item.title}</Text>
-				<Text style={styles.date}>{formatISODate(item.created_at)}</Text>
-				<Text style={styles.body}>{item.body}</Text>
+		<TouchableHighlight onPress={() => onSelect(item)} delayPressIn={0} underlayColor="#eee">
+			<View style={styles.touchable}>
+				<View style={styles.iconView}>{getIcon(item.data.type)}</View>
+				<View>
+					<Text style={styles.title}>{item.title}</Text>
+					<Text style={styles.date}>{formatISODate(item.created_at)}</Text>
+					<Text style={styles.body}>{item.body}</Text>
+				</View>
 			</View>
-		</Ripple>
+		</TouchableHighlight>
 	);
 }
 
 export function getIcon(type) {
 	switch (type) {
 		case NotificationType.ADVERTISEMENT:
-			return <AdsIcon />;
+			return (
+				<View style={styles.ads}>
+					<AdsIcon />
+				</View>
+			);
+		case NotificationType.TIP:
+			return (
+				<View style={styles.tip}>
+					<AdsIcon stroke='#ec4899'/>
+				</View>
+			);
 		case NotificationType.CHANGE_PRIVACY_POLICES:
-			return <PoliticIcon />;
+			return (
+				<View style={styles.changePolicy}>
+					<PoliticIcon stroke="#f87171" width={18} />
+				</View>
+			);
 		case NotificationType.TRANSFER:
-			return <TransferIcon />;
+			return (
+				<View style={styles.transfer}>
+					<TransferIcon width={18} stroke="#3b82f6" />
+				</View>
+			);
 		case NotificationType.PURCHASE_DONE:
-			return <BookIcon />;
+			return (
+				<View style={styles.purchase}>
+					<BookIcon width={18} stroke="#6366f1" />
+				</View>
+			);
 	}
 }
 
 const styles = {
-	ripple: tailwind('flex flex-row px-4 py-3'),
+	touchable: tailwind('flex flex-row px-4 py-3'),
 	iconView: tailwind('mr-4'),
-	title: [tailwind('text-sm'), typefaces.pm],
+	title: [tailwind('text-sm'), typefaces.pm, { width: FULL_WIDTH - 100 }],
 	date: [tailwind('text-xs text-gray-700')],
-	body: [tailwind('text-sm'), typefaces.pr],
+	body: [{ fontSize: 13 }, typefaces.pr, { width: FULL_WIDTH - 80 }],
+	changePolicy: tailwind('w-8 h-8 rounded-full bg-red-100 flex items-center justify-center'),
+	transfer: tailwind('w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center'),
+	purchase: tailwind('w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center'),
+	ads: tailwind('w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center'),
+	tip: tailwind('w-8 h-8 rounded-full bg-pink-200 flex items-center justify-center'),
 };
 
 export default memo(Notification);
