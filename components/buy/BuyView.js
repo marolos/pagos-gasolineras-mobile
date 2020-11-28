@@ -147,7 +147,7 @@ export default class BuyView extends React.Component {
                amount={this.state.amount}
                vehicle={this.state.vehicle}
             />
-            <LoadingModal show={this.state.showBuying} text='Realizando la compra.'/>
+            <LoadingModal show={this.state.showBuying} text="Realizando la compra."/>
             <BuyDoneModal
                show={this.state.showBuyDone}
                onCancel={this.close}

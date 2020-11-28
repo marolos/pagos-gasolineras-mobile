@@ -47,7 +47,7 @@ export const AdsDetail = memo(({ data }) => (
 	</View>
 ));
 
-export const DisableUserDetail = memo(({ data }) => <View></View>);
+export const DisableUserDetail = memo(({ data }) => <View />);
 
 export const TransferDetail = memo(({ data, body }) => (
 	<View>

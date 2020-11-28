@@ -23,7 +23,6 @@ class CreateTransferView extends React.Component {
          showGasStation: false,
          receiverIdentifier: null,
          gasStationBalance: null,
-         showConfirm: false,
          sending: false,
          amount: 0,
          showConfirm: false,

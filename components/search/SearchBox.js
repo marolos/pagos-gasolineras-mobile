@@ -134,7 +134,7 @@ function AnimatedBackground({ show }) {
       }).start();
    }, [show]);
 
-   return <Animated.View style={[styles.bg, { height: value, width: value }]}></Animated.View>;
+   return <Animated.View style={[styles.bg, { height: value, width: value }]} />;
 }
 
 function ResultList({ results = [], onPressItem = () => {}, onSearchNear = () => {} }) {

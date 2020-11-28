@@ -15,13 +15,13 @@ export default class CompanySelector extends React.Component{
          open: false,
          options: [],
          selected: this.props.selected,
-         loading: false
+         loading: false,
       }
    }
 
    componentDidMount(){
       this.setState({ loading: true });
-      this.cancelControl = makeCancelable(   
+      this.cancelControl = makeCancelable(
          Fetch.get('/company/all/'),
          (res) => {
             this.setState({ options: res.body, loading: false });
@@ -63,7 +63,7 @@ export default class CompanySelector extends React.Component{
                      <Ripple
                         key={item.id}
                         style={tailwind('px-3 py-3')}
-                        onPress={() => {;
+                        onPress={() => {
                            this.setState({ selected: item, open: false });
                            this.props.onChange(this.state.selected);
                         }}
@@ -103,6 +103,6 @@ const styles = {
    list: [
       tailwind('absolute bg-white w-48 border rounded-sm border-white'),
       { top: 41, right: 0, zIndex: 10 },
-      shadowStyle
+      shadowStyle,
    ],
 };

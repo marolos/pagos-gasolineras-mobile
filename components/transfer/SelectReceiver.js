@@ -8,10 +8,8 @@ class SelectReceiver extends React.Component {
       };
 	}
 	render(){
-		return(
-			<View>
-
-			</View>
+		return (
+			<View />
 		)
 	}
 }

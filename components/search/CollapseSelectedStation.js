@@ -17,7 +17,7 @@ class CollapseSelectedStation extends React.Component {
 			loaded: false,
 			hasCredit: false,
 			company: {},
-			balance: null
+			balance: null,
 		};
 	}
 
@@ -46,7 +46,7 @@ class CollapseSelectedStation extends React.Component {
 		Fetch.get('/users/balances/', { station_id: station.id })
 			.then((res) => {
 				const { balance } = res.body;
-				if(balance && balance.total){
+				if (balance && balance.total){
 					this.setState({ hasCredit: balance.total > 0, balance: balance});
 				}
 			})
@@ -79,7 +79,7 @@ class CollapseSelectedStation extends React.Component {
 					gas_station: station,
 					company,
 					total: balance.total,
-					id: balance.id
+					id: balance.id,
 				}),
 			100,
 		);
