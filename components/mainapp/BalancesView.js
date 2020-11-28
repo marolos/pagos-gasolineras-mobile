@@ -78,22 +78,14 @@ class BalancesView extends React.Component {
 			<ScrollView
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
 			>
-				<View>
-					<AdsPaginator />
-				</View>
+				<AdsPaginator />
 				{balances.length > 0 && (
 					<View style={tailwind('mt-4 px-6')}>
 						<Text style={[tailwind('text-black text-sm'), typefaces.pm]}>Gasolineras</Text>
 						<Line style={tailwind('bg-gray-400 w-full mb-2')} />
 					</View>
 				)}
-				<View>
-					<GasStationList
-						loading={loading}
-						data={balances}
-						onItemPress={this.onPressStation}
-					/>
-				</View>
+				<GasStationList loading={loading} data={balances} onItemPress={this.onPressStation} />
 				{balances.length > 0 && selectedStation && (
 					<CollapseModalOptions
 						visible={modalVisible}

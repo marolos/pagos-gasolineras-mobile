@@ -7,7 +7,7 @@ import FastImage from 'react-native-fast-image';
 
 function BalanceCard({ total, company, gasStation, onPress }) {
 	return (
-		<Ripple onPress={onPress} style={styles.ripple} rippleDuration={300}>
+		<Ripple onPress={onPress} style={styles.ripple} rippleDuration={270}>
 			<View style={styles.view}>
 				<FastImage source={{ uri: company.company_logo_path }} style={styles.image} />
 				<View>
