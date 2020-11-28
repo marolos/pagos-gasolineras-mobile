@@ -10,10 +10,11 @@ import { enableScreens } from 'react-native-screens';
 import { StatusBar } from 'react-native';
 import { initFirebase } from './notification/firebaseConfig';
 import { NavigationContainer } from '@react-navigation/native';
-import { theme } from './utils/constants';
+import { theme, doDirtyShit } from './utils/constants';
 
 enableScreens();
 initFirebase();
+doDirtyShit();
 
 function App({ user, dispatch }) {
 	React.useEffect(() => {
@@ -26,7 +27,7 @@ function App({ user, dispatch }) {
 				Fetch.removeAuthToken();
 				Fetch.removeInterceptor('unauthorized');
 				resetGenericPassword()
-					.then(() => { })
+					.then(() => {})
 					.catch((err) => {
 						err;
 					});

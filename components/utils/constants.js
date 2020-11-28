@@ -1,5 +1,13 @@
 import { Dimensions } from 'react-native';
 
+export const doDirtyShit = () => {
+	if (process.env.NODE_ENV !== 'development') {
+		console.log = () => {};
+		console.error = () => {};
+		console.warn = () => {};
+	}
+};
+
 export const REST_API_URL =
 	process.env.NODE_ENV === 'development'
 		? 'http://localhost:8000'

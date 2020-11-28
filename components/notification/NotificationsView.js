@@ -32,6 +32,7 @@ class NotificationsView extends React.Component {
 		}
 		this.unsubscribeFocus = navigation.addListener('focus', () => {
 			dispatch(setActiveTab(TabOptions.NOTIFICATIONS));
+			dispatch({ type: 'CLEAR_ARRIVED_NEW' });
 		});
 		this.loadNew();
 	}
@@ -48,7 +49,10 @@ class NotificationsView extends React.Component {
 				this.props.dispatch({ type: 'SET_NOTIFICATIONS', value: res.body.notifications });
 			})
 			.catch((err) => console.error(err))
-			.finally(() => this.setState({ refreshing: false }));
+			.finally(() => {
+				this.setState({ refreshing: false });
+				this.props.dispatch({ type: 'CLEAR_ARRIVED_NEW' });
+			});
 	};
 
 	onEndReached = () => {

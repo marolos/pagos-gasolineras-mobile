@@ -6,11 +6,8 @@ let MessagingApp = null;
 
 export function initFirebase() {
 	MessagingApp = getMessaging();
-	MessagingApp.onMessage((message) => {
-		console.log('onMessage', message.data)
-	});
 	MessagingApp.setBackgroundMessageHandler(async (message) => {
-		console.log('background', message.data)
+		console.log('background', message.data);
 	});
 }
 
@@ -20,8 +17,6 @@ export function getMessaging() {
 	}
 	return MessagingApp;
 }
-
-
 
 // Request permission notifications for ios devices
 export async function requestUserPermission() {
@@ -47,11 +42,13 @@ export async function getDeviceInfo() {
 	Fetch.post('/notification/user/token/', { device_info })
 		.then((res) => {})
 		.catch((err) => {
-			console.error(err)
+			console.error(err);
 			Fetch.post('/notification/user/token/', { device_info })
-				.then((res) => {res})
+				.then((res) => {
+					res;
+				})
 				.catch((_err) => {
-					console.error(_err)
+					console.error(_err);
 				});
 		});
 }

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View } from 'react-native';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import BalancesView from './BalancesView';
 import { TabOptions } from '../redux/reducers';
 import tailwind from 'tailwind-rn';
@@ -16,21 +16,25 @@ import { getMessaging } from '../notification/firebaseConfig';
 
 const Tab = createBottomTabNavigator();
 
-function TabMenuNavigator({navigation}) {
+function TabMenuNavigator({ navigation }) {
+	const dispatch = useDispatch();
+
 	React.useEffect(() => {
 		getMessaging().onNotificationOpenedApp((message) => {
-			console.log('::from opened::', message);
 			navigation.navigate('tabMenu', { screen: 'notifications', params: message });
 		});
 		getMessaging()
 			.getInitialNotification()
 			.then((message) => {
 				if (message) {
-					console.log('::from exited::', message);
 					navigation.navigate('tabMenu', { screen: 'notifications', params: message });
 				}
 			});
+		getMessaging().onMessage((message) => {
+			dispatch({ type: 'ARRIVED_NEW' });
+		});
 	}, []);
+
 	return (
 		<Tab.Navigator tabBar={CustomTabBar}>
 			<Tab.Screen name="balances" component={BalancesView} />
@@ -61,7 +65,7 @@ const CustomTabBarMemoized = memo(({ navigation }) => {
 					icon={SearchIcon}
 					navigation={navigation}
 				/>
-				<TabButton
+				<TabButtonBadger
 					navigateTo="notifications"
 					tabOption={TabOptions.NOTIFICATIONS}
 					label="Notificaciones"
@@ -73,40 +77,48 @@ const CustomTabBarMemoized = memo(({ navigation }) => {
 	);
 });
 
-const mapStateToProps = (state) => ({
-	activeTab: state.activeTab,
+const TabButtonBase = memo(({ navigateTo, activeTab, tabOption, label, icon, navigation }) => {
+	const Icon = icon;
+	const focused = activeTab.label === tabOption.label;
+	return (
+		<Ripple
+			onPress={() => {
+				navigation.navigate(navigateTo);
+			}}
+			style={styles.tabButton.ripple}
+			rippleCentered={true}
+			rippleSize={80}
+			rippleDuration={300}
+		>
+			<View style={styles.tabButton.view}>
+				<Icon focused={focused} />
+				<Text
+					style={[
+						{ fontSize: 11 },
+						focused ? styles.tabButton.focused : styles.tabButton.notFocused,
+						typefaces.pm,
+					]}
+				>
+					{label}
+				</Text>
+			</View>
+		</Ripple>
+	);
 });
 
-const TabButton = connect(mapStateToProps)(
-	memo(({ navigateTo, activeTab, label, icon, navigation }) => {
-		const Icon = icon;
-		const focused = activeTab.label === label.trim();
-		return (
-			<Ripple
-				onPress={() => {
-					navigation.navigate(navigateTo);
-				}}
-				style={styles.tabButton.ripple}
-				rippleCentered={true}
-				rippleSize={80}
-				rippleDuration={300}
-			>
-				<View style={styles.tabButton.view}>
-					<Icon focused={focused} />
-					<Text
-						style={[
-							{ fontSize: 11 },
-							focused ? styles.tabButton.focused : styles.tabButton.notFocused,
-							typefaces.pm,
-						]}
-					>
-						{label}
-					</Text>
-				</View>
-			</Ripple>
-		);
-	}),
-);
+const TabButton = connect((state) => ({ activeTab: state.activeTab }))(TabButtonBase);
+
+const TabButtonBadger = connect(({ activeTab, newNotification }) => ({
+	activeTab,
+	newNotification,
+}))((props) => {
+	return (
+		<View style={styles.badge.view}>
+			{props.newNotification && <View style={styles.badge.circle} />}
+			<TabButtonBase {...props} />
+		</View>
+	);
+});
 
 const styles = {
 	tabButton: {
@@ -119,6 +131,13 @@ const styles = {
 		view: { ...shadowStyle, backgroundColor: 'white' },
 		line: [{ height: 2 }, tailwind('bg-gray-200')],
 		buttons: tailwind('flex flex-row justify-evenly pb-1 pt-1'),
+	},
+	badge: {
+		view: { position: 'relative' },
+		circle: [
+			tailwind('absolute rounded-full bg-pink-500'),
+			{ right: 8, top: 4, width: 10, height: 10 },
+		],
 	},
 };
 

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import * as authReducers from './auth/reducers';
-import * as authNotification from './notification/reducers';
+import { user } from './auth/reducers';
+import { notifications, newNotification } from './notification/reducers';
 
 export const TabOptions = {
 	GAS: { label: 'Gasolineras' },
@@ -19,8 +19,9 @@ const activeTab = (state = TabOptions.GAS, action) => {
 
 const rootReducers = combineReducers({
 	activeTab,
-	...authReducers,
-	...authNotification,
+	notifications,
+	newNotification,
+	user,
 });
 
 export default rootReducers;

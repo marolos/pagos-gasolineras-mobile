@@ -15,7 +15,6 @@ import ChooseCardView from './payment/ChooseCardView';
 import AddCardView from './payment/AddCardView';
 import ConfirmTopupView from './topup/ConfirmTopupView';
 import GenerateCodeView from './buy/GenerateCodeView';
-import { getMessaging } from './notification/firebaseConfig';
 
 const Stack = createStackNavigator();
 

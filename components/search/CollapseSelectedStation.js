@@ -17,6 +17,7 @@ class CollapseSelectedStation extends React.Component {
 			loaded: false,
 			hasCredit: false,
 			company: {},
+			balance: null
 		};
 	}
 
@@ -45,7 +46,9 @@ class CollapseSelectedStation extends React.Component {
 		Fetch.get('/users/balances/', { station_id: station.id })
 			.then((res) => {
 				const { balance } = res.body;
-				this.setState({ hasCredit: balance && balance.total > 0 });
+				if(balance && balance.total){
+					this.setState({ hasCredit: balance.total > 0, balance: balance});
+				}
 			})
 			.catch((err) => {
 				this.setState({ hasCredit: false });
@@ -55,8 +58,6 @@ class CollapseSelectedStation extends React.Component {
 	onTopup = () => {
 		const { company } = this.state;
 		const { closeCollapse, station, navigation } = this.props;
-		console.log('company::::', company);
-		console.log('station::::', station);
 		closeCollapse();
 		setTimeout(
 			() =>
@@ -69,22 +70,23 @@ class CollapseSelectedStation extends React.Component {
 	};
 
 	onBuy = () => {
-		const { company } = this.state;
+		const { company, balance } = this.state;
 		const { closeCollapse, station, navigation } = this.props;
-		console.log('company::::', company);
-		console.log('station::::', station);
 		closeCollapse();
 		setTimeout(
 			() =>
 				navigation.navigate('buy', {
 					gas_station: station,
 					company,
+					total: balance.total,
+					id: balance.id
 				}),
 			100,
 		);
 	};
 
 	onFeedback = () => {
+		this.props.closeCollapse()
 		this.props.navigation.navigate('feedback', {
 			screen: 'feedbackView',
 			params: { station: this.props.station },

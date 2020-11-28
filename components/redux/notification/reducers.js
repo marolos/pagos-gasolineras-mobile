@@ -18,3 +18,14 @@ export const notifications = (state = [], action) => {
 			return state;
 	}
 };
+
+export const newNotification = (state = false, action) => {
+	switch (action.type) {
+		case 'ARRIVED_NEW':
+			return true;
+		case 'CLEAR_ARRIVED_NEW':
+			return false;
+		default:
+			return state;
+	}
+};

@@ -37,8 +37,8 @@ class SearchView extends React.Component {
 			this.props.dispatch(setActiveTab(TabOptions.SEARCH));
 		});
 	}
-	
-	componentWillUnmount(){
+
+	componentWillUnmount() {
 		if (this.unsubscribeFocus) this.unsubscribeFocus();
 	}
 
@@ -98,7 +98,7 @@ class SearchView extends React.Component {
 					center: [longitude, latitude],
 				});
 			} catch (error) {
-				this.setState({ pointers: [] });
+				this.setState({ pointers: [], center: this.state.userLocation });
 			}
 		} else {
 			SimpleToast.showWithGravity(
