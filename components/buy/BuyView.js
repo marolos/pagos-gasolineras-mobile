@@ -91,7 +91,7 @@ export default class BuyView extends React.Component {
 	};
 
 	close = () => {
-		this.props.navigation.reset({ index: 0, routes: [{ name: 'tabMenu' }] });
+		this.props.navigation.reset({ index: 0, routes: [{ name: 'home' }] });
 	};
 
 	goCodeView = () => {

@@ -31,6 +31,7 @@ class HomeNavigator extends React.Component {
 		return (
 			<Stack.Navigator
 				screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
+				initialRouteName="tabMenu"
 			>
 				<Stack.Screen
 					name="tabMenu"
