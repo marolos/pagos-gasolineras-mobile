@@ -10,7 +10,7 @@ export default function RadioGroup({radios, onCheck, initValue}){
       <View style={tailwind('flex flex-row')}>
          {radios.map((radio, _) =>
          <View key={radio.value}>
-            <RadioButton item={radio} active={radio.value == initValue} onCheck={onCheck}/>
+            <RadioButton item={radio} active={radio.value === initValue} onCheck={onCheck}/>
          </View>
          )}
       </View>

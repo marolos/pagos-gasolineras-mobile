@@ -64,7 +64,7 @@ class DateTimeFilter extends React.Component {
 	};
 
 	handleConfirm = (date) => {
-		if (this.state.paramDate != '') {
+		if (this.state.paramDate !== '') {
 			if (this.state.paramDate === 'toDate') {
 				this.setState({ toDate: date, visible: false, selectToDate: true });
 				this.isValid();

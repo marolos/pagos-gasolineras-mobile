@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import ReactNativeModal from 'react-native-modal';
@@ -198,7 +197,6 @@ const ConfirmTransferModal = memo(
 );
 
 const TransferDoneModal = ({ show, onClose }) => {
-   const navigation = useNavigation();
    return (
       <ReactNativeModal
          isVisible={show}

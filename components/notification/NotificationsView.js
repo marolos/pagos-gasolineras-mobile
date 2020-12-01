@@ -2,14 +2,14 @@ import React, { memo } from 'react';
 import { View, FlatList, ActivityIndicator, Image, Text } from 'react-native';
 import { connect } from 'react-redux';
 import tailwind from 'tailwind-rn';
-import { setActiveTab } from '../redux/actions';
-import { TabOptions } from '../redux/reducers';
+import { setActiveTab } from '../redux/ui/actions';
 import Line from '../shared/Line';
 import Notification from './Notification';
 import emptyImage from '../../assets/background/empty.png';
 import { typefaces } from '../utils/styles';
 import Fetch from '../utils/Fetch';
 import NotificationModal from './NotificationModal';
+import { TabOptions } from '../redux/ui/reducers';
 
 class NotificationsView extends React.Component {
 	constructor(props) {
@@ -83,7 +83,7 @@ class NotificationsView extends React.Component {
 
 	keyExtractor = (item) => item.id + '';
 
-	renderItem = (props) => <Notification {...props} onSelect={this.onSelectItem} />;
+	renderItem = ({ item }) => <Notification item={item} onSelect={this.onSelectItem} />;
 
 	render() {
 		const { refreshing, loadingMore, modalVisible, selectedItem } = this.state;
@@ -95,7 +95,6 @@ class NotificationsView extends React.Component {
 					onRefresh={this.loadNew}
 					data={this.props.notifications}
 					renderItem={this.renderItem}
-					tou
 					keyExtractor={this.keyExtractor}
 					ItemSeparatorComponent={Line}
 					ListFooterComponent={<ListFooter loading={loadingMore} />}
@@ -122,7 +121,7 @@ const ListFooter = memo(({ loading }) => {
 	);
 });
 
-const EmptyMessage = memo((props) => {
+const EmptyMessage = memo(() => {
 	return (
 		<View style={tailwind('items-center mb-12 mt-24')}>
 			<View>

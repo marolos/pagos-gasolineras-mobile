@@ -10,8 +10,8 @@ import Line from '../shared/Line';
 import { makeCancelable } from '../utils/utils';
 import Fetch from '../utils/Fetch';
 import emptyImage from '../../assets/background/empty.png';
-import { setActiveTab } from '../redux/actions';
-import { TabOptions } from '../redux/reducers';
+import { setActiveTab } from '../redux/ui/actions';
+import { TabOptions } from '../redux/ui/reducers';
 
 class BalancesView extends React.Component {
 	constructor(props) {

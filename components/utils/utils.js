@@ -4,7 +4,6 @@ import {
 	CEDULA_REGEX,
 	CHAR_REGEX,
 	ALPHANUMERIC,
-	MAPBOX_API_URL,
 	MAPBOX_TOKEN,
 } from './constants';
 import { FetchClass } from './Fetch';
@@ -101,8 +100,8 @@ export function randomString(length = 6) {
 
 /**
  * Allow to execute a promise without side effects.
- * It doesn't cancel the request at all, just don't execute the resolve function
- * when the promise is done and the function cancel() is called.
+ * It doesn't cancel the request at all, just doesn't execute the resolve function when
+ * the promise is done and the function cancel() is called.
  * It's usefull when performing an update state in the resolve function
  * but sometimes you need to unmount the component. This way, you can use the cancel() function as a cleanup
  * on componentWillUnmout() or on the cleanup function on your React.useEffect()
@@ -202,6 +201,10 @@ export function sortByDate(key, ascendent = false) {
 	return (a, b) => Date.parse(b[key]) - Date.parse(a[key]);
 }
 
+/**
+ * Fake delay (sleep). Just work along side async-await
+ * @param {number} delay
+ */
 export function sleep(delay = 100) {
 	return new Promise((resolve) => setTimeout(resolve, delay));
 }
@@ -229,4 +232,18 @@ export async function getMapboxRoute(start, end) {
 	}
 
 	return [];
+}
+
+/**
+ * wrap the try catch from async-await
+ * @param {Promise} promise
+ * @returns {Array} [result, error]
+ */
+export async function to(promise) {
+	try {
+		const result = await promise;
+		return [result, null];
+	} catch (error) {
+		return [null, error];
+	}
 }

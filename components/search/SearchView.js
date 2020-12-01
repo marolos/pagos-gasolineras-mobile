@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { FULL_HIGHT, FULL_WIDTH, MAPBOX_TOKEN, MAP_CENTER } from '../utils/constants';
 import MapboxGL from '@react-native-mapbox-gl/maps';
@@ -9,8 +9,8 @@ import SimpleToast from 'react-native-simple-toast';
 import pointImg from '../../assets/icons/point.png';
 import { getMapboxRoute, sleep } from '../utils/utils';
 import { connect } from 'react-redux';
-import { TabOptions } from '../redux/reducers';
-import { setActiveTab } from '../redux/actions';
+import { setActiveTab } from '../redux/ui/actions';
+import { TabOptions } from '../redux/ui/reducers';
 
 MapboxGL.setAccessToken(MAPBOX_TOKEN);
 MapboxGL.setTelemetryEnabled(false);
@@ -22,7 +22,6 @@ class SearchView extends React.Component {
 			perm: false,
 			center: MAP_CENTER,
 			zoom: 12,
-			userLocation: MAP_CENTER,
 			showLocation: false,
 			showCollapse: false,
 			pointers: [],
@@ -43,7 +42,7 @@ class SearchView extends React.Component {
 	}
 
 	loadRoute = (end) => {
-		getMapboxRoute(this.state.userLocation, end)
+		getMapboxRoute(this.props.userLocation, end)
 			.then((routeResult) => {
 				this.setState({ showRoute: true, route: routeResult });
 			})
@@ -57,7 +56,7 @@ class SearchView extends React.Component {
 		try {
 			const granted = await MapboxGL.requestAndroidLocationPermissions();
 			this.setState({ showLocation: granted });
-			await sleep(200);
+			await sleep(800);
 			return granted;
 		} catch (err) {
 			console.error(err);
@@ -65,11 +64,13 @@ class SearchView extends React.Component {
 		}
 	};
 
-	updateUserLocation = (location) => {
-		const newLocation = [location.coords.longitude, location.coords.latitude];
-		this.setState((state) => ({
-			userLocation: newLocation,
-		}));
+	updateUserLocation = async (location) => {
+		try {
+			const newLocation = [location.coords.longitude, location.coords.latitude];
+			this.props.dispatch({ type: 'SET_USER_LOCATION', value: newLocation });
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	onSelectPointer = (station, event) => {
@@ -87,18 +88,16 @@ class SearchView extends React.Component {
 		const granted = await this.getUserLocation();
 		if (granted) {
 			try {
-				const {
-					userLocation: [longitude, latitude],
-				} = this.state;
+				const [longitude, latitude] = this.props.userLocation;
 				this.setState({ center: [longitude, latitude] });
 				const response = await Fetch.get('/company/search/gs/nearto/', { longitude, latitude });
 				this.setState({
 					pointers: response.body.result,
 					zoom: 13,
-					center: [longitude, latitude],
+					center: this.props.userLocation,
 				});
 			} catch (error) {
-				this.setState({ pointers: [], center: this.state.userLocation });
+				this.setState({ pointers: [], center: this.props.userLocation });
 			}
 		} else {
 			SimpleToast.showWithGravity(
@@ -139,9 +138,11 @@ class SearchView extends React.Component {
 				<View style={styles.map.view}>
 					<MapboxGL.MapView style={styles.map.map} rotateEnabled={false}>
 						<MapboxGL.Camera centerCoordinate={center} zoomLevel={zoom} />
-						{showLocation && (
-							<MapboxGL.UserLocation onUpdate={this.updateUserLocation} animated />
-						)}
+						<MapboxGL.UserLocation
+							visible={showLocation}
+							onUpdate={this.updateUserLocation}
+							animated
+						/>
 						{showRoute && <RouteShape route={route} />}
 						{pointers.map((station) => (
 							<Pointer
@@ -235,4 +236,4 @@ const styles = {
 	iconLayer: { iconImage: pointImg, iconSize: 0.7, iconTranslate: [0, -10] },
 };
 
-export default connect()(SearchView);
+export default connect(({ userLocation }) => ({ userLocation }))(SearchView);

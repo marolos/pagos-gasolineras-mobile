@@ -55,7 +55,7 @@ class NotificationModal extends React.Component {
 	}
 }
 
-function getDetail(type, item) {
+export function getDetail(type, item) {
 	switch (type) {
 		case NotificationType.CHANGE_PRIVACY_POLICES:
 			return <PolicyDetail {...item} />;

@@ -25,6 +25,8 @@ import LoggingOutView from './auth/LoggingOutView';
 import { connect } from 'react-redux';
 import HandleNotification from './linking/HandleNotification';
 import FeedbackNavigator from './feedback/FeedbackNavigator';
+import TipsNavigator from './tips/TipsNavigator';
+import BackgroundModal from './notification/BackgroundModal';
 
 const Drawer = createDrawerNavigator();
 
@@ -63,17 +65,21 @@ function AppDrawerNavigator(props) {
 		);
 	}
 	return (
-		<Drawer.Navigator drawerContent={DrawerContent} initialRouteName={'home'}>
-			<Drawer.Screen name="home" component={HomeNavigator} />
-			<Drawer.Screen name="profile" component={ProfileNavigator} />
-			<Drawer.Screen name="records" component={RecordsNavigator} />
-			<Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
-			<Drawer.Screen name="transfers" component={TransferNavigator} />
-			<Drawer.Screen name="logout" component={LogoutView} />
-			<Drawer.Screen name="loggingOut" component={LoggingOutView} />
-			<Drawer.Screen name="handleNotification" component={HandleNotification} />
-			<Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}} />
-		</Drawer.Navigator>
+		<React.Fragment>
+			<Drawer.Navigator drawerContent={DrawerContent} initialRouteName={'home'}>
+				<Drawer.Screen name="home" component={HomeNavigator} />
+				<Drawer.Screen name="profile" component={ProfileNavigator} />
+				<Drawer.Screen name="records" component={RecordsNavigator} />
+				<Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
+				<Drawer.Screen name="transfers" component={TransferNavigator} />
+				<Drawer.Screen name="logout" component={LogoutView} />
+				<Drawer.Screen name="loggingOut" component={LoggingOutView} />
+				<Drawer.Screen name="handleNotification" component={HandleNotification} />
+				<Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}} />
+				<Drawer.Screen name="tips" component={TipsNavigator} />
+			</Drawer.Navigator>
+			<BackgroundModal />
+		</React.Fragment>
 	);
 }
 
@@ -122,7 +128,7 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 					text="Sugerencias y reclamos"
 					style={tailwind('pt-2')}
 					navigation={navigation}
-					navigateTo="feedbackView"
+					navigateTo="feedback"
 				/>
 				<DrawerItemText text="Políticas de servicios" navigation={navigation} />
 				<DrawerItemText text="Contácto" navigation={navigation} />

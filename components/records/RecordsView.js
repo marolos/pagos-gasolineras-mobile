@@ -233,7 +233,7 @@ class RecordsView extends React.Component {
 							<View style={[tailwind('flex flex-row justify-center'), { height: 200 }]}>
 								<ActivityIndicator animating color="black" size="large" />
 							</View>
-						) : this.state.purchases.length == 0 ? (
+						) : this.state.purchases.length === 0 ? (
 							<EmptyMessage />
 						) : (
 							<View>

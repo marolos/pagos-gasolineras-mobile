@@ -7,7 +7,7 @@ import {
 import TabMenuNavigator from './mainapp/TabMenuNavigator';
 import TopupDataView from './topup/TopupDataView';
 import BuyView from './buy/BuyView';
-import { CustomHeaderTitle, CustomHeaderLeft } from './shared/CustomHeader';
+import { CustomHeaderTitle, CustomHeaderLeft, CustomHeaderRight } from './shared/CustomHeader';
 import BillingDataView from './topup/BillingDataView';
 import Label from './shared/Label';
 import tailwind from 'tailwind-rn';
@@ -23,8 +23,8 @@ class HomeNavigator extends React.Component {
 		super(props);
 	}
 
-	shouldComponentUpdate(){
-		return false
+	shouldComponentUpdate() {
+		return false;
 	}
 
 	render() {
@@ -38,6 +38,7 @@ class HomeNavigator extends React.Component {
 					options={({ navigation }) => ({
 						headerLeft: () => <CustomHeaderLeft navigation={navigation} />,
 						headerTitle: () => <CustomHeaderTitle />,
+						headerRight: () => <CustomHeaderRight navigation={navigation} />,
 					})}
 				/>
 				<Stack.Screen

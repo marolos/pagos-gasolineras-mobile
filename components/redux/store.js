@@ -15,7 +15,7 @@ const reducers = persistReducer(
    {
       key: 'root',
       storage: AsyncStorage,
-      whitelist: ['user', 'notifications', 'newNotification'],
+      whitelist: ['user', 'notifications', 'newNotification', 'userLocation'],
       transforms: [encryptor],
    },
    rootReducers,

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Image, Text, Keyboard } from 'react-native';
+import { View, Image, Text, Keyboard } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import { typefaces } from '../utils/styles';
 import tailwind from 'tailwind-rn';

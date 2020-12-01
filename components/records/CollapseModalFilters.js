@@ -133,7 +133,7 @@ function ExpandedFilter({
 						]}
 					/>
 					<View>
-						{state.value == 'datetime' ? (
+						{state.value === 'datetime' ? (
 							<DateTimeFilter
 								fromDatetime={initFromDateTime}
 								toDatetime={initToDateTime}
@@ -177,7 +177,7 @@ function GasFilter({ initGasStation, onInvalidInput, onValidInput }) {
 				onChange={(item) => {
 					loadGasStations(item);
 				}}
-			 />
+			/>
 			<GasStationSelector
 				ref={ref}
 				onChange={(gas) => {
@@ -187,7 +187,7 @@ function GasFilter({ initGasStation, onInvalidInput, onValidInput }) {
 						onInvalidInput('No ha seleccionado una estación.');
 					}
 				}}
-			 />
+			/>
 		</View>
 	);
 }

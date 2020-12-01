@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, Animated } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import { FULL_WIDTH } from '../utils/constants';
 

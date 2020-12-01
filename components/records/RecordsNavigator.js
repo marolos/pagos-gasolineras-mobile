@@ -11,7 +11,7 @@ import PurchaseView from './PurchaseView';
 
 const Stack = createStackNavigator();
 
-export default function RecordsNavigator({ navigation }) {
+export default function RecordsNavigator({ }) {
    return (
       <Stack.Navigator
          screenOptions={{

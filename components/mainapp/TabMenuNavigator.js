@@ -1,9 +1,8 @@
 import React, { memo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View } from 'react-native';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import BalancesView from './BalancesView';
-import { TabOptions } from '../redux/reducers';
 import tailwind from 'tailwind-rn';
 import DispenserIcon from '../icons/DispenserIcon';
 import SearchIcon from '../icons/SearchIcon';
@@ -13,12 +12,11 @@ import { typefaces, shadowStyle } from '../utils/styles';
 import SearchView from '../search/SearchView';
 import NotificationsView from '../notification/NotificationsView';
 import { getMessaging } from '../notification/firebaseConfig';
+import { TabOptions } from '../redux/ui/reducers';
 
 const Tab = createBottomTabNavigator();
 
 function TabMenuNavigator({ navigation }) {
-	const dispatch = useDispatch();
-
 	React.useEffect(() => {
 		getMessaging().onNotificationOpenedApp((message) => {
 			navigation.navigate('tabMenu', { screen: 'notifications', params: message });
@@ -30,9 +28,6 @@ function TabMenuNavigator({ navigation }) {
 					navigation.navigate('tabMenu', { screen: 'notifications', params: message });
 				}
 			});
-		getMessaging().onMessage((message) => {
-			dispatch({ type: 'ARRIVED_NEW' });
-		});
 	}, []);
 
 	return (
@@ -65,7 +60,7 @@ const CustomTabBarMemoized = memo(({ navigation }) => {
 					icon={SearchIcon}
 					navigation={navigation}
 				/>
-				<TabButtonBadger
+				<TabButtonBadge
 					navigateTo="notifications"
 					tabOption={TabOptions.NOTIFICATIONS}
 					label="Notificaciones"
@@ -106,15 +101,21 @@ const TabButtonBase = memo(({ navigateTo, activeTab, tabOption, label, icon, nav
 	);
 });
 
+const Badge = () => (
+	<View style={styles.badge.wapper}>
+		<View style={styles.badge.circle} />
+	</View>
+);
+
 const TabButton = connect((state) => ({ activeTab: state.activeTab }))(TabButtonBase);
 
-const TabButtonBadger = connect(({ activeTab, newNotification }) => ({
+const TabButtonBadge = connect(({ activeTab, newNotification }) => ({
 	activeTab,
 	newNotification,
 }))((props) => {
 	return (
 		<View style={styles.badge.view}>
-			{props.newNotification && <View style={styles.badge.circle} />}
+			{props.newNotification && <Badge />}
 			<TabButtonBase {...props} />
 		</View>
 	);
@@ -134,9 +135,10 @@ const styles = {
 	},
 	badge: {
 		view: { position: 'relative' },
-		circle: [
-			tailwind('absolute rounded-full bg-pink-500'),
-			{ right: 8, top: 4, width: 10, height: 10 },
+		circle: [tailwind('rounded-full bg-pink-500'), { width: 9, height: 9 }],
+		wapper: [
+			tailwind('absolute bg-pink-100 items-center'),
+			{ right: 14, top: 8, width: 10, height: 10 },
 		],
 	},
 };
