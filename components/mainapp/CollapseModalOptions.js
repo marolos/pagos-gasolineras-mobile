@@ -55,7 +55,9 @@ function CollapseModalOptions({ visible, closeCollapse, station }) {
 					</View>
 					<Ripple
 						style={tailwind('absolute right-0 p-6')}
-						onPress={closeCollapse}
+						onPress={() => {
+							setTimeout(() => closeCollapse(), 50);
+						}}
 						rippleCentered
 					>
 						<ArrowDownIcon />

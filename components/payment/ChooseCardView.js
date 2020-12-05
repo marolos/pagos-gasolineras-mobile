@@ -39,7 +39,7 @@ function ChooseCardView({ user, navigation, route }) {
 		dispatch({ type: 'loading' });
 		Fetch.get('/payment/user/card/')
 			.then((res) => dispatch({ type: 'set_cards', value: res.body.cards }))
-			.catch((err) => {});
+			.catch(() => dispatch({ type: 'end_loading' }));
 	}, []);
 
 	function next() {

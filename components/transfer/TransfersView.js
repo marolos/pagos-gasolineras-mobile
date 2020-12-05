@@ -8,10 +8,10 @@ import emptyImage from '../../assets/background/empty.png';
 import Fetch from '../utils/Fetch';
 import { typefaces } from '../utils/styles';
 import { makeCancelable, sortByDate } from '../utils/utils';
-import { formatISODate } from '../buy/utils';
 import ArrowLeftDownIcon from '../icons/ArrowLeftDownIcon';
 import ArrowUpRightIcon from '../icons/ArrowUpRightIcon';
 import TransferIcon from '../icons/TransferIcon';
+import { formatISODate } from '../utils/dateUtils';
 
 class TransfersView extends React.Component {
 	constructor(props) {

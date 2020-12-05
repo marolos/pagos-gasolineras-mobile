@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text, ActivityIndicator, Image } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH } from '../utils/constants';
+import { formatISODate } from '../utils/dateUtils';
 import { typefaces } from '../utils/styles';
-import { formatISODate, generateQR } from './utils';
+import { generateQR } from './utils';
 
 export default function GenerateCodeView({ route }) {
    const { params } = route;

@@ -7,7 +7,6 @@ import Ripple from 'react-native-material-ripple';
 import ScheduleIcon from '../icons/ScheduleIcon';
 import InfoIcon from '../icons/InfoIcon';
 import { typefaces } from '../utils/styles';
-import { formatISODate } from '../buy/utils';
 import emptyImage from '../../assets/background/empty.png';
 import FloatingButton from '../shared/FloatingButton';
 import FilterIcon from '../icons/FilterIcon';
@@ -15,6 +14,7 @@ import ExclamationIcon from '../icons/ExclamationIcon';
 import CollapseModalFilters from './CollapseModalFilters';
 import SimpleToast from 'react-native-simple-toast';
 import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
+import { formatISODate } from '../utils/dateUtils';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 	const paddingToBottom = 20;

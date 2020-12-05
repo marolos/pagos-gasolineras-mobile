@@ -5,7 +5,7 @@ import { View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity } fr
 import tailwind from 'tailwind-rn';
 import FastImage from 'react-native-fast-image';
 import { typefaces } from '../utils/styles';
-import { formatISODate, generateQR } from '../buy/utils';
+import { generateQR } from '../buy/utils';
 import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
 import Ripple from 'react-native-material-ripple';
 import Modal from 'react-native-modal';
@@ -15,6 +15,7 @@ import Button from '../shared/Button';
 import LoadingModal from '../shared/LoadingModal';
 import SimpleToast from 'react-native-simple-toast';
 import InfoIcon from '../icons/InfoIcon';
+import { formatISODate } from '../utils/dateUtils';
 
 class PurchaseView extends React.Component {
 	constructor(props) {

@@ -172,12 +172,7 @@ function GasFilter({ initGasStation, onInvalidInput, onValidInput }) {
 
 	return (
 		<View>
-			<CompanySelector
-				selected={initGasStation?.company}
-				onChange={(item) => {
-					loadGasStations(item);
-				}}
-			/>
+			<CompanySelector selected={initGasStation?.company} onChange={loadGasStations} />
 			<GasStationSelector
 				ref={ref}
 				onChange={(gas) => {

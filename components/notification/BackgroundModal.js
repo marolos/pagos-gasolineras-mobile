@@ -43,31 +43,4 @@ class BackgroundModal extends React.Component {
 	}
 }
 
-// <ReactNativeModal
-// 	isVisible={visible}
-// 	testID={'modal'}
-// 	animationIn="fadeIn"
-// 	animationOut="fadeOut"
-// 	onSwipeComplete={this.close}
-// 	backdropTransitionOutTiming={0}
-// 	backdropOpacity={0.5}
-// 	style={styles.modal}
-// >
-// 	{visible && item && (
-// 		<View style={styles.view}>
-// 			<View style={tailwind('flex flex-row mt-2')}>
-// 				<View style={tailwind('mr-4')}>{getIcon(item.data.type)}</View>
-// 				<View>
-// 					<Text style={[tailwind('text-sm'), typefaces.pm]}>{item.title}</Text>
-// 					<Text>{formatISODate(item.created_at, 'PPP')}</Text>
-// 				</View>
-// 			</View>
-// 			<View style={tailwind('my-4 px-2')}>{getDetail(item.data.type, item)}</View>
-// 			<View style={tailwind('flex items-center mb-2')}>
-// 				<Button onPress={this.close} text="cerrar" />
-// 			</View>
-// 		</View>
-// 	)}
-// </ReactNativeModal>
-
 export default connect()(BackgroundModal);

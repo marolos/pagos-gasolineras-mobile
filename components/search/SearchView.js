@@ -19,7 +19,6 @@ class SearchView extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			perm: false,
 			center: MAP_CENTER,
 			zoom: 12,
 			showLocation: false,

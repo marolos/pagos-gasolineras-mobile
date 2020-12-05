@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 import tailwind from 'tailwind-rn';
-import { formatISODate } from '../buy/utils';
 import AdsIcon from '../icons/AdsIcon';
 import BookIcon from '../icons/BookIcon';
 import PoliticIcon from '../icons/PoliticIcon';
 import TransferIcon from '../icons/TransferIcon';
 import { FULL_WIDTH, NotificationType } from '../utils/constants';
+import { formatISODate } from '../utils/dateUtils';
 import { typefaces } from '../utils/styles';
 
 function Notification({ item, onSelect }) {

@@ -3,8 +3,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import ClockIcon from '../icons/ClockIcon';
 import CalendarIcon from '../icons/CalendarIcon';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { formatISODate } from '../buy/utils';
 import tailwind from 'tailwind-rn';
+import { formatISODate } from '../utils/dateUtils';
 
 class DateTimeFilter extends React.Component {
 	constructor(props) {

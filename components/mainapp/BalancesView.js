@@ -60,16 +60,19 @@ class BalancesView extends React.Component {
 	};
 
 	onPressStation = (item) => {
-		this.setState({
-			selectedStation: item,
-		});
+		if (this.state.modalVisible) return;
 		setTimeout(
 			() =>
 				this.setState({
+					selectedStation: item,
 					modalVisible: true,
 				}),
-			50,
+			60,
 		);
+	};
+
+	closeCollapse = () => {
+		this.setState({ modalVisible: false });
 	};
 
 	render() {
@@ -90,7 +93,7 @@ class BalancesView extends React.Component {
 					<CollapseModalOptions
 						visible={modalVisible}
 						station={selectedStation}
-						closeCollapse={() => this.setState({ modalVisible: false })}
+						closeCollapse={this.closeCollapse}
 					/>
 				)}
 			</ScrollView>

@@ -21,6 +21,7 @@ class NotificationsView extends React.Component {
 			selectedItem: null,
 		};
 	}
+	
 	componentDidMount() {
 		const { navigation, dispatch, route } = this.props;
 		if (route.params) {
@@ -82,7 +83,6 @@ class NotificationsView extends React.Component {
 	};
 
 	keyExtractor = (item) => item.id + '';
-
 	renderItem = ({ item }) => <Notification item={item} onSelect={this.onSelectItem} />;
 
 	render() {

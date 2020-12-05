@@ -178,13 +178,13 @@ const styles = {
 	cvc: {
 		view: tailwind('w-2/5'),
 		text: [tailwind('ml-2 text-sm'), typefaces.pm],
-		inputI: tailwind('w-12'),
+		inputI: tailwind('w-20'),
 		inputC: tailwind('w-full'),
 	},
 	exp: {
 		view: tailwind('w-1/2'),
 		text: [tailwind('ml-2 text-sm'), typefaces.pm],
-		inputI: tailwind('w-20'),
+		inputI: tailwind('w-24'),
 		inputC: tailwind('w-full'),
 	},
 	addCard: {

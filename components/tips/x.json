@@ -1,0 +1,122 @@
+[
+    {
+        "company": {
+            "address": "av. del bombero",
+            "business_name": "PDV",
+            "company_logo_path": "https://i.imgur.com/I6TzMoi.png",
+            "id": 1,
+            "img_path": "pdv.png"
+        },
+        "created_at": "2020-11-03T21:02:34.654289Z",
+        "created_by": 6,
+        "description": "Prueba texto.",
+        "dislike_count": 0,
+        "gas_station": null,
+        "id": 19,
+        "img_path": "https://i.imgur.com/p7DdKRx.png",
+        "kind": "TIP",
+        "like_count": 1,
+        "liked": false,
+        "title": "Test"
+    },
+    {
+        "company": {
+            "address": "av. del bombero",
+            "business_name": "PDV",
+            "company_logo_path": "https://i.imgur.com/I6TzMoi.png",
+            "id": 1,
+            "img_path": "pdv.png"
+        },
+        "created_at": "2020-11-03T06:33:54.492570Z",
+        "created_by": 6,
+        "description": "Prueba desde el app.",
+        "dislike_count": 0,
+        "gas_station": null,
+        "id": 16,
+        "img_path": "https://i.imgur.com/AkbacRy.png",
+        "kind": "TIP",
+        "like_count": 1,
+        "liked": false,
+        "title": "Prueba App"
+    },
+    {
+        "company": {
+            "address": "av. del bombero",
+            "business_name": "PDV",
+            "company_logo_path": "https://i.imgur.com/I6TzMoi.png",
+            "id": 1,
+            "img_path": "pdv.png"
+        },
+        "created_at": "2020-11-02T01:40:50.225390Z",
+        "created_by": 6,
+        "description": "No uses el teléfono mientras manejas",
+        "dislike_count": 0,
+        "gas_station": null,
+        "id": 8,
+        "img_path": "https://i.imgur.com/zJ3DJug.jpg",
+        "kind": "TIP",
+        "like_count": 0,
+        "liked": false,
+        "title": "Nuevo tip"
+    },
+    {
+        "company": {
+            "address": "av. del bombero",
+            "business_name": "PDV",
+            "company_logo_path": "https://i.imgur.com/I6TzMoi.png",
+            "id": 1,
+            "img_path": "pdv.png"
+        },
+        "created_at": "2020-11-02T01:39:09.075359Z",
+        "created_by": 13,
+        "description": "No uses el teléfono mientras manejas",
+        "dislike_count": 0,
+        "gas_station": 1,
+        "id": 7,
+        "img_path": "https://i.imgur.com/89lj81F.jpg",
+        "kind": "TIP",
+        "like_count": 0,
+        "liked": false,
+        "title": "Nuevo tip"
+    },
+    {
+        "company": {
+            "address": "av. del bombero",
+            "business_name": "PDV",
+            "company_logo_path": "https://i.imgur.com/I6TzMoi.png",
+            "id": 1,
+            "img_path": "pdv.png"
+        },
+        "created_at": "2020-11-02T01:37:01.048492Z",
+        "created_by": 13,
+        "description": "No uses el teléfono mientras manejas",
+        "dislike_count": 0,
+        "gas_station": 1,
+        "id": 6,
+        "img_path": "https://i.imgur.com/dA5QyYG.jpg",
+        "kind": "TIP",
+        "like_count": 0,
+        "liked": false,
+        "title": "Nuevo tip"
+    },
+    {
+        "company": {
+            "address": "av. del bombero",
+            "business_name": "PDV",
+            "company_logo_path": "https://i.imgur.com/I6TzMoi.png",
+            "id": 1,
+            "img_path": "pdv.png"
+        },
+        "created_at": "2020-11-02T01:34:14.226702Z",
+        "created_by": 13,
+        "description": "No uses el teléfono mientras manejas",
+        "dislike_count": 0,
+        "gas_station": 1,
+        "id": 5,
+        "img_path": "https://i.imgur.com/YwXFE9C.jpg",
+        "kind": "TIP",
+        "like_count": 0,
+        "liked": false,
+        "title": "Nuevo tip"
+    }
+]

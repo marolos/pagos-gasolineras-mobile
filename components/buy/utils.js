@@ -1,6 +1,4 @@
 import qrcode from 'qrcode-generator';
-import format from 'date-fns/format';
-import { es } from 'date-fns/locale';
 
 export async function generateQR(text, typeNumber = 0, errorCorrection = 'L', cellSize = 12) {
    try {
@@ -12,9 +10,4 @@ export async function generateQR(text, typeNumber = 0, errorCorrection = 'L', ce
    } catch (err) {
       throw new Error(err.message);
    }
-}
-
-
-export function formatISODate(ISOString, pattern = 'PPpp') {
-   return format(new Date(ISOString), pattern, { locale: es });
 }

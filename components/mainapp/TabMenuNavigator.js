@@ -56,7 +56,7 @@ const CustomTabBarMemoized = memo(({ navigation }) => {
 				<TabButton
 					navigateTo="search"
 					tabOption={TabOptions.SEARCH}
-					label="   Buscar   " // a bit hacky, sorry. It's to give space to the button and appreciate the ripple.
+					label="   Buscar   " // a bit hacky, sorry. It's to give space to the button and appreciate the ripple effect.
 					icon={SearchIcon}
 					navigation={navigation}
 				/>

@@ -4,7 +4,6 @@ import tailwind from 'tailwind-rn';
 import ReactNativeModal from 'react-native-modal';
 import { getIcon } from './Notification';
 import { FULL_WIDTH, NotificationType } from '../utils/constants';
-import { formatISODate } from '../buy/utils';
 import { typefaces } from '../utils/styles';
 import {
 	AdsDetail,
@@ -15,6 +14,7 @@ import {
 	TransferDetail,
 } from './Details';
 import Button from '../shared/Button';
+import { formatISODate } from '../utils/dateUtils';
 
 class NotificationModal extends React.Component {
 	constructor(props) {

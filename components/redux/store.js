@@ -7,18 +7,18 @@ import thunk from 'redux-thunk';
 import { encryptTransform } from 'redux-persist-transform-encrypt/lib/sync';
 
 const encryptor = encryptTransform({
-   secretKey: ENCRYPTOR_KEY,
-   onError: (error) => console.error('error on encryptor: ', error),
+	secretKey: ENCRYPTOR_KEY,
+	onError: (error) => console.error('error on encryptor: ', error),
 });
 
 const reducers = persistReducer(
-   {
-      key: 'root',
-      storage: AsyncStorage,
-      whitelist: ['user', 'notifications', 'newNotification', 'userLocation'],
-      transforms: [encryptor],
-   },
-   rootReducers,
+	{
+		key: 'root',
+		storage: AsyncStorage,
+		whitelist: ['user', 'notifications', 'newNotification', 'userLocation', 'tips'],
+		transforms: [encryptor],
+	},
+	rootReducers,
 );
 
 const store = createStore(reducers, applyMiddleware(thunk));

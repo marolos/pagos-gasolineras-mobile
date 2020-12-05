@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
 import emptyImage from '../../assets/background/empty.png';
+import Fetch from '../utils/Fetch';
+import { makeCancelable } from '../utils/utils';
+import TipAd from './TipAd';
+import Line from '../shared/Line';
 
 class TipsView extends React.Component {
 	constructor(props) {
@@ -18,19 +22,53 @@ class TipsView extends React.Component {
 		this.loadNew();
 	}
 
-	loadNew = () => {};
+	componentWillUnmount() {
+		if (this.cancelReq) this.cancelReq.cancel();
+	}
+
+	loadNew = () => {
+		this.setState({ refreshing: true });
+		this.cancelReq = makeCancelable(
+			loadItems(),
+			(tips) => {
+				this.props.dispatch({ type: 'SET_TIPS', value: tips });
+				this.setState({ refreshing: false });
+			},
+			(err) => {
+				err;
+				this.setState({ refreshing: false });
+			},
+		);
+	};
+
+	renderItem = ({ item }) => <TipAd tipad={item} />;
+	keyExtractor = (item) => item.id + '';
 
 	render() {
 		const { refreshing, loadingMore } = this.state;
+		const { tips } = this.props;
 		return (
 			<FlatList
-				data={this.props.tips}
+				data={tips}
+				renderItem={this.renderItem}
+				keyExtractor={this.keyExtractor}
 				refreshing={refreshing}
 				onRefresh={this.loadNew}
 				ListEmptyComponent={EmptyMessage}
 				ListFooterComponent={<ListFooter loading={loadingMore} />}
+				ItemSeparatorComponent={ItemSeparator}
 			/>
 		);
+	}
+}
+
+async function loadItems(old = false, last) {
+	try {
+		const res = await Fetch.get('/company/tipads/tips/');
+		const { tips, liked } = res.body;
+		return tips.map((tip) => ({ ...tip, liked: !!liked.find((id) => id === tip.id) }));
+	} catch (err) {
+		return [];
 	}
 }
 
@@ -57,4 +95,6 @@ const EmptyMessage = memo(() => {
 	);
 });
 
-export default connect()(TipsView);
+const ItemSeparator = memo(() => <Line style={tailwind('mt-2 mb-1 h-1')}/>);
+
+export default connect(({ tips }) => ({ tips }))(TipsView);
