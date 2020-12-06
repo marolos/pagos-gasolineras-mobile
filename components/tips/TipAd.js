@@ -1,3 +1,4 @@
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import React, { memo } from 'react';
 import { Image, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -7,15 +8,22 @@ import LikeIcon from '../icons/LikeIcon';
 import Line from '../shared/Line';
 import { FULL_WIDTH } from '../utils/constants';
 import { formatISORelative } from '../utils/dateUtils';
+import Fetch from '../utils/Fetch';
 import { typefaces } from '../utils/styles';
 
 class TipAd extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			liked: this.props.tipad.liked,
+			liked: this.props.data.liked,
 			imgHeight: 200,
 		};
+		this.likeDebounced = AwesomeDebouncePromise((liked) => {
+			const { id } = this.props.data;
+			return liked
+				? Fetch.put(`/company/tipads/${id}/like/`)
+				: Fetch.put(`/company/tipads/${id}/dislike/`);
+		}, 800);
 	}
 
 	componentDidMount() {
@@ -23,22 +31,31 @@ class TipAd extends React.Component {
 	}
 
 	getDimensions = () => {
-		Image.getSize(this.props.tipad.img_path, (w, h) => {
-			const scaleFactor = w / FULL_WIDTH;
+		Image.getSize(this.props.data.img_path, (w, h) => {
+			const scaleFactor = (w + 32) / FULL_WIDTH;
 			const imageHeight = h / scaleFactor;
 			this.setState({ imgHeight: imageHeight });
 		});
 	};
 
-	like = () => {};
+	like = () => {
+		const newLiked = !this.state.liked;
+		this.likeDebounced(newLiked)
+			.then(() => {
+				this.setState(() => ({ liked: newLiked }));
+			})
+			.catch(() => {
+				this.setState(() => ({ liked: !newLiked }));
+			});
+	};
 
 	render() {
 		const { liked, imgHeight } = this.state;
-		const { company, created_at, img_path, title, like_count } = this.props.tipad;
+		const { company, created_at, img_path, title, description, like_count } = this.props.data;
 		const count = liked ? like_count + 1 : like_count;
 		return (
-			<View>
-				<View style={tailwind('flex flex-row justify-between px-4 py-2 items-center')}>
+			<React.Fragment>
+				<View style={tailwind('flex flex-row justify-between px-4 pb-2 pt-3 items-center')}>
 					<Text style={[typefaces.pm]}>{company.business_name}</Text>
 					<Text style={[tailwind('text-xs text-gray-700'), typefaces.pm]}>
 						{formatISORelative(created_at)}
@@ -50,29 +67,35 @@ class TipAd extends React.Component {
 					style={{ height: imgHeight }}
 					resizeMode={FastImage.resizeMode.stretch}
 				/>
-				<View style={tailwind('flex flex-row items-center justify-between px-4 py-2')}>
-					<Text>{title}</Text>
+				<View style={tailwind('flex flex-row justify-between px-4 py-2')}>
+					<View>
+						<Text style={[typefaces.pm]}>{title}</Text>
+						<Text style={[tailwind('w-64 text-gray-700')]}>{description}</Text>
+					</View>
 					<LikeButton liked={liked} onPress={this.like} count={count} />
 				</View>
-			</View>
+				<Line />
+			</React.Fragment>
 		);
 	}
 }
 
 const LikeButton = memo(({ liked, onPress, count }) => (
-	<View style={tailwind('flex flex-row items-center')}>
-		<Ripple
-			style={tailwind('flex flex-row items-center justify-center rounded-full w-12 h-12')}
-			onPress={onPress}
-			rippleDuration={250}
-			rippleColor="#aba"
-			rippleOpacity={1.1}
-			rippleCentered
-		>
-			<LikeIcon width={22} fill={liked ? '#000' : 'none'} stroke={liked ? '#ababab' : '#444'} />
-		</Ripple>
-		<Text style={[tailwind('mt-2 text-xs'), typefaces.pm]}>{count}</Text>
-	</View>
+	// <View style={tailwind('flex flex-row items-center')}>
+	<Ripple
+		style={tailwind('flex flex-row items-center justify-center rounded-full w-12 h-12')}
+		onPress={onPress}
+		rippleDuration={320}
+		rippleColor="#fbcfe8"
+		rippleOpacity={1.1}
+		rippleCentered
+	>
+		<LikeIcon width={22} fill={liked ? '#ec4899' : 'none'} stroke={liked ? '#ec4899' : '#555'} />
+		{count > 0 && (
+			<Text style={[tailwind('mt-2 ml-2 text-xs text-gray-600'), typefaces.pm]}>{count}</Text>
+		)}
+	</Ripple>
+	// </View>
 ));
 
 const azxcv = {

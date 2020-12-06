@@ -117,7 +117,7 @@ export function makeCancelable(promise, resolve, reject) {
 		.catch((error) => (hasCanceled_ ? reject({ isCanceled: true }) : reject(error)));
 
 	return {
-		cancel() {
+		cancel: () => {
 			hasCanceled_ = true;
 		},
 	};

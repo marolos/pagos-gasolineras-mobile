@@ -41,7 +41,28 @@ class TipsView extends React.Component {
 		);
 	};
 
-	renderItem = ({ item }) => <TipAd tipad={item} />;
+	loadOld = () => {
+		this.setState({ loadingMore: true });
+		this.cancelReq = makeCancelable(
+			loadItems(true, this.getLastId()),
+			(tips) => {
+				this.props.dispatch({ type: 'PUSH_TIPS', value: tips });
+				this.setState({ loadingMore: false });
+			},
+			(err) => {
+				err;
+				this.setState({ loadingMore: false });
+			},
+		);
+	};
+
+	getLastId = () => {
+		const { tips } = this.props;
+		const last = tips.length > 0 ? tips[tips.length - 1].id : null;
+		return last;
+	};
+
+	renderItem = ({ item }) => <TipAd data={item} />;
 	keyExtractor = (item) => item.id + '';
 
 	render() {
@@ -57,6 +78,8 @@ class TipsView extends React.Component {
 				ListEmptyComponent={EmptyMessage}
 				ListFooterComponent={<ListFooter loading={loadingMore} />}
 				ItemSeparatorComponent={ItemSeparator}
+				onEndReached={this.loadOld}
+				onEndReachedThreshold={0.3}
 			/>
 		);
 	}
@@ -64,9 +87,14 @@ class TipsView extends React.Component {
 
 async function loadItems(old = false, last) {
 	try {
-		const res = await Fetch.get('/company/tipads/tips/');
-		const { tips, liked } = res.body;
-		return tips.map((tip) => ({ ...tip, liked: !!liked.find((id) => id === tip.id) }));
+		const fetchProm = old
+			? Fetch.get('/company/tipads/tips/old/', { last })
+			: Fetch.get('/company/tipads/tips/');
+		const res = await fetchProm;
+		const { tips, likes } = res.body;
+		return tips.map((tip) => {
+			return { ...tip, liked: !!likes.find((id) => id === tip.id) };
+		});
 	} catch (err) {
 		return [];
 	}
@@ -95,6 +123,6 @@ const EmptyMessage = memo(() => {
 	);
 });
 
-const ItemSeparator = memo(() => <Line style={tailwind('mt-2 mb-1 h-1')}/>);
+const ItemSeparator = memo(() => <Line style={tailwind('h-1')} />);
 
 export default connect(({ tips }) => ({ tips }))(TipsView);
