@@ -4,6 +4,7 @@ import { notifications, newNotification } from './notification/reducers';
 import { userLocation } from './geolocation/reducers';
 import { activeTab } from './ui/reducers';
 import { tips } from './tips/reducers';
+import { ads } from './ads/reducers';
 
 const rootReducers = combineReducers({
 	activeTab,
@@ -12,6 +13,7 @@ const rootReducers = combineReducers({
 	userLocation,
 	user,
 	tips,
+	ads,
 });
 
 export default rootReducers;

@@ -1,23 +1,19 @@
 import React, { memo } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Swiper from 'react-native-swiper';
+import { connect } from 'react-redux';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, ADS_MAX_HEIGHT } from '../utils/constants';
-import { fakeFetch, itemsMocks } from '../utils/mocks';
+import Fetch from '../utils/Fetch';
 import { makeCancelable } from '../utils/utils';
 
-function AdsPaginator(props) {
-	const [state, setState] = React.useState({
-		items: [],
-		loading: true,
-	});
-
+function AdsPaginator({ ads, dispatch }) {
 	React.useEffect(() => {
 		const req = makeCancelable(
-			fakeFetch(itemsMocks, 100),
-			(_itemsMocks) => {
-				setState({ items: _itemsMocks, loading: false });
+			Fetch.get('/company/tipads/ads/'),
+			(res) => {
+				dispatch({ type: 'SET_ADS', value: res.body.ads });
 			},
 			(err) => {
 				if (err.isCanceled) return;
@@ -30,7 +26,7 @@ function AdsPaginator(props) {
 	return (
 		<View style={styles.main}>
 			<Swiper
-				key={state.items.length}
+				key={ads.length}
 				showsButtons={false}
 				loop={false}
 				height={ADS_MAX_HEIGHT}
@@ -39,34 +35,23 @@ function AdsPaginator(props) {
 				activeDot={<ActiveDot />}
 				paginationStyle={{ bottom: 10 }}
 			>
-				{state.loading ? (
-					<View style={styles.container}>
-						<ActivityIndicator
-							style={styles.loader}
-							animating={state.loading}
-							size="small"
-							color="#000"
-						/>
-					</View>
-				) : (
-					state.items.map((item, index) => <AdsItem href={item.href} key={index} />)
-				)}
+				{ads.map((ad) => (
+					<AdsItem href={ad.img_path} key={ad.id} />
+				))}
 			</Swiper>
 		</View>
 	);
 }
 
-function AdsItem({ href }) {
+const AdsItem = memo(({ href }) => {
 	return (
-		<View>
-			<FastImage
-				style={styles.image}
-				source={{ uri: href }}
-				resizeMode={FastImage.resizeMode.stretch}
-			/>
-		</View>
+		<FastImage
+			style={styles.image}
+			source={{ uri: href }}
+			resizeMode={FastImage.resizeMode.stretch}
+		/>
 	);
-}
+});
 
 const Dot = memo(() => <View style={styles.dot} />);
 const ActiveDot = memo(() => <View style={styles.activeDot} />);
@@ -85,4 +70,15 @@ const styles = {
 	loader: tailwind('flex flex-row justify-center items-center'),
 };
 
-export default AdsPaginator;
+export default connect(({ ads }) => ({ ads }))(memo(AdsPaginator));
+
+/* {state.loading ? (
+					<View style={styles.container}>
+						<ActivityIndicator
+							style={styles.loader}
+							animating={state.loading}
+							size="small"
+							color="#000"
+						/>
+					</View>
+				) : ( */
