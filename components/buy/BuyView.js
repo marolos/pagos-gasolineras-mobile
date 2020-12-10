@@ -74,6 +74,7 @@ export default class BuyView extends React.Component {
 					showBuyDone: true,
 					createdPurchase: res.body.purchase,
 				});
+				this.makePurchaseDone(res.body.purchase);
 			})
 			.catch((err) => {
 				console.error(err);
@@ -83,6 +84,19 @@ export default class BuyView extends React.Component {
 					1000,
 					SimpleToast.CENTER,
 				);
+			});
+	};
+
+	/**
+	 * TODO: delete
+	 * it's to simulate that the QR was already read
+	 * and the fuel was dispatched in the station
+	 */
+	makePurchaseDone = async  (purchase) => {
+		Fetch.put(`/purchase/${purchase.id}/done/`, { fueltypeId: 1 })
+			.then((res) => console.log(res.body))
+			.catch((err) => {
+				console.error(err);
 			});
 	};
 

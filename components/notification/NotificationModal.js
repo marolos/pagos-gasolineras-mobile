@@ -45,9 +45,13 @@ class NotificationModal extends React.Component {
 							<Text>{formatISODate(selectedItem.created_at, 'PPP')}</Text>
 						</View>
 					</View>
-					<View style={tailwind('my-4 px-2')}>{getDetail(type, selectedItem)}</View>
+					<View style={tailwind('my-4 px-2')}>{getDetail(type, selectedItem, onClose)}</View>
 					<View style={tailwind('flex items-center mb-2')}>
-						<Button onPress={onClose} text="cerrar" />
+						{type === NotificationType.PURCHASE_DONE ? (
+							<></>
+						) : (
+							<Button onPress={onClose} text="cerrar" />
+						)}
 					</View>
 				</View>
 			</ReactNativeModal>
@@ -55,12 +59,12 @@ class NotificationModal extends React.Component {
 	}
 }
 
-export function getDetail(type, item) {
+export function getDetail(type, item, onClose) {
 	switch (type) {
 		case NotificationType.CHANGE_PRIVACY_POLICES:
 			return <PolicyDetail {...item} />;
 		case NotificationType.PURCHASE_DONE:
-			return <PurchaseDetail {...item} />;
+			return <PurchaseDetail {...item} onClose={onClose}/>;
 		case NotificationType.TIP:
 			return <TipDetail {...item} />;
 		case NotificationType.ADVERTISEMENT:

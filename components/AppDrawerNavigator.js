@@ -23,7 +23,6 @@ import LogoutView from './auth/LogoutView';
 import { getDeviceInfo, requestUserPermission } from './notification/firebaseConfig';
 import LoggingOutView from './auth/LoggingOutView';
 import { connect } from 'react-redux';
-import HandleNotification from './linking/HandleNotification';
 import FeedbackNavigator from './feedback/FeedbackNavigator';
 import TipsNavigator from './tips/TipsNavigator';
 import BackgroundModal from './notification/BackgroundModal';
@@ -74,7 +73,6 @@ function AppDrawerNavigator(props) {
 				<Drawer.Screen name="transfers" component={TransferNavigator} />
 				<Drawer.Screen name="logout" component={LogoutView} />
 				<Drawer.Screen name="loggingOut" component={LoggingOutView} />
-				<Drawer.Screen name="handleNotification" component={HandleNotification} />
 				<Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}} />
 				<Drawer.Screen name="tips" component={TipsNavigator} />
 			</Drawer.Navigator>

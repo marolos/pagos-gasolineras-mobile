@@ -10,17 +10,8 @@ import { makeCancelable } from '../utils/utils';
 
 function AdsPaginator({ ads, dispatch }) {
 	React.useEffect(() => {
-		const req = makeCancelable(
-			Fetch.get('/company/tipads/ads/'),
-			(res) => {
-				dispatch({ type: 'SET_ADS', value: res.body.ads });
-			},
-			(err) => {
-				if (err.isCanceled) return;
-			},
-		);
-
-		return () => req.cancel();
+		const cleanUp = reloadForever(dispatch);
+		return cleanUp;
 	}, []);
 
 	return (
@@ -56,6 +47,26 @@ const AdsItem = memo(({ href }) => {
 const Dot = memo(() => <View style={styles.dot} />);
 const ActiveDot = memo(() => <View style={styles.activeDot} />);
 
+const reloadForever = (dispatch) => {
+	let req;
+	const intervalId = setInterval(() => {
+		req = makeCancelable(
+			Fetch.get('/company/tipads/ads/'),
+			(res) => {
+				dispatch({ type: 'SET_ADS', value: res.body.ads });
+			},
+			(err) => {
+				if (err.isCanceled) return;
+			},
+		);
+	}, 60 * 1000);
+
+	return () => {
+		req && req.cancel();
+		clearInterval(intervalId);
+	};
+};
+
 const styles = {
 	main: { width: FULL_WIDTH, height: ADS_MAX_HEIGHT },
 	container: {
@@ -72,13 +83,3 @@ const styles = {
 
 export default connect(({ ads }) => ({ ads }))(memo(AdsPaginator));
 
-/* {state.loading ? (
-					<View style={styles.container}>
-						<ActivityIndicator
-							style={styles.loader}
-							animating={state.loading}
-							size="small"
-							color="#000"
-						/>
-					</View>
-				) : ( */
