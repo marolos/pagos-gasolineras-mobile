@@ -8,38 +8,42 @@ import Fetch from '../utils/Fetch';
 import { getMessaging } from '../notification/firebaseConfig';
 
 export default function LoggingOutView({ navigation }) {
-   const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-   React.useEffect(() => {
-      getMessaging()
-         .getToken()
-         .then((token) => {
-            Fetch.delete('/notification/user/token/', { token: token })
-               .then((res) => {})
-               .catch((err) => {err})
-               .finally(() => dispatch(logoutAction()));
-            getMessaging()
-               .deleteToken()
-               .then(() => {})
-               .catch((err) => {err});
-         })
-         .catch((err) => dispatch(logoutAction()));
-   }, []);
+	React.useEffect(() => {
+		getMessaging()
+			.getToken()
+			.then((token) => {
+				Fetch.delete('/notification/user/token/', { token: token })
+					.then((res) => {})
+					.catch((err) => {
+						err;
+					})
+					.finally(() => dispatch(logoutAction()));
+				getMessaging()
+					.deleteToken()
+					.then(() => {})
+					.catch((err) => {
+						err;
+					});
+			})
+			.catch((err) => dispatch(logoutAction()));
+	}, []);
 
-   return (
-      <View style={styles.container}>
-         <ActivityIndicator size="large" color="black" animating />
-      </View>
-   );
+	return (
+		<View style={styles.container}>
+			<ActivityIndicator size="large" color="black" animating />
+		</View>
+	);
 }
 
 const styles = {
-   container: [
-      {
-         margin: 0,
-         height: FULL_HIGHT + 40,
-         width: FULL_WIDTH + 5,
-      },
-      tailwind('flex items-center justify-center'),
-   ],
+	container: [
+		{
+			margin: 0,
+			height: FULL_HIGHT + 40,
+			width: FULL_WIDTH + 5,
+		},
+		tailwind('flex items-center justify-center'),
+	],
 };
