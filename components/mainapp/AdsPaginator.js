@@ -8,11 +8,11 @@ import { FULL_WIDTH, ADS_MAX_HEIGHT } from '../utils/constants';
 import Fetch from '../utils/Fetch';
 import { makeCancelable } from '../utils/utils';
 
-function AdsPaginator({ ads, dispatch }) {
+function AdsPaginator({ ads, dispatch, reload }) {
 	React.useEffect(() => {
-		const cleanUp = reloadForever(dispatch);
+		const cleanUp = loadData(dispatch);
 		return cleanUp;
-	}, []);
+	}, [reload]);
 
 	return (
 		<View style={styles.main}>
@@ -47,23 +47,18 @@ const AdsItem = memo(({ href }) => {
 const Dot = memo(() => <View style={styles.dot} />);
 const ActiveDot = memo(() => <View style={styles.activeDot} />);
 
-const reloadForever = (dispatch) => {
-	let req;
-	const intervalId = setInterval(() => {
-		req = makeCancelable(
-			Fetch.get('/company/tipads/ads/'),
-			(res) => {
-				dispatch({ type: 'SET_ADS', value: res.body.ads });
-			},
-			(err) => {
-				if (err.isCanceled) return;
-			},
-		);
-	}, 60 * 1000);
-
+const loadData = (dispatch) => {
+	let req = makeCancelable(
+		Fetch.get('/company/tipads/ads/'),
+		(res) => {
+			dispatch({ type: 'SET_ADS', value: res.body.ads });
+		},
+		(err) => {
+			if (err.isCanceled) return;
+		},
+	);
 	return () => {
-		req && req.cancel();
-		clearInterval(intervalId);
+		req.cancel();
 	};
 };
 
@@ -82,4 +77,3 @@ const styles = {
 };
 
 export default connect(({ ads }) => ({ ads }))(memo(AdsPaginator));
-

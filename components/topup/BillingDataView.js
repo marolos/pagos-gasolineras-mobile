@@ -13,13 +13,11 @@ import SimpleToast from 'react-native-simple-toast';
 import CitySelect from './CitySelect';
 import Fetch from '../utils/Fetch';
 import { connect } from 'react-redux';
-import { getStorageItem, setStorageItem } from '../utils/storage';
 
 class BillingDataView extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			actualData: {},
 			loading: false,
 			loadingData: true,
 			form: {
@@ -35,28 +33,25 @@ class BillingDataView extends React.Component {
 	}
 
 	componentDidMount() {
-		const { user_id } = this.props.user;
-		getStorageItem('form' + user_id)
-			.then((data) => {
-				this.setState({ actualData: data, form: data, loadingData: false });
-			})
-			.catch((err) => {
-				this.loadData();
-			});
+		if (!this.props.user.ciudad) {
+			this.loadData();
+		} else {
+			this.setState({ loadingData: false, form: this.props.user });
+		}
 	}
 
 	componentWillUnmount() {
-		if (this.request) this.request.cancel();
-		if (this.saveRequest) this.saveRequest.cancel();
+		this.request && this.request.cancel();
+		this.saveRequest && this.saveRequest.cancel();
 	}
 
 	loadData = () => {
-		const { user_id } = this.props.user;
+		const {user} = this.props;
 		this.request = makeCancelable(
 			Fetch.get('/users/billing/data/'),
 			(res) => {
-				this.setState({ actualData: res.body, form: res.body, loadingData: false });
-				setStorageItem('form' + user_id, res.body);
+				this.setState({ loadingData: false, form: res.body });
+				this.props.dispatch({ type: 'LOGIN', data: { ...user, ...res.body } });
 			},
 			(err) => {
 				if (err.isCanceled) return;
@@ -68,48 +63,40 @@ class BillingDataView extends React.Component {
 	sendData = () => {
 		Keyboard.dismiss();
 		if (this.state.loading) return;
-		const { user_id } = this.props.user;
-		const { navigation, route } = this.props;
-		const { actualData, form } = this.state;
+		const { navigation, route, user } = this.props;
+		const { navigateToOnDone, ...data } = route.params;
+		const { form } = this.state;
 
 		const { valid, message } = validForm(form);
 		if (!valid) {
 			SimpleToast.show(message);
 			return;
 		}
-		if (equalForm(actualData, form)) {
-			navigation.push('topupData', route.params);
+		if (equalForm(user, form)) {
+			navigation.push(navigateToOnDone, data);
 			return;
 		}
 		this.setState({ loading: true });
 
 		this.saveRequest = makeCancelable(
-			Fetch.put('/users/billing/data/', this.state.form),
+			Fetch.put('/users/billing/data/', form),
 			(res) => {
-				this.setState({ loading: false, actualData: this.state.form }, () => {
-					navigation.push('topupData', route.params);
+				this.setState({ loading: false }, () => {
+					navigation.push(navigateToOnDone, data);
 				});
-				setStorageItem('form' + user_id, this.state.form);
+				this.props.dispatch({ type: 'LOGIN', data: { ...user, ...form } });
 			},
 			(err) => {
 				if (err.isCanceled) return;
 				if (err.status === 455) {
 					SimpleToast.show('Ya existe otro registro con la placa: ' + err.body.error);
-					this.setState({
-						loading: false,
-					});
+					this.setState({ loading: false });
 					return;
 				}
-				this.setState({
-					loading: false,
-					actualData: this.state.actualData,
-					form: this.state.actualData,
-				});
-				setStorageItem('form' + user_id, this.actualData);
+				this.setState({ loading: false, form: user });
 			},
 		);
 	};
-
 
 	render() {
 		const formData = this.state.form;
@@ -220,7 +207,7 @@ function Message() {
 				<InfoIcon fill={'#975a16'} />
 				<Text style={styles.message.text}>
 					Por favor verifica o completa tus datos de facturación
-            </Text>
+				</Text>
 			</View>
 		</View>
 	);
@@ -243,7 +230,7 @@ const styles = {
 	spiner: {
 		view: [
 			tailwind('absolute bg-gray-800 bg-opacity-50 flex justify-center'),
-			{ width: FULL_WIDTH, height: FULL_HIGHT },
+			{ width: FULL_WIDTH, height: FULL_HIGHT + 150 },
 		],
 	},
 	message: {
@@ -259,6 +246,6 @@ const styles = {
 	},
 };
 
-const mapStateToProps = (state) => ({ user: state.user.data });
+const mapStateToProps = ({ user }) => ({ user: user.data });
 
 export default connect(mapStateToProps)(BillingDataView);

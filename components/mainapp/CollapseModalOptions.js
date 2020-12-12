@@ -42,7 +42,14 @@ function CollapseModalOptions({ visible, closeCollapse, station }) {
 							primary={false}
 							onPress={() => {
 								closeCollapse();
-								setTimeout(() => navigation.navigate('billingData', station), 200);
+								setTimeout(
+									() =>
+										navigation.navigate('billingData', {
+											...station,
+											navigateToOnDone: 'topupData',
+										}),
+									200,
+								);
 							}}
 						/>
 						<Button

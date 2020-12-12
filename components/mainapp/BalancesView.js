@@ -81,7 +81,7 @@ class BalancesView extends React.Component {
 			<ScrollView
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
 			>
-				<AdsPaginator />
+				<AdsPaginator reload={refreshing}/>
 				{balances.length > 0 && (
 					<View style={tailwind('mt-4 px-6')}>
 						<Text style={[tailwind('text-black text-sm'), typefaces.pm]}>Gasolineras</Text>

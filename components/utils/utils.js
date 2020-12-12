@@ -117,7 +117,7 @@ export function makeCancelable(promise, resolve, reject) {
 		.catch((error) => (hasCanceled_ ? reject({ isCanceled: true }) : reject(error)));
 
 	return {
-		cancel: () => {
+		cancel() {
 			hasCanceled_ = true;
 		},
 	};
@@ -142,6 +142,7 @@ export function equalForm(actualValue, newValue) {
 }
 
 export function equalVehiclesIds(actualValues, newValues) {
+	if (!actualValues) return false;
 	if (actualValues.length !== newValues.length) return false;
 	actualValues.forEach((value) => {
 		const result = newValues.find(
