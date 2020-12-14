@@ -64,6 +64,7 @@ class CollapseSelectedStation extends React.Component {
 				navigation.navigate('billingData', {
 					gas_station: station,
 					company,
+					navigateToOnDone: "topupData"
 				}),
 			100,
 		);
