@@ -88,7 +88,7 @@ class PurchaseRating extends React.Component {
 				</View>
 				<View>
 					<BasicInput
-						placeholder="Excribir comentario (opcional)"
+						placeholder="Comentario (opcional)"
 						onChange={(text) => (this.comment = text)}
 						maxLength={300}
 						style={typefaces.pr}
