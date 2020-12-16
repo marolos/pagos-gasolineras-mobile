@@ -74,7 +74,8 @@ export default class BuyView extends React.Component {
 					showBuyDone: true,
 					createdPurchase: res.body.purchase,
 				});
-				this.makePurchaseDone(res.body.purchase);
+				setTimeout(()=> this.makePurchaseDone(res.body.purchase), 5000)
+				
 			})
 			.catch((err) => {
 				console.error(err);

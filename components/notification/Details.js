@@ -54,11 +54,12 @@ class PurchaseRating extends React.Component {
 			.then(() => {})
 			.catch((err) => {
 				console.error(err);
-			})
-			.finally(() => {
-				this.props.onClose();
-				SimpleToast.showWithGravity('Calificacion enviada.', 800, SimpleToast.CENTER);
 			});
+
+		setTimeout(() => {
+			this.props.onClose();
+			SimpleToast.showWithGravity('Calificacion enviada.', 800, SimpleToast.CENTER);
+		}, 500);
 	};
 
 	render() {
