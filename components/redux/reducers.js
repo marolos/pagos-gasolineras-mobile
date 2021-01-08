@@ -5,6 +5,8 @@ import { userLocation } from './geolocation/reducers';
 import { activeTab } from './ui/reducers';
 import { tips } from './tips/reducers';
 import { ads } from './ads/reducers';
+import { cards } from './payment/reducers';
+
 
 const rootReducers = combineReducers({
 	activeTab,
@@ -14,6 +16,7 @@ const rootReducers = combineReducers({
 	user,
 	tips,
 	ads,
+	cards
 });
 
 export default rootReducers;

@@ -9,7 +9,6 @@ import BasicInput from '../shared/BasicInput';
 import Button from '../shared/Button';
 import LoadingButton from '../shared/LoadingButton';
 import Fetch from '../utils/Fetch';
-import { useObjState } from '../utils/hooks';
 import { typefaces } from '../utils/styles';
 
 export const PolicyDetail = memo(({ data }) => (

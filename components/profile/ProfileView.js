@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import tailwind from 'tailwind-rn';
 import CarIcon from '../icons/CarIcon';
 import EditIcon from '../icons/EditIcon';
-import EmainIcon from '../icons/EmainIcon';
+import EmailIcon from '../icons/EmailIcon';
 import IdCardIcon from '../icons/IdCardIcon';
 import MapPinIcon from '../icons/MapPinIcon';
 import ProfileIcon from '../icons/ProfileIcon';
@@ -34,7 +34,7 @@ function ProfileView({ user, navigation }) {
 					<Item
 						label="Email"
 						value={user.email}
-						icon={<EmainIcon strokeWidth={1} width={20} height={16} />}
+						icon={<EmailIcon strokeWidth={1} width={20} height={16} />}
 					/>
 					<Item
 						label="Teléfono"

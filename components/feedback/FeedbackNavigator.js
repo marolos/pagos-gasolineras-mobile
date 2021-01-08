@@ -7,6 +7,7 @@ import {
 import Label from '../shared/Label';
 import tailwind from 'tailwind-rn';
 import FeedbackView from './FeedbackView';
+import FeedbackType from './FeedbackType';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,15 @@ export default function FeedbackNavigator({ navigation }) {
 							style={tailwind('text-base mt-1')}
 							focused
 						/>
+					),
+				})}
+			/>
+			<Stack.Screen
+				name="feedbackType"
+				component={FeedbackType}
+				options={() => ({
+					headerTitle: () => (
+						<Label text={'Elegir tipo'} style={tailwind('text-base mt-1')} focused />
 					),
 				})}
 			/>
