@@ -4,9 +4,7 @@ import Fetch from '../utils/Fetch';
 import tailwind from 'tailwind-rn';
 import { makeCancelable } from '../utils/utils';
 import Ripple from 'react-native-material-ripple';
-import ScheduleIcon from '../icons/ScheduleIcon';
-import InfoIcon from '../icons/InfoIcon';
-import { typefaces } from '../utils/styles';
+import { typefaces, shadowStyle3 } from '../utils/styles';
 import emptyImage from '../../assets/background/empty.png';
 import FloatingButton from '../shared/FloatingButton';
 import FilterIcon from '../icons/FilterIcon';
@@ -15,6 +13,8 @@ import CollapseModalFilters from './CollapseModalFilters';
 import SimpleToast from 'react-native-simple-toast';
 import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
 import { formatISODate } from '../utils/dateUtils';
+import { background, white, dollar_text, btn_secundary, done } from '../utils/colors';
+import gasLogo from '../../assets/img/gasolina_menu.png';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 	const paddingToBottom = 20;
@@ -202,7 +202,7 @@ class RecordsView extends React.Component {
 
 	render() {
 		return (
-			<View style={{ height: FULL_HIGHT - 80, width: FULL_WIDTH }}>
+			<View style={{ height: FULL_HIGHT - 80, width: FULL_WIDTH, backgroundColor: background }}>
 				<FloatingButton
 					icon={
 						!this.state.filterActive ? (
@@ -289,40 +289,45 @@ function PurchasesList({ data, onItemTap }) {
 function PurchaseItem({ purchase, onTap }) {
 	return (
 		<Ripple style={tailwind('mx-2 my-1')} onPress={() => onTap()}>
-			<View style={tailwind('flex rounded-md py-2 px-3 border border-gray-300')}>
-				<View style={tailwind('flex flex-row')}>
-					<View style={tailwind('mt-1 mr-1')}>
-						<ScheduleIcon />
-					</View>
-					<Text>
-						<Text style={[tailwind('font-semibold'), typefaces.pm]}>Compra </Text>
-						en{' '}
-						<Text style={[tailwind('font-semibold'), typefaces.pm]}>
-							{purchase?.gas_station?.name}
-						</Text>{' '}
-						por{' '}
-						<Text style={[tailwind('text-green-600'), typefaces.pm]}>
-							${parseFloat(purchase?.amount).toFixed(2)}
+			<View style={[tailwind('flex flex-row rounded-xl py-2 px-3 border border-gray-300'), 
+			{ backgroundColor: white, paddingBottom: 10, paddingTop: 20 }, shadowStyle3]}>
+				<View style={tailwind('flex mt-2')}>
+					<Image source={gasLogo} style={{ width: 25, height: 30 }}></Image>
+				</View>
+				<View  style={tailwind('w-11/12')}>
+					<View style={tailwind('ml-4')}>
+						<Text>
+							<Text style={[tailwind('font-bold'), typefaces.pm]}>Compra en</Text>
+							{' '}
+							<Text style={[tailwind('font-bold'), typefaces.pm]}>
+								{purchase?.gas_station?.name} por
+							</Text>{' '}
+							{' '}
+							<Text style={[{ color: dollar_text }, tailwind('font-bold'), typefaces.pm]}>
+								${parseFloat(purchase?.amount).toFixed(2)}
+							</Text>
 						</Text>
-					</Text>
-				</View>
-				<View style={tailwind('flex flex-row justify-end items-center')}>
-					<Text style={[tailwind('text-gray-700 text-xs mr-1'), typefaces.pm]}>Factura</Text>
-					<InfoIcon width={14} height={14} fill={'#555'} />
-				</View>
-				<View style={tailwind('flex flex-row ml-4')}>
-					<Text style={[tailwind('text-gray-700 text-xs'), typefaces.pm]}>
-						{formatISODate(purchase?.created_at ? purchase?.created_at : new Date())}{' '}
-					</Text>
-					<Text style={[tailwind('text-xs')]}>
-						{purchase?.is_done ? (
-							<Text style={tailwind('text-red-500')}>(efectuado)</Text>
-						) : new Date(purchase?.code_expiry_date) > new Date() ? (
-							<Text style={tailwind('text-yellow-500')}>(en proceso)</Text>
-						) : (
-							<Text style={tailwind('text-gray-700')}>(expirada)</Text>
-						)}
-					</Text>
+					</View>
+					{/* <View style={tailwind('flex flex-row justify-end items-center')}>
+						<Text style={[tailwind('text-gray-700 text-xs mr-1'), typefaces.pm]}>Factura</Text>
+						<InfoIcon width={14} height={14} fill={'#555'} />
+					</View> */}
+					<View style={tailwind('flex flex-row ml-4 mt-1')}>
+						<Text style={[tailwind('text-gray-700 text-xs'), typefaces.pm]}>
+							{formatISODate(purchase?.created_at ? purchase?.created_at : new Date())}{' '}
+						</Text>
+					</View>
+					<View style={tailwind('flex flex-row justify-end mr-1')}>
+							<Text style={[tailwind('text-xs italic')]}>
+								{purchase?.is_done ? (
+									<Text style={{ color: done }}>Efectuado</Text>
+								) : new Date(purchase?.code_expiry_date) > new Date() ? (
+									<Text style={{ color: btn_secundary }}>En proceso</Text>
+								) : (
+									<Text style={tailwind('text-gray-700')}>Expirada</Text>
+								)}
+							</Text>
+					</View>
 				</View>
 			</View>
 		</Ripple>
