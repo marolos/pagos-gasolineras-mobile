@@ -1,10 +1,11 @@
 import React from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import ClockIcon from '../icons/ClockIcon';
-import CalendarIcon from '../icons/CalendarIcon';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { formatISODate } from '../utils/dateUtils';
+import fechaIcon from '../../assets/img/fecha.png'
+import horaIcon from '../../assets/img/hora.png'
+import { info_text } from '../utils/colors'
 
 class DateTimeFilter extends React.Component {
 	constructor(props) {
@@ -138,53 +139,53 @@ class DateTimeFilter extends React.Component {
 				</View>
 				<View>
 					<View style={tailwind('flex flex-row items-center justify-between')}>
-						<Text>Desde:</Text>
+						<Text style={{ color: info_text }} >Desde:</Text>
 						<View style={tailwind('mx-2')} />
 						<DateTimeField
 							showDateTimePicker={this.showDatePicker}
 							param="fromDate"
-							icon={<CalendarIcon />}
+							icon={<Image source={fechaIcon} style={{ width: 15, height: 16 }} />}
 							content={
 								this.state.selectFromDate
 									? ' ' + formatISODate(this.state.fromDate, 'dd/MM/yyyy')
-									: ' Día'
+									: ''
 							}
 						/>
 						<View style={tailwind('mx-1')} />
 						<DateTimeField
 							showDateTimePicker={this.showTimePicker}
 							param="fromTime"
-							icon={<ClockIcon />}
+							icon={<Image source={horaIcon} style={{ width: 16, height: 16 }} />}
 							content={
 								this.state.selectFromTime
 									? ' ' + formatISODate(this.state.fromTime, 'HH:mm')
-									: ' Hora'
+									: ''
 							}
 						/>
 					</View>
 					<View style={tailwind('my-1')} />
 					<View style={tailwind('flex flex-row items-center justify-between')}>
-						<Text>Hasta:</Text>
+						<Text style={{ color: info_text }}>Hasta:</Text>
 						<View style={tailwind('mx-2')} />
 						<DateTimeField
 							showDateTimePicker={this.showDatePicker}
 							param="toDate"
-							icon={<CalendarIcon />}
+							icon={<Image source={fechaIcon} style={{ width: 15, height: 16 }} />}
 							content={
 								this.state.selectToDate
 									? ' ' + formatISODate(this.state.toDate, 'dd/MM/yyyy')
-									: ' Día'
+									: ''
 							}
 						/>
 						<View style={tailwind('mx-1')} />
 						<DateTimeField
 							showDateTimePicker={this.showTimePicker}
 							param="toTime"
-							icon={<ClockIcon />}
+							icon={<Image source={horaIcon} style={{ width: 16, height: 16 }} />}
 							content={
 								this.state.selectToTime
 									? ' ' + formatISODate(this.state.toTime, 'HH:mm')
-									: ' Hora'
+									: ''
 							}
 						/>
 					</View>
@@ -196,7 +197,7 @@ class DateTimeFilter extends React.Component {
 
 function DateTimeField({ showDateTimePicker, param, icon, content }) {
 	return (
-		<View style={tailwind('flex rounded-md py-1 px-1 w-32 border border-gray-300')}>
+		<View style={tailwind('flex rounded-3xl py-1 px-1 w-32 border border-black')}>
 			<TouchableOpacity onPress={() => showDateTimePicker(param)}>
 				<View style={tailwind('flex flex-row items-center ml-1')}>
 					{icon}

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import Svg, { Path } from "react-native-svg"
 
-function FilterIcon({ fill = "#fff" }) {
+function FilterIcon({ fill = "#01356e" }) {
 	return (
 		<Svg width="32" height="32" viewBox="0 0 48 48" fill="none">
 			<Path d="M47 12C47 11.4696 46.7893 10.9609 46.4142 10.5858C46.0391 10.2107 45.5304 10 45 10H24C23.4696 10 22.9609 10.2107 22.5858 10.5858C22.2107 10.9609 22 11.4696 22 12C22 12.5304 22.2107 13.0391 22.5858 13.4142C22.9609 13.7893 23.4696 14 24 14H45C45.5304 14 46.0391 13.7893 46.4142 13.4142C46.7893 13.0391 47 12.5304 47 12Z" fill={fill} />

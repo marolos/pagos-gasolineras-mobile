@@ -7,6 +7,7 @@ import Fetch from '../utils/Fetch';
 import { shadowStyle, typefaces } from '../utils/styles';
 import { makeCancelable } from '../utils/utils';
 import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
+import { info_text } from '../utils/colors'
 
 export default class CompanySelector extends React.Component{
    constructor(props){
@@ -38,7 +39,7 @@ export default class CompanySelector extends React.Component{
    render() {
       return (
          <View style={tailwind('flex flex-row justify-between mt-4 items-center')}>
-            <Text style={typefaces.pm}>Empresa: </Text>
+            <Text style={{ color: info_text }}>Empresa: </Text>
             <Ripple style={styles.ripple} onPress={() => this.setState({ open: !this.state.open })}>
                {this.state.loading ? (
                   <ActivityIndicator size="small" animating color="black" style={tailwind('mb-1')} />
@@ -96,7 +97,7 @@ function Item({ item }) {
 const styles = {
    ripple: [
       tailwind(
-         'flex flex-row items-center justify-between px-4 w-48 py-1 border border-gray-400 rounded',
+         'flex flex-row items-center justify-between px-4 w-48 py-1 border border-black rounded-3xl',
       ),
       { minWidth: 130 },
    ],

@@ -12,7 +12,7 @@ const style = StyleSheet.create({
 	},
 	content: {
 		borderRadius: 30,
-		backgroundColor: 'black',
+		backgroundColor: '#f2e259',
 		width: 60,
 		height: 60,
 		alignItems: 'center',

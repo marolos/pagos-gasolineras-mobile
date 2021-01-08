@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import RadioGroup from '../shared/RadioGroup';
-import Button from '../shared/Button';
+import Button from '../shared/AppButton';
 import tailwind from 'tailwind-rn';
 import Modal from 'react-native-modal';
 import { typefaces } from '../utils/styles';
@@ -9,6 +9,7 @@ import CompanySelector from './CompanySelector';
 import GasStationSelector from './GasStationSelector';
 import SimpleToast from 'react-native-simple-toast';
 import DateTimeFilter from './DateTimeFilter';
+import { btn_text, background, info_text } from '../utils/colors';
 
 function CollapseModalFilters({
 	visible,
@@ -61,7 +62,7 @@ function CollapseModalFilters({
 			backdropTransitionOutTiming={0}
 			style={styles.modal}
 		>
-			<View style={styles.view}>
+			<View style={[styles.view, { backgroundColor: background }]}>
 				<View style={tailwind('my-3 mx-2')}>
 					<ExpandedFilter
 						initFromDateTime={initFromDateTime}
@@ -123,7 +124,7 @@ function ExpandedFilter({
 		<View style={[tailwind('flex'), { minHeight: 20 }]}>
 			<View>
 				<View style={tailwind('flex items-center m-2')}>
-					<Text style={[tailwind('mb-2 text-lg'), typefaces.pb]}>Filtros</Text>
+					<Text style={[tailwind('mb-2 text-lg'), typefaces.pb, { color: btn_text }]}>Filtros</Text>
 					<RadioGroup
 						initValue={state.value}
 						onCheck={onCheck}

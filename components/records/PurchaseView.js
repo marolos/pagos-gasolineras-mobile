@@ -9,25 +9,24 @@ import { generateQR } from '../buy/utils';
 import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
 import Ripple from 'react-native-material-ripple';
 import Modal from 'react-native-modal';
-import QRIcon from '../icons/QRIcon';
-import CheckRoundedIcon from '../icons/CheckRoundedIcon';
-import Button from '../shared/Button';
+import Button from '../shared/AppButton';
 import LoadingModal from '../shared/LoadingModal';
 import SimpleToast from 'react-native-simple-toast';
-import InfoIcon from '../icons/InfoIcon';
 import { formatISODate } from '../utils/dateUtils';
+import { btn_text, dollar_text, info_text} from '../utils/colors'
+import qrIcon from '../../assets/img/qr.png';
 
 class PurchaseView extends React.Component {
 	constructor(props) {
 		super(props);
-		let in_process = new Date(this.props.route.params.code_expiry_date) > new Date();
+		let in_process = new Date(this.props.purchase.code_expiry_date) > new Date() && !this.props.purchase.is_done;
 		this.state = {
 			loading: true,
-			purchase: this.props.route.params,
+			purchase: this.props.purchase,
 			fuel_type: null,
-			is_done: this.props.route.params.is_done,
+			is_done: this.props.purchase.is_done,
 			in_process: in_process,
-			expired: !in_process && !this.props.route.params.is_done,
+			expired: !in_process && !this.props.purchase.is_done,
 			qr: null,
 			generating: false,
 			showDelete: false,
@@ -111,114 +110,98 @@ class PurchaseView extends React.Component {
 
 	render() {
 		return (
-			<ScrollView style={tailwind('mb-4 px-4')}>
+			<ScrollView style={tailwind('')}>
 				{this.state.loading ? (
 					<View style={[tailwind('flex flex-row justify-center'), { height: 200 }]}>
 						<ActivityIndicator animating color="black" size="large" />
 					</View>
 				) : (
-					<View style={[tailwind('mt-1'), { height: FULL_HIGHT, width: FULL_WIDTH }]}>
-						<Text style={[tailwind('text-xs')]}>
-							{this.state.is_done ? (
-								<Text style={tailwind('text-red-500')}>(efectuado)</Text>
-							) : this.state.in_process ? (
-								<Text style={tailwind('text-yellow-500')}>(en proceso)</Text>
-							) : (
-								<Text style={tailwind('text-gray-700')}>(expirada)</Text>
-							)}
-						</Text>
-						<View style={tailwind('flex justify-center items-center mb-6')}>
+					<View>
+						<View style={tailwind('flex justify-center items-center mb-4')}>
 							<FastImage
 								source={{ uri: this.state.purchase.gas_station.company.company_logo_path }}
-								style={{ width: 100, height: 100 }}
+								style={{ width: 80, height: 80 }}
 							/>
-							<Text style={[tailwind('text-green-600'), typefaces.pm]}>
+							<Text style={[tailwind('text-lg'), typefaces.psb, { color: dollar_text }]}>
 								${parseFloat(this.state.purchase.amount).toFixed(2)}
 							</Text>
 						</View>
-						<View>
-							<Text>
-								<Text style={typefaces.pb}>Fecha:</Text>{' '}
-								{formatISODate(this.state.purchase.created_at, 'dd/MM/yyyy HH:mm')}
-							</Text>
-							<Text>
-								<Text style={typefaces.pb}>Expira:</Text>{' '}
-								{formatISODate(this.state.purchase.code_expiry_date, 'dd/MM/yyyy HH:mm')}
-							</Text>
-							<Text>
-								<Text style={typefaces.pb}>Cliente: </Text>
-								{this.fullName()}
-							</Text>
-							<Text>
-								<Text style={typefaces.pb}>Vehículo:</Text>{' '}
-								{this.state.purchase.vehicle.number}
+						<View style={tailwind('mb-2')}>
+							<Text style={tailwind('text-center text-lg')}>{this.fullName()}</Text>
+						</View>
+						<View style={tailwind('flex flex-row p-3')}>
+							<View>
+								<Text style={[{ color: info_text }, tailwind('text-base mb-1')]}>Fecha:</Text>
+								<Text style={[{ color: info_text }, tailwind('text-base mb-1')]}>Expira:</Text>
+								<Text style={[{ color: info_text }, tailwind('text-base mb-1')]}>Vehículo:</Text>
+								<Text style={[{ color: info_text }, tailwind('text-base mb-1')]}>Estación:</Text>
+								<Text style={[{ color: info_text }, tailwind('text-base mb-1')]}>Dirección:  </Text>
+								{this.state.is_done ? (
+									<Text style={[{ color: info_text }, tailwind('text-base mb-1')]}>Gasolina:</Text>) : <View/>}
+								{this.state.is_done ? (
+									<Text style={[{ color: info_text }, tailwind('text-base mb-1')]}>Galones:</Text>) : <View/>}
+							</View>
+							<View>
+								<Text style={tailwind('text-base mb-1')}>{formatISODate(this.state.purchase.created_at, 'dd/MM/yyyy HH:mm')}</Text>
+								<Text style={tailwind('text-base mb-1')}>
+									{formatISODate(this.state.purchase.code_expiry_date, 'dd/MM/yyyy HH:mm')}
+								</Text>
+								<Text style={tailwind('text-base mb-1')}>{this.state.purchase.vehicle.number}
 								{this.state.purchase.vehicle.alias
 									? '(' + this.state.purchase.vehicle.alias + ')'
-									: ''}
-							</Text>
-						</View>
-						<View style={tailwind('mt-3')}>
-							<Text>
-								<Text style={typefaces.pb}>Estación: </Text>
-								{this.gasStation().name}
-							</Text>
-							<Text>
-								<Text style={typefaces.pb}>Dirección: </Text>
-								{this.gasStation().address}
-							</Text>
-						</View>
-						{this.state.is_done ? (
-							<View style={tailwind('mt-3')}>
-								<Text>
-									<Text style={typefaces.pb}>Gasolina: </Text>
-									{this.state.fuel_type.name}
-								</Text>
-								<Text>
-									<Text style={typefaces.pb}>Galones:</Text>{' '}
-									{parseFloat(this.state.purchase.gallons).toFixed(2)}
-								</Text>
+									: ''}</Text>
+									<Text style={tailwind('text-base mb-1')}>{this.gasStation().name}</Text>
+									<Text style={tailwind('text-base mb-1')}>{this.gasStation().address}</Text>
+									{this.state.is_done ? (
+										<Text style={tailwind('text-base mb-1')}>{this.state.fuel_type.name}</Text>
+									) : <View/>}
+									{this.state.is_done ? (
+										<Text style={tailwind('text-base mb-1')}>{parseFloat(this.state.purchase.gallons).toFixed(2)}</Text>
+									) : <View/>}
 							</View>
-						) : (
-							<View />
-						)}
-						<View style={tailwind('flex justify-center items-center mt-4 mb-2')}>
-							{this.state.qr == null && this.state.in_process ? (
-								<QRButton text={'Generar QR'} onPress={() => this.onGenerate()} />
-							) : this.state.generating ? (
-								<View style={[tailwind('flex flex-row justify-center')]}>
+						</View>
+						{this.state.generating ? (
+							<View style={[tailwind('flex flex-row justify-center')]}>
 									<ActivityIndicator animating color="black" size="large" />
-								</View>
-							) : this.state.in_process ? (
+							</View>
+						) : <View/> }
+						{this.state.qr != null ? (
+						<View style={tailwind('flex justify-center items-center')}>
 								<View>
+									<Image
+										source={{ uri: this.state.qr }}
+										style={{ width: FULL_WIDTH - 190, height: FULL_WIDTH - 190 }}
+									/>
 									<Text
-										style={[tailwind('text-xl text-gray-800 text-center'), typefaces.pm]}
+										style={[tailwind('text-xl text-center'), { color: btn_text }, typefaces.psb]}
 									>
 										{this.state.purchase.number_code}
 									</Text>
-									<Image
-										source={{ uri: this.state.qr }}
-										style={{ width: FULL_WIDTH - 130, height: FULL_WIDTH - 130 }}
-									/>
 								</View>
-							) : (
-								<View />
-							)}
-						</View>
-						{this.state.in_process ? (
-							<View style={[tailwind('absolute w-full mt-2'), { bottom: 0 }]}>
-								<View
-									style={{ borderWidth: 1, borderColor: 'red', borderBottomColor: 'red' }}
-								/>
-								<TouchableOpacity
-									style={tailwind('mt-2')}
-									onPress={() => this.setState({ showDelete: true })}
-								>
-									<Text style={tailwind('text-center text-red-500')}>CANCELAR COMPRA</Text>
-								</TouchableOpacity>
+						</View> ) : <View/>} 
+						{this.state.qr == null && this.state.in_process ? (
+								<View style={tailwind('flex flex-row justify-end')}>
+									<View style={tailwind('flex justify-center items-center mt-5')}>
+										<Button primary={false}
+											text={"Cancelar recarga"}
+											onPress={() => this.setState({ showDelete: true })}
+										/>
+								</View>
+								<View style={tailwind('pl-1')}></View>
+								
+								<Ripple style={tailwind('w-16 items-center mt-5 justify-center')} onPress={() => this.onGenerate()}>
+									<Image source={qrIcon} style={{ width: 30, height: 30 }}/>
+								</Ripple>		
 							</View>
-						) : (
-							<View />
-						)}
+						) : this.state.in_process ? (
+							<View style={tailwind('flex justify-center items-center mt-5')}>
+										<Button primary={false}
+											text={"Cancelar recarga"}
+											onPress={() => this.setState({ showDelete: true })}
+										/>
+								</View>
+						) : <View />
+					}
 					</View>
 				)}
 				<LoadingModal show={this.state.showLoading} text="Cancelando compra." />
@@ -233,26 +216,6 @@ class PurchaseView extends React.Component {
 	}
 }
 
-const QRButton = memo(({ onPress, text }) => {
-	return (
-		<Ripple
-			onPress={onPress}
-			style={tailwind('rounded-md items-center w-40')}
-			rippleColor="#ffffff"
-			rippleSize={500}
-			rippleDuration={600}
-		>
-			<View
-				style={tailwind(
-					'flex flex-row bg-black rounded-md items-center justify-evenly w-full py-2 px-4',
-				)}
-			>
-				<QRIcon />
-				<Text style={[tailwind('text-white mt-1'), typefaces.pm]}>{text}</Text>
-			</View>
-		</Ripple>
-	);
-});
 
 const DeletePurchaseModal = memo(({ show, onCancel, onConfirm }) => {
 	return (
@@ -263,22 +226,21 @@ const DeletePurchaseModal = memo(({ show, onCancel, onConfirm }) => {
 			backdropTransitionOutTiming={0}
 			style={tailwind('flex items-center')}
 		>
-			<View style={tailwind('w-full bg-white rounded-lg')}>
+			<View style={tailwind('w-full bg-white rounded-3xl')}>
 				<View style={tailwind('p-6 rounded-md')}>
 					<View style={tailwind('flex flex-row')}>
-						<CheckRoundedIcon />
 						<Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>
-							¿Está seguro que desea cancelar la compra?
+							¿Está seguro que desea cancelar la recarga?
 						</Text>
 					</View>
 					<View style={tailwind('flex flex-row justify-evenly mt-4')}>
 						<Button
-							text={'cancelar'}
+							text={'Cancelar'}
 							primary={false}
 							onPress={onCancel}
 							style={{ width: 100 }}
 						/>
-						<Button text={'aceptar'} onPress={onConfirm} style={{ width: 100 }} />
+						<Button text={'Aceptar'} onPress={onConfirm} style={{ width: 100 }} />
 					</View>
 				</View>
 			</View>
@@ -295,12 +257,11 @@ const PurchaseCancelDoneModal = ({ show, onClose }) => {
 			backdropTransitionOutTiming={0}
 			style={tailwind('flex items-center')}
 		>
-			<View style={tailwind('w-full bg-white rounded-lg')}>
+			<View style={tailwind('w-full bg-white rounded-3xl')}>
 				<View style={tailwind('p-6 rounded-md')}>
 					<View style={tailwind('flex flex-row')}>
-						<InfoIcon />
 						<Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>
-							Se canceló la compra con éxito
+							Se canceló la recarga con éxito
 						</Text>
 					</View>
 					<View style={tailwind('flex flex-row justify-evenly mt-8')}>

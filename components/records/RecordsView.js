@@ -1,11 +1,11 @@
-import React from 'react';
-import { View, Text, ActivityIndicator, ScrollView, RefreshControl, Image } from 'react-native';
+import React,{ memo } from 'react';
+import { View, Text, ActivityIndicator, ScrollView, RefreshControl, Image, TouchableOpacity } from 'react-native';
 import Fetch from '../utils/Fetch';
 import tailwind from 'tailwind-rn';
 import { makeCancelable } from '../utils/utils';
 import Ripple from 'react-native-material-ripple';
 import { typefaces, shadowStyle3 } from '../utils/styles';
-import emptyImage from '../../assets/background/empty.png';
+import Modal from 'react-native-modal';
 import FloatingButton from '../shared/FloatingButton';
 import FilterIcon from '../icons/FilterIcon';
 import ExclamationIcon from '../icons/ExclamationIcon';
@@ -13,8 +13,16 @@ import CollapseModalFilters from './CollapseModalFilters';
 import SimpleToast from 'react-native-simple-toast';
 import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
 import { formatISODate } from '../utils/dateUtils';
-import { background, white, dollar_text, btn_secundary, done } from '../utils/colors';
+import { background, 
+			white, 
+			dollar_text, 
+			btn_secundary, 
+			done, 
+			info_text } from '../utils/colors';
 import gasLogo from '../../assets/img/gasolina_menu.png';
+import exitIcon from '../../assets/img/salir.png';
+import BackIcon from '../icons/SmallBackIcon';
+import PurchaseView from './PurchaseView';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 	const paddingToBottom = 20;
@@ -27,6 +35,7 @@ class RecordsView extends React.Component {
 		this.state = {
 			page: 0,
 			purchases: [],
+			purchase: null,
 			loading: true,
 			loadMore: false,
 			refreshing: false,
@@ -39,6 +48,7 @@ class RecordsView extends React.Component {
 			showFbtn: false,
 			filtersVisible: false,
 			filterActive: false,
+			showPurchase: false
 		};
 	}
 
@@ -158,7 +168,8 @@ class RecordsView extends React.Component {
 	};
 
 	onItemTap = (purchase) => {
-		this.props.navigation.push('purchaseDetail', purchase);
+		this.setState({ purchase: purchase, showPurchase: true })
+		//this.props.navigation.push('purchaseDetail', purchase);
 	};
 
 	onScroll = (nativeEvent) => {
@@ -202,7 +213,7 @@ class RecordsView extends React.Component {
 
 	render() {
 		return (
-			<View style={{ height: FULL_HIGHT - 80, width: FULL_WIDTH, backgroundColor: background }}>
+			<View style={{ height: FULL_HIGHT, width: FULL_WIDTH, backgroundColor: white }}>
 				<FloatingButton
 					icon={
 						!this.state.filterActive ? (
@@ -220,35 +231,40 @@ class RecordsView extends React.Component {
 					end={this.state.endfbtn}
 					onPress={() => this.onFilterPress()}
 				/>
-				<ScrollView
-					scrollEventThrottle={400}
-					onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}
-					onScrollEndDrag={() => this.onScrollEnd()}
-					refreshControl={
-						<RefreshControl onRefresh={this.onRefresh} refreshing={this.state.refreshing} />
-					}
-				>
-					<View>
-						{this.state.loading ? (
-							<View style={[tailwind('flex flex-row justify-center'), { height: 200 }]}>
-								<ActivityIndicator animating color="black" size="large" />
-							</View>
-						) : this.state.purchases.length === 0 ? (
-							<EmptyMessage />
-						) : (
-							<View>
-								<PurchasesList onItemTap={this.onItemTap} data={this.state.purchases} />
-								{this.state.loadMore ? (
-									<View style={[tailwind('flex flex-row justify-center'), { height: 30 }]}>
-										<ActivityIndicator animating color="black" size="large" />
-									</View>
-								) : (
-									<View />
-								)}
-							</View>
-						)}
-					</View>
-				</ScrollView>
+				<View style={{zIndex: 1 }}>
+					<BackTitle navigation={this.props.navigation}/>
+				</View> 
+					<ScrollView
+						style={[tailwind('flex rounded-2xl py-3'), { backgroundColor: background, zIndex: 10 }]}
+						contentInset={4, 4, 4, 4}
+						scrollEventThrottle={400}
+						onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}
+						onScrollEndDrag={() => this.onScrollEnd()}
+						refreshControl={
+							<RefreshControl onRefresh={this.onRefresh} refreshing={this.state.refreshing} />
+						}
+					>
+						<View>
+							{this.state.loading ? (
+								<View style={[tailwind('flex flex-row justify-center'), { height: 200 }]}>
+									<ActivityIndicator animating color="black" size="large" />
+								</View>
+							) : this.state.purchases.length === 0 ? (
+								<EmptyMessage />
+							) : (
+								<View>
+									<PurchasesList onItemTap={this.onItemTap} data={this.state.purchases} />
+									{this.state.loadMore ? (
+										<View style={[tailwind('flex flex-row justify-center'), { height: 30 }]}>
+											<ActivityIndicator animating color="black" size="large" />
+										</View>
+									) : (
+										<View />
+									)}
+								</View>
+							)}
+						</View>
+					</ScrollView>
 				<CollapseModalFilters
 					visible={this.state.filtersVisible}
 					onFilter={this.onFilter}
@@ -269,10 +285,29 @@ class RecordsView extends React.Component {
 						}
 					}}
 				/>
+				<PurchaseViewModal 
+					purchase={this.state.purchase}
+					show={this.state.showPurchase} 
+					onClose={() => this.setState({ showPurchase: false })}/>
 			</View>
 		);
 	}
 }
+
+const BackTitle = memo(({ navigation }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={navigation.goBack}
+				style={tailwind('rounded-full p-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<BackIcon />
+			</Ripple>
+			<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Historial</Text>
+		</View>
+	)
+})
 
 function PurchasesList({ data, onItemTap }) {
 	return (
@@ -288,7 +323,7 @@ function PurchasesList({ data, onItemTap }) {
 
 function PurchaseItem({ purchase, onTap }) {
 	return (
-		<Ripple style={tailwind('mx-2 my-1')} onPress={() => onTap()}>
+		<TouchableOpacity style={[tailwind('mx-2 my-1'),{ backgroundColor: white }]} onPress={() => onTap()} activeOpacity={0.9}>
 			<View style={[tailwind('flex flex-row rounded-xl py-2 px-3 border border-gray-300'), 
 			{ backgroundColor: white, paddingBottom: 10, paddingTop: 20 }, shadowStyle3]}>
 				<View style={tailwind('flex mt-2')}>
@@ -330,23 +365,47 @@ function PurchaseItem({ purchase, onTap }) {
 					</View>
 				</View>
 			</View>
-		</Ripple>
+		</TouchableOpacity>
 	);
 }
 
 function EmptyMessage(props) {
 	return (
 		<View style={tailwind('items-center mb-12 mt-16')}>
-			<View>
-				<Image source={emptyImage} style={[tailwind('w-32 h-48')]} />
-			</View>
 			<View style={tailwind('px-12')}>
-				<Text style={[tailwind('text-gray-700 text-lg text-center'), typefaces.pm]}>
-					No hay compras para mostrar.
+				<Text style={[tailwind('text-sm text-center'), typefaces.pm, { color: info_text }]}>
+					No ha realizado ningún movimiento.
 				</Text>
 			</View>
 		</View>
 	);
 }
+
+const PurchaseViewModal = ({ show, onClose, purchase }) => {
+	return (
+		<Modal
+			isVisible={show}
+			animationIn="fadeIn"
+			animationOut="fadeOut"
+			backdropTransitionOutTiming={0}
+			onBackdropPress={onClose}
+			style={tailwind('flex items-center')}
+		>
+			<View style={tailwind('w-full bg-white rounded-2xl')}>
+				<View style={tailwind('flex flex-row justify-end mr-2 mt-3')}>
+					<Ripple style={[tailwind('flex flex-row justify-center w-8 p-2')]} onPress={()=> onClose()}>
+						<Image source={exitIcon} style={{ width: 8, height: 8 }}/>
+					</Ripple>
+				</View>
+				<View style={tailwind('px-10 pb-5')}>
+					<Text style={[tailwind('text-xl'), typefaces.pb]}>Detalle de la recarga</Text>
+					<View style={tailwind('justify-center')}>
+						<PurchaseView purchase={purchase}/>
+					</View>
+				</View>
+			</View>
+		</Modal>
+	);
+};
 
 export default RecordsView;
