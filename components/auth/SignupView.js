@@ -6,13 +6,16 @@ import { typefaces } from '../utils/styles';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, FULL_HIGHT, EMAIL_REGEX, PASSWORD_REGEX } from '../utils/constants';
 import { ScrollView } from 'react-native-gesture-handler';
-import BackIcon from '../icons/BackIcon';
+import BackIcon from '../icons/SmallBackIcon';
 import { authRequest } from '../redux/auth/actions';
 import { passwordValidator } from '../utils/utils';
 import BasicInput from '../shared/BasicInput';
 import PasswordInput from './PasswordInput';
 import Ripple from 'react-native-material-ripple';
 import SimpleToast from 'react-native-simple-toast';
+import InfoIcon from '../../assets/img/popup.png'
+import fondo from '../../assets/img/fondo.png';
+import logo from '../../assets/img/logo.png';
 
 class SignupView extends React.Component {
 	constructor(props) {
@@ -81,102 +84,102 @@ class SignupView extends React.Component {
 
 	render() {
 		return (
-			<ScrollView keyboardShouldPersistTaps="handled">
+			<View style={{ height: FULL_HIGHT, width: FULL_WIDTH}}>
+				<View style={tailwind('absolute')}>
+					<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }}/>
+				</View>
+				<View>
+					<Ripple
+						onPress={() => this.props.navigation.goBack()}
+						style={tailwind('p-4 w-12 h-12')}
+						rippleCentered={true}
+					>
+						<BackIcon fill="white"/>
+					</Ripple>
+				</View>
 				<View style={[tailwind('items-center'), { height: FULL_HIGHT }]}>
-					<View style={tailwind('relative')}>
-						<Image
-							source={require('../../assets/background/bg.jpg')}
-							style={{ width: FULL_WIDTH, height: FULL_WIDTH + 60 }}
-						/>
-						<BackTitle navigation={this.props.navigation} />
-					</View>
-					<View style={styles.card}>
-						<View>
-							<BasicInput
-								placeholder="Nombres"
-								onChange={(text) =>
-									this.setState((state) => ({
-										information: { ...state.information, first_name: text },
-									}))
-								}
-								style={tailwind('my-1')}
-								validate={(text) => text.length > 0}
-							/>
-							<BasicInput
-								placeholder="Apellidos"
-								onChange={(text) =>
-									this.setState((state) => ({
-										information: { ...state.information, last_name: text },
-									}))
-								}
-								style={tailwind('my-1')}
-								validate={(text) => text.length > 0}
-							/>
-							<BasicInput
-								placeholder="Correo"
-								onChange={(text) =>
-									this.setState((state) => ({
-										information: { ...state.information, email: text },
-									}))
-								}
-								style={tailwind('my-1')}
-								validate={(text) => EMAIL_REGEX.test(text)}
-							/>
-							<PasswordInput
-								placeholder="Contraseña"
-								onChange={(text) =>
-									this.setState((state) => ({
-										information: { ...state.information, password1: text },
-									}))
-								}
-								style={tailwind('my-1')}
-								validate={(text) => PASSWORD_REGEX.test(text)}
-							/>
-							<PasswordInput
-								placeholder="Confirmar contraseña"
-								onChange={(text) =>
-									this.setState((state) => ({
-										information: { ...state.information, password2: text },
-									}))
-								}
-								style={tailwind('mt-1')}
-								validate={(text) => PASSWORD_REGEX.test(text)}
-							/>
-						</View>
-						<View style={tailwind('mt-5 items-center')}>
-							<LoadingButton
-								text={'Registrarse'}
-								onPress={this.onRegister}
-								loading={this.state.loading}
-							/>
-						</View>
+					<Logo />
+					<View style={[tailwind('flex rounded-t-2xl py-3 bg-white h-full px-6'), { width: FULL_WIDTH - 30 }]}>
+						<ScrollView
+						   style={[tailwind('flex rounded-2xl my-2')]}
+						   contentInset={0, 0, 0, 0}
+						>
+							<View>
+								<Text style={[tailwind('text-3xl'), typefaces.psb]}>Crear Cuenta</Text>
+							</View>
+							<View style={tailwind('items-center mt-4')}>
+								<BasicInput
+									placeholder="Nombres"
+									onChange={(text) =>
+										this.setState((state) => ({
+											information: { ...state.information, first_name: text },
+										}))
+									}
+									style={tailwind('mb-5')}
+									validate={(text) => text.length > 0}
+								/>
+								<BasicInput
+									placeholder="Apellidos"
+									onChange={(text) =>
+										this.setState((state) => ({
+											information: { ...state.information, last_name: text },
+										}))
+									}
+									style={tailwind('mb-5')}
+									validate={(text) => text.length > 0}
+								/>
+								<BasicInput
+									placeholder="Correo Electrónico"
+									onChange={(text) =>
+										this.setState((state) => ({
+											information: { ...state.information, email: text },
+										}))
+									}
+									style={tailwind('mb-5')}
+									validate={(text) => EMAIL_REGEX.test(text)}
+								/>
+								<PasswordInput
+									placeholder="Contraseña"
+									onChange={(text) =>
+										this.setState((state) => ({
+											information: { ...state.information, password1: text },
+										}))
+									}
+									style={tailwind('mb-5')}
+									validate={(text) => PASSWORD_REGEX.test(text)}
+								/>
+								<PasswordInput
+									placeholder="Confirmar contraseña"
+									onChange={(text) =>
+										this.setState((state) => ({
+											information: { ...state.information, password2: text },
+										}))
+									}
+									style={tailwind('mb-5')}
+									validate={(text) => PASSWORD_REGEX.test(text)}
+								/>
+							</View>
+							<View style={tailwind('mt-10 items-center')}>
+								<LoadingButton
+									text={'Registrarse'}
+									onPress={this.onRegister}
+									loading={this.state.loading}
+								/>
+							</View>
+						</ScrollView>
 					</View>
 				</View>
-			</ScrollView>
+			</View>
 		);
 	}
 }
 
-const BackTitle = memo(({ navigation }) => {
-	return (
-		<View style={[tailwind('absolute'), { top: 25, left: 25 }]}>
-			<Ripple
-				onPress={navigation.goBack}
-				style={tailwind('rounded-full p-2 w-12 h-12 items-center')}
-				rippleCentered={true}
-			>
-				<BackIcon />
-			</Ripple>
-			<Text style={[tailwind('text-2xl'), typefaces.pb]}>Crear una cuenta</Text>
-		</View>
-	)
-})
 
-const styles = {
-	card: [
-		tailwind('absolute bg-white items-center rounded-md border-2 border-gray-200 px-6 py-8'),
-		{ top: 140 },
-	],
-};
+const Logo = memo(() => (
+	<View style={tailwind('flex flex-row justify-center items-center mb-8 flex')}>
+		<Image source={logo} style={tailwind('w-64 h-16')}/>
+	</View>
+));
+
 
 export default connect()(SignupView);

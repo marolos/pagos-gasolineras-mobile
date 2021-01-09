@@ -6,7 +6,6 @@ import LoadingButton from '../shared/LoadingButton';
 import { typefaces } from '../utils/styles';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, FULL_HIGHT, EMAIL_REGEX } from '../utils/constants';
-import { ScrollView } from 'react-native-gesture-handler';
 import BackIcon from '../icons/SmallBackIcon';
 import BasicInput from '../shared/BasicInput';
 import Ripple from 'react-native-material-ripple';
@@ -91,7 +90,7 @@ class ResetpassView extends React.Component {
 								Ingresa tu correo electrónico para recuperar tu contraseña
 								</Text>
 							</View>
-							<View style={tailwind('mt-5 items-center')}>
+							<View style={tailwind('mt-10 items-center')}>
 								<BasicInput
 									placeholder="Correo Electrónico"
 									onChange={(text) =>
@@ -103,7 +102,7 @@ class ResetpassView extends React.Component {
 									validate={(text) => EMAIL_REGEX.test(text)}
 								/>
 							</View>
-							<View style={tailwind('mt-5 items-center')}>
+							<View style={tailwind('mt-10 items-center')}>
 								<LoadingButton
 									text={'Recuperar'}
 									onPress={this.onRegister}
@@ -153,12 +152,6 @@ class ResetpassView extends React.Component {
 	}
 }
 
-const styles = {
-	card: [
-		tailwind('absolute bg-white items-center rounded-md border-2 border-gray-200 px-6 py-8'),
-		{ top: 140 },
-	],
-};
 
 const Logo = memo(() => (
 	<View style={tailwind('flex flex-row justify-center items-center my-8 mt-12 mb-24 flex')}>

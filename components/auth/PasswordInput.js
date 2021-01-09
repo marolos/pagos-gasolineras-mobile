@@ -34,8 +34,8 @@ export default function PasswordInput({ placeholder, onChange, validate, style }
 }
 
 const styles = {
-	input: tailwind('rounded-md border-2 border-gray-200 w-64 pl-5'),
+	input: tailwind('rounded-3xl border border-black w-64 pl-5'),
 	editing: tailwind('bg-white border-2 border-gray-600'),
-	noEditing: tailwind('bg-gray-200'),
+	noEditing: tailwind('bg-white'),
 	error: tailwind('bg-white border-2 border-red-400'),
 };
