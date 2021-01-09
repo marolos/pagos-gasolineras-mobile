@@ -1,8 +1,11 @@
 import React, { memo } from 'react';
-import { LoginManager, AccessToken } from 'react-native-fbsdk';
-import { View, Text, StyleSheet } from 'react-native';
+import { LoginManager, AccessToken} from 'react-native-fbsdk';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import tailwind from 'tailwind-rn';
 import Ripple from 'react-native-material-ripple';
+import fbIcon from '../../assets/img/facebook.png';
+import { fb_btn } from '../utils/colors';
+import { typefaces } from '../utils/styles';
 
 function FacebookButton({ onFacebookLogin }) {
 	function doSignUp() {
@@ -16,9 +19,11 @@ function FacebookButton({ onFacebookLogin }) {
 	}
 
 	return (
-		<Ripple style={tailwind('rounded-md items-center w-40 mt-6')} onPress={doSignUp}>
-			<View style={[tailwind('rounded-md items-center w-full py-3'), styles.blue]}>
-				<Text style={tailwind('text-white text-xs')}>Iniciar con facebook</Text>
+		<Ripple style={tailwind('rounded-md items-center w-56 mt-10')} onPress={doSignUp}>
+			<View style={[tailwind('flex flex-row rounded-md items-center justify-center w-full py-3'), styles.blue]}>
+				<Image source={fbIcon} style={{ width: 10, height: 21 }}/>
+				<View style={tailwind("w-3")}></View>
+				<Text style={tailwind('text-white')}>Acceder con <Text style={typefaces.psb}>Facebook</Text></Text>
 			</View>
 		</Ripple>
 	);
@@ -42,7 +47,7 @@ async function onFacebookButtonPress() {
 }
 
 const styles = StyleSheet.create({
-	blue: { backgroundColor: '#3B5998' },
+	blue: { backgroundColor: fb_btn },
 });
 
 export default memo(FacebookButton);

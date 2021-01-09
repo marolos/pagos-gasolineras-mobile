@@ -1,17 +1,18 @@
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TextInput, ActivityIndicator, Keyboard } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Keyboard, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import LoadingButton from '../shared/LoadingButton';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
 import TextButton from '../shared/TextButton';
-import UserLoginIcon from '../icons/UserLoginIcon';
-import PasswordLoginIcon from '../icons/PasswordLoginIcon';
 import FacebookButton from '../shared/FacebookButton';
 import { authRequest } from '../redux/auth/actions';
 import SimpleToast from 'react-native-simple-toast';
 import { EMAIL_REGEX } from '../utils/constants';
+import fondo from '../../assets/img/fondo.png';
+import logo from '../../assets/img/logo.png';
+import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
 
 class LoginView extends React.Component {
 	state = {
@@ -83,39 +84,48 @@ class LoginView extends React.Component {
 
 	navigateTo = (option) => {
 		//this.setState();
+		console.log(FULL_HIGHT);
 		this.props.navigation.push(option);
 	};
 
 	render() {
 		return (
 			<View>
+				<View style={tailwind('absolute')}>
+					<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }}/>
+				</View>
 				<View style={tailwind('items-center items-center w-full')}>
 					<Logo />
-					<View style={tailwind('flex flex-row')}>
-						<UserLoginIcon style={tailwind('mt-5')} width={16} height={20} />
+					<View style={[tailwind('flex rounded-t-2xl py-3 bg-white h-full px-6'), { width: FULL_WIDTH - 40 }]}> 
+					<View style={tailwind('mx-4')}>
 						<TextInput
 							style={[
-								tailwind('bg-gray-200 rounded-md w-64 m-2 pl-5'),
+								tailwind('rounded-3xl border w-full pl-5 mt-10'),
 								this.state.hasEmailError ? tailwind('border-2 border-red-400') : {},
 								typefaces.pm,
 							]}
-							placeholder="email"
+							placeholder="Correo Electrónico"
 							onChangeText={this.onChangeEmail}
 						/>
-					</View>
-					<View style={tailwind('flex flex-row')}>
-						<PasswordLoginIcon style={tailwind('mt-5')} width={18} height={23} />
 						<TextInput
-							style={[tailwind('bg-gray-200 rounded-md w-64 m-2 pl-5'), typefaces.pm]}
-							placeholder="contraseña"
+							style={[tailwind('rounded-3xl border w-full pl-5 mt-4'), typefaces.pm]}
+							placeholder="Contraseña"
 							secureTextEntry={true}
 							onChangeText={this.onChangePassword}
 						/>
+						<View style={tailwind('flex flex-row justify-end')}>
+							<ResetPassMessage navigateTo={this.navigateTo} />
+						</View>
+						</View>
+						<View style={tailwind('items-center')}>
+							<LoginButton onPress={this.onLogin} loading={this.state.loading} />
+							<View style={tailwind('border-t w-full mt-12')} />
+							<FacebookButton onFacebookLogin={this.onFacebookLogin} />
+						</View>
 					</View>
-					<LoginButton onPress={this.onLogin} loading={this.state.loading} />
-					<ResetPassMessage navigateTo={this.navigateTo} />
-					<SignupMessage navigateTo={this.navigateTo} />
-					<FacebookButton onFacebookLogin={this.onFacebookLogin} />
+						<View style={{ position: 'absolute', top: FULL_HIGHT - 55 }}>
+								<SignupMessage navigateTo={this.navigateTo} />
+						</View>
 				</View>
 				<LoadingModal show={this.state.showModal} />
 			</View>
@@ -124,8 +134,8 @@ class LoginView extends React.Component {
 }
 
 const LoginButton = memo(({ onPress, loading }) => (
-	<View style={tailwind('mt-8')}>
-		<LoadingButton text="Iniciar sesión" onPress={onPress} loading={loading} />
+	<View style={tailwind('mt-5')}>
+		<LoadingButton text="Iniciar Sesión" onPress={onPress} loading={loading} />
 	</View>
 ));
 
@@ -145,29 +155,28 @@ const LoadingModal = memo(({ show }) => (
 
 const SignupMessage = memo(({ navigateTo }) => (
 	<View style={tailwind('flex flex-row items-center mt-4')}>
-		<Text style={[typefaces.pr, { marginRight: 10 }]}>¿No tienes cuenta?</Text>
+		<Text style={[tailwind('text-xs mr-1')]}>¿Nuevo Usuario?</Text>
 		<TextButton
-			text="Regístrate"
+			text="¡Regístrate aquí!"
 			onPress={() => navigateTo('signup')}
-			style={{ textDecorationLine: 'underline' }}
+			style={tailwind('text-xs')}
 		/>
 	</View>
 ));
 
 const ResetPassMessage = memo(({ navigateTo }) => (
-	<View style={tailwind('mt-8')}>
+	<View>
 		<TextButton
 			text="¿Olvidaste tu contraseña?"
 			onPress={() => navigateTo('resetpass')}
-			style={{ textDecorationLine: 'underline' }}
+			style={tailwind('text-xs')}
 		/>
 	</View>
 ));
 
 const Logo = memo(() => (
-	<View style={tailwind('flex flex-row justify-center items-center my-8 mt-20 flex')}>
-		<Text style={[tailwind('text-gray-800 text-2xl'), typefaces.psb]}>Fuel</Text>
-		<Text style={[tailwind('text-gray-600 text-2xl'), typefaces.psb]}>pay</Text>
+	<View style={tailwind('flex flex-row justify-center items-center my-8 mt-24 mb-24 flex')}>
+		<Image source={logo} style={tailwind('w-64 h-16')}/>
 	</View>
 ));
 

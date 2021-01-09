@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
 import Ripple from 'react-native-material-ripple';
+import { btn_text, btn_primary } from '../utils/colors';
 
 export default function LoadingButton({
 	text,
@@ -17,14 +18,15 @@ export default function LoadingButton({
 	return (
 		<Ripple
 			onPress={onPress}
-			style={[tailwind('rounded-md items-center w-56'), style ? style : {}]}
+			style={[tailwind('rounded-3xl items-center w-40'), style ? style : {}]}
 			rippleColor="#ffffff"
 			rippleSize={500}
 			rippleDuration={600}
 		>
 			<View
 				style={[
-					tailwind('bg-black rounded-md items-center w-full py-4'),
+					tailwind('rounded-3xl items-center w-full py-3'),
+					{ backgroundColor: btn_primary },
 					icon ? tailwind('flex flex-row justify-evenly') : {},
 					viewStyle,
 				]}
@@ -34,7 +36,7 @@ export default function LoadingButton({
 				) : (
 					<>
 						{icon && iconPos === 'left' && <View>{icon}</View>}
-						<Text style={[tailwind('text-white'), typefaces.psb, textStyle]}>{text}</Text>
+						<Text style={[{ color: btn_text }, typefaces.psb, textStyle]}>{text}</Text>
 						{icon && iconPos === 'right' && <View>{icon}</View>}
 					</>
 				)}
