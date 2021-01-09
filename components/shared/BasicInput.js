@@ -47,8 +47,8 @@ export default function BasicInput({
 }
 
 const styles = {
-	input: tailwind('rounded-md border-2 border-gray-200 w-64 pl-5'),
-	editing: tailwind('bg-white border-2 border-gray-600'),
-	noEditing: tailwind('bg-gray-200'),
+	input: tailwind('rounded-3xl border border-black w-64 pl-5 bg-white'),
+	editing: tailwind('bg-white border border-black'),
+	noEditing: tailwind('bg-white'),
 	hasErrors: tailwind('bg-white border-2 border-red-400'),
 };

@@ -96,7 +96,7 @@ class LoginView extends React.Component {
 				</View>
 				<View style={tailwind('items-center items-center w-full')}>
 					<Logo />
-					<View style={[tailwind('flex rounded-t-2xl py-3 bg-white h-full px-6'), { width: FULL_WIDTH - 40 }]}> 
+					<View style={[tailwind('flex rounded-t-2xl py-3 bg-white h-full px-6'), { width: FULL_WIDTH - 30 }]}> 
 					<View style={tailwind('mx-4')}>
 						<TextInput
 							style={[

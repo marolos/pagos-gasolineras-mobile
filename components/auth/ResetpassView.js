@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { View, Image, Text, Keyboard } from 'react-native';
 import Modal from 'react-native-modal';
@@ -7,13 +7,16 @@ import { typefaces } from '../utils/styles';
 import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, FULL_HIGHT, EMAIL_REGEX } from '../utils/constants';
 import { ScrollView } from 'react-native-gesture-handler';
-import BackIcon from '../icons/BackIcon';
+import BackIcon from '../icons/SmallBackIcon';
 import BasicInput from '../shared/BasicInput';
 import Ripple from 'react-native-material-ripple';
 import SimpleToast from 'react-native-simple-toast';
 import Fetch from '../utils/Fetch';
-import Button from '../shared/Button';
-import InfoIcon from '../icons/InfoIcon';
+import Button from '../shared/AppButton';
+import InfoIcon from '../../assets/img/popup.png'
+import fondo from '../../assets/img/fondo.png';
+import logo from '../../assets/img/logo.png';
+import { info_text } from '../utils/colors';
 
 class ResetpassView extends React.Component {
 	constructor(props) {
@@ -66,36 +69,31 @@ class ResetpassView extends React.Component {
 
 	render() {
 		return (
-			<ScrollView keyboardShouldPersistTaps="handled">
-				<View style={[tailwind('items-center'), { height: FULL_HIGHT }]}>
-					<View style={tailwind('relative')}>
-						<Image
-							source={require('../../assets/background/bg.jpg')}
-							style={{ width: FULL_WIDTH, height: FULL_WIDTH + 60 }}
-						/>
-						<View style={[tailwind('absolute'), { top: 25, left: 25 }]}>
-							<Ripple
-								onPress={() => this.props.navigation.goBack()}
-								style={tailwind('rounded-full p-2 w-12 h-12 items-center')}
-								rippleCentered={true}
-							>
-								<BackIcon />
-							</Ripple>
-							<Text style={[tailwind('text-2xl'), typefaces.pb]}>Recuperar contraseña</Text>
-						</View>
-					</View>
-
-					<View style={[styles.card, tailwind('mx-8')]}>
-						<View>
+			<View>
+				<View style={tailwind('absolute')}>
+					<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }}/>
+				</View>
+				<View>
+					<Ripple
+						onPress={() => this.props.navigation.goBack()}
+						style={tailwind('p-4 w-12 h-12')}
+						rippleCentered={true}
+					>
+						<BackIcon fill="white"/>
+					</Ripple>
+				</View>
+				<View style={[tailwind('items-center w-full'), { height: FULL_HIGHT }]}>
+					<Logo/>
+					<View style={[tailwind('flex rounded-t-2xl py-3 bg-white h-full px-6'), { width: FULL_WIDTH - 30 }]}>
+						<View style={tailwind('pt-20 mx-4')}>
 							<View style={[tailwind('items-center')]}>
 								<Text style={[typefaces.pr, tailwind('text-center')]}>
-									Ingrese su correo electrónico le enviaremos un enlace para que recupere
-									el acceso a su cuenta.
+								Ingresa tu correo electrónico para recuperar tu contraseña
 								</Text>
 							</View>
 							<View style={tailwind('mt-5 items-center')}>
 								<BasicInput
-									placeholder="Correo electrónico"
+									placeholder="Correo Electrónico"
 									onChange={(text) =>
 										this.setState((state) => ({
 											information: { ...state.information, email: text },
@@ -107,7 +105,7 @@ class ResetpassView extends React.Component {
 							</View>
 							<View style={tailwind('mt-5 items-center')}>
 								<LoadingButton
-									text={'Enviar enlace'}
+									text={'Recuperar'}
 									onPress={this.onRegister}
 									loading={this.state.loading}
 								/>
@@ -121,26 +119,27 @@ class ResetpassView extends React.Component {
 					animationIn="fadeIn"
 					animationOut="fadeOut"
 					backdropTransitionOutTiming={0}
-					style={tailwind('w-full flex items-center m-0')}
+					style={tailwind('flex items-center mx-3')}
 				>
 					<View style={tailwind('w-full bg-white rounded-lg')}>
 						<View style={tailwind('p-6 rounded-md')}>
 							<View style={tailwind('flex flex-row')}>
-								<InfoIcon />
-								<Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>Listo</Text>
+								<Text style={[tailwind('text-3xl ml-4'), typefaces.psb]}>Listo</Text>
+							</View>
+							<View style={tailwind('flex flex-row justify-center')} >
+								<Image source={InfoIcon} style={{ width: 70, height: 70 }}/>
 							</View>
 							<View>
 								<View style={tailwind('p-2 pt-5')}>
-									<Text style={[typefaces.pr]}>
-										Si el correo se encuentra registrado debería recibir un correo
-										electrónico.
+									<Text style={[typefaces.pr, tailwind('text-center'), { color: info_text }]}>
+										Si el correo se encuentra registrado debería recibir un correo electrónico.
 									</Text>
 								</View>
 							</View>
 
-							<View style={tailwind('flex flex-row justify-evenly mt-6')}>
+							<View style={tailwind('flex flex-row justify-evenly mt-4')}>
 								<Button
-									text={'Listo'}
+									text={'Cerrar'}
 									onPress={() => {
 										this.setState({ showModal: false });
 									}}
@@ -149,7 +148,7 @@ class ResetpassView extends React.Component {
 						</View>
 					</View>
 				</Modal>
-			</ScrollView>
+			</View>
 		);
 	}
 }
@@ -160,5 +159,12 @@ const styles = {
 		{ top: 140 },
 	],
 };
+
+const Logo = memo(() => (
+	<View style={tailwind('flex flex-row justify-center items-center my-8 mt-12 mb-24 flex')}>
+		<Image source={logo} style={tailwind('w-64 h-16')}/>
+	</View>
+));
+
 
 export default connect()(ResetpassView);
