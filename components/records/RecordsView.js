@@ -213,7 +213,7 @@ class RecordsView extends React.Component {
 
 	render() {
 		return (
-			<View style={{ height: FULL_HIGHT, width: FULL_WIDTH, backgroundColor: white }}>
+			<View style={{ height: FULL_HIGHT - 25, width: FULL_WIDTH, backgroundColor: white }}>
 				<FloatingButton
 					icon={
 						!this.state.filterActive ? (

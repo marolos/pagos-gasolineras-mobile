@@ -154,7 +154,7 @@ class ResetpassView extends React.Component {
 
 
 const Logo = memo(() => (
-	<View style={tailwind('flex flex-row justify-center items-center my-8 mt-12 mb-24 flex')}>
+	<View style={tailwind('flex flex-row justify-center items-center my-8 mt-8 mb-20 flex')}>
 		<Image source={logo} style={tailwind('w-64 h-16')}/>
 	</View>
 ));

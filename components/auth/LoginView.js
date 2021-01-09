@@ -96,7 +96,7 @@ class LoginView extends React.Component {
 				</View>
 				<View style={tailwind('items-center items-center w-full')}>
 					<Logo />
-					<View style={[tailwind('flex rounded-t-2xl py-3 bg-white h-full px-6'), { width: FULL_WIDTH - 30 }]}> 
+					<View style={[tailwind('flex rounded-t-2xl py-3 bg-white h-full px-6'), { width: FULL_WIDTH - 0 }]}> 
 					<View style={tailwind('mx-4')}>
 						<TextInput
 							style={[
@@ -154,7 +154,7 @@ const LoadingModal = memo(({ show }) => (
 ));
 
 const SignupMessage = memo(({ navigateTo }) => (
-	<View style={tailwind('flex flex-row items-center mt-4')}>
+	<View style={tailwind('flex flex-row items-center')}>
 		<Text style={[tailwind('text-xs mr-1')]}>¿Nuevo Usuario?</Text>
 		<TextButton
 			text="¡Regístrate aquí!"
@@ -175,7 +175,7 @@ const ResetPassMessage = memo(({ navigateTo }) => (
 ));
 
 const Logo = memo(() => (
-	<View style={tailwind('flex flex-row justify-center items-center my-8 mt-24 mb-24 flex')}>
+	<View style={tailwind('flex flex-row justify-center items-center my-8 mt-20 mb-20 flex')}>
 		<Image source={logo} style={tailwind('w-64 h-16')}/>
 	</View>
 ));
