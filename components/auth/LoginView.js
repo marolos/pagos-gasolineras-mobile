@@ -1,6 +1,14 @@
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TextInput, ActivityIndicator, Keyboard, Image } from 'react-native';
+import {
+	View,
+	Text,
+	TextInput,
+	ActivityIndicator,
+	Keyboard,
+	Image,
+	ScrollView,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import LoadingButton from '../shared/LoadingButton';
 import tailwind from 'tailwind-rn';
@@ -90,45 +98,45 @@ class LoginView extends React.Component {
 
 	render() {
 		return (
-			<View>
+			<ScrollView keyboardShouldPersistTaps="handled">
 				<View style={tailwind('absolute')}>
-					<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }}/>
+					<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }} />
 				</View>
 				<View style={tailwind('items-center items-center w-full')}>
 					<Logo />
-					<View style={[tailwind('flex rounded-t-2xl py-3 bg-white h-full px-6'), { width: FULL_WIDTH - 0 }]}> 
-					<View style={tailwind('mx-4')}>
-						<TextInput
-							style={[
-								tailwind('rounded-3xl border w-full pl-5 mt-10'),
-								this.state.hasEmailError ? tailwind('border-2 border-red-400') : {},
-								typefaces.pm,
-							]}
-							placeholder="Correo Electrónico"
-							onChangeText={this.onChangeEmail}
-						/>
-						<TextInput
-							style={[tailwind('rounded-3xl border w-full pl-5 mt-4'), typefaces.pm]}
-							placeholder="Contraseña"
-							secureTextEntry={true}
-							onChangeText={this.onChangePassword}
-						/>
+					<View style={[tailwind('flex rounded-t-2xl py-3 bg-white h-full px-6 w-full')]}>
+						<View style={tailwind('mx-4')}>
+							<TextInput
+								style={[
+									tailwind('rounded-3xl border w-full pl-5 mt-10'),
+									this.state.hasEmailError ? tailwind('border-2 border-red-400') : {},
+									typefaces.pm,
+								]}
+								placeholder="Correo Electrónico"
+								onChangeText={this.onChangeEmail}
+							/>
+							<TextInput
+								style={[tailwind('rounded-3xl border w-full pl-5 mt-4'), typefaces.pm]}
+								placeholder="Contraseña"
+								secureTextEntry={true}
+								onChangeText={this.onChangePassword}
+							/>
+						</View>
 						<View style={tailwind('flex flex-row justify-end')}>
 							<ResetPassMessage navigateTo={this.navigateTo} />
 						</View>
-						</View>
 						<View style={tailwind('items-center')}>
 							<LoginButton onPress={this.onLogin} loading={this.state.loading} />
-							<View style={tailwind('border-t w-full mt-12')} />
+							<View style={tailwind('border-t w-full mt-8')} />
 							<FacebookButton onFacebookLogin={this.onFacebookLogin} />
 						</View>
-					</View>
-						<View style={{ position: 'absolute', top: FULL_HIGHT - 55 }}>
-								<SignupMessage navigateTo={this.navigateTo} />
+						<View style={tailwind('items-center mt-6')}>
+							<SignupMessage navigateTo={this.navigateTo} />
 						</View>
+					</View>
 				</View>
 				<LoadingModal show={this.state.showModal} />
-			</View>
+			</ScrollView>
 		);
 	}
 }
@@ -155,11 +163,11 @@ const LoadingModal = memo(({ show }) => (
 
 const SignupMessage = memo(({ navigateTo }) => (
 	<View style={tailwind('flex flex-row items-center')}>
-		<Text style={[tailwind('text-xs mr-1')]}>¿Nuevo Usuario?</Text>
+		<Text style={[tailwind('text-sm mr-1')]}>¿Nuevo Usuario?</Text>
 		<TextButton
 			text="¡Regístrate aquí!"
 			onPress={() => navigateTo('signup')}
-			style={tailwind('text-xs')}
+			style={tailwind('text-sm mt-1')}
 		/>
 	</View>
 ));
@@ -175,8 +183,8 @@ const ResetPassMessage = memo(({ navigateTo }) => (
 ));
 
 const Logo = memo(() => (
-	<View style={tailwind('flex flex-row justify-center items-center my-8 mt-20 mb-20 flex')}>
-		<Image source={logo} style={tailwind('w-64 h-16')}/>
+	<View style={tailwind('flex flex-row justify-center items-center my-8 mb-12 mt-16')}>
+		<Image source={logo} style={tailwind('w-48 h-12')} />
 	</View>
 ));
 

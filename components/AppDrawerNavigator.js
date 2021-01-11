@@ -26,6 +26,8 @@ import { connect } from 'react-redux';
 import FeedbackNavigator from './feedback/FeedbackNavigator';
 import TipsNavigator from './tips/TipsNavigator';
 import BackgroundModal from './notification/BackgroundModal';
+import ContactView from './feedback/ContactView';
+import ContactNavigator from './feedback/ContactNavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -74,6 +76,7 @@ function AppDrawerNavigator(props) {
 				<Drawer.Screen name="logout" component={LogoutView} />
 				<Drawer.Screen name="loggingOut" component={LoggingOutView} />
 				<Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}} />
+				<Drawer.Screen name="contact" component={ContactNavigator} />
 				<Drawer.Screen name="tips" component={TipsNavigator} />
 			</Drawer.Navigator>
 			<BackgroundModal />
@@ -129,7 +132,7 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 					navigateTo="feedback"
 				/>
 				<DrawerItemText text="Políticas de servicios" navigation={navigation} />
-				<DrawerItemText text="Contácto" navigation={navigation} />
+				<DrawerItemText text="Contácto" navigation={navigation} navigateTo="contact" />
 				<LogoutItem navigation={navigation} />
 			</View>
 		</View>
