@@ -37,6 +37,7 @@ class HomeNavigator extends React.Component {
 					name="tabMenu"
 					component={TabMenuNavigator}
 					options={({ navigation }) => ({
+						headerTransparent: true,
 						headerLeft: () => <CustomHeaderLeft navigation={navigation} />,
 						headerTitle: () => <CustomHeaderTitle />,
 						headerRight: () => <CustomHeaderRight navigation={navigation} />,

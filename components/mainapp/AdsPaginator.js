@@ -7,6 +7,7 @@ import tailwind from 'tailwind-rn';
 import { FULL_WIDTH, ADS_MAX_HEIGHT } from '../utils/constants';
 import Fetch from '../utils/Fetch';
 import { makeCancelable } from '../utils/utils';
+import { btn_text } from '../utils/colors';
 
 function AdsPaginator({ ads, dispatch, reload }) {
 	React.useEffect(() => {
@@ -19,7 +20,8 @@ function AdsPaginator({ ads, dispatch, reload }) {
 			<Swiper
 				key={ads.length}
 				showsButtons={false}
-				loop={false}
+				loop={true}
+				autoplay={true}
 				height={ADS_MAX_HEIGHT}
 				width={FULL_WIDTH}
 				dot={<Dot />}
@@ -36,11 +38,13 @@ function AdsPaginator({ ads, dispatch, reload }) {
 
 const AdsItem = memo(({ href }) => {
 	return (
-		<FastImage
-			style={styles.image}
-			source={{ uri: href }}
-			resizeMode={FastImage.resizeMode.stretch}
-		/>
+		<View style={{ backgroundColor: btn_text, opacity: 1 }}>
+		   <FastImage
+			   style={styles.image}
+			   source={{ uri: href }}
+			   resizeMode={FastImage.resizeMode.stretch}
+	      />
+		</View>
 	);
 });
 

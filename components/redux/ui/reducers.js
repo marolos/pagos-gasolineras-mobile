@@ -2,6 +2,7 @@ export const TabOptions = {
 	GAS: { label: 'Gasolineras' },
 	SEARCH: { label: 'Buscar' },
 	NOTIFICATIONS: { label: 'Notificaciones' },
+	PROFILE: { label: 'Perfil' },
 };
 
 export const activeTab = (state = TabOptions.GAS, action) => {

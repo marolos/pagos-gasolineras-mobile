@@ -235,7 +235,7 @@ class RecordsView extends React.Component {
 					<BackTitle navigation={this.props.navigation}/>
 				</View> 
 					<ScrollView
-						style={[tailwind('flex rounded-2xl py-3'), { backgroundColor: background, zIndex: 10 }]}
+						style={[tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}
 						contentInset={4, 4, 4, 4}
 						scrollEventThrottle={400}
 						onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}
@@ -253,6 +253,7 @@ class RecordsView extends React.Component {
 								<EmptyMessage />
 							) : (
 								<View>
+									 <View style={tailwind('h-4')}></View>
 									<PurchasesList onItemTap={this.onItemTap} data={this.state.purchases} />
 									{this.state.loadMore ? (
 										<View style={[tailwind('flex flex-row justify-center'), { height: 30 }]}>

@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import BalancesView from './BalancesView';
 import tailwind from 'tailwind-rn';
 import DispenserIcon from '../icons/DispenserIcon';
-import SearchIcon from '../icons/SearchIcon';
-import NotificationIcon from '../icons/NotificationIcon';
+import SearchIcon from '../icons/SearchIcon2';
+import ProfileIcon from '../icons/ProfileIcon2';
+import TipsIcon from '../icons/TipsIcon';
 import Ripple from 'react-native-material-ripple';
 import { typefaces, shadowStyle } from '../utils/styles';
 import SearchView from '../search/SearchView';
 import NotificationsView from '../notification/NotificationsView';
+import ProfileView from '../profile/ProfileView';
 import { getMessaging } from '../notification/firebaseConfig';
 import { TabOptions } from '../redux/ui/reducers';
 
@@ -35,6 +37,7 @@ function TabMenuNavigator({ navigation }) {
 			<Tab.Screen name="balances" component={BalancesView} />
 			<Tab.Screen name="search" component={SearchView} />
 			<Tab.Screen name="notifications" component={NotificationsView} />
+			<Tab.Screen name="profile" component={ProfileView} />
 		</Tab.Navigator>
 	);
 }
@@ -49,22 +52,27 @@ const CustomTabBarMemoized = memo(({ navigation }) => {
 				<TabButton
 					navigateTo="balances"
 					tabOption={TabOptions.GAS}
-					label="Gasolineras"
+					//label="Gasolineras"
 					icon={DispenserIcon}
 					navigation={navigation}
 				/>
 				<TabButton
 					navigateTo="search"
 					tabOption={TabOptions.SEARCH}
-					label="   Buscar   " // a bit hacky, sorry. It's to give space to the button and appreciate the ripple effect.
+					//label="               " // a bit hacky, sorry. It's to give space to the button and appreciate the ripple effect.
 					icon={SearchIcon}
 					navigation={navigation}
 				/>
 				<TabButtonBadge
 					navigateTo="notifications"
 					tabOption={TabOptions.NOTIFICATIONS}
-					label="Notificaciones"
-					icon={NotificationIcon}
+					icon={TipsIcon}
+					navigation={navigation}
+				/>
+				<TabButtonBadge
+					navigateTo="notifications"
+					tabOption={TabOptions.PROFILE}
+					icon={ProfileIcon}
 					navigation={navigation}
 				/>
 			</View>
@@ -87,7 +95,7 @@ const TabButtonBase = memo(({ navigateTo, activeTab, tabOption, label, icon, nav
 		>
 			<View style={styles.tabButton.view}>
 				<Icon focused={focused} />
-				<Text
+				{/* <Text
 					style={[
 						{ fontSize: 11 },
 						focused ? styles.tabButton.focused : styles.tabButton.notFocused,
@@ -95,7 +103,7 @@ const TabButtonBase = memo(({ navigateTo, activeTab, tabOption, label, icon, nav
 					]}
 				>
 					{label}
-				</Text>
+				</Text> */}
 			</View>
 		</Ripple>
 	);
@@ -123,15 +131,15 @@ const TabButtonBadge = connect(({ activeTab, newNotification }) => ({
 
 const styles = {
 	tabButton: {
-		ripple: { paddingTop: 10 },
-		view: tailwind('flex items-center'),
+		ripple: { paddingTop: 10, paddingBottom: 10 },
+		view: tailwind('flex items-center w-16'),
 		focused: tailwind('text-black'),
 		notFocused: tailwind('text-gray-500'),
 	},
 	bar: {
 		view: { ...shadowStyle, backgroundColor: 'white' },
 		line: [{ height: 2 }, tailwind('bg-gray-200')],
-		buttons: tailwind('flex flex-row justify-evenly pb-1 pt-1'),
+		buttons: tailwind('flex flex-row justify-evenly pb-1 pt-1 items-center'),
 	},
 	badge: {
 		view: { position: 'relative' },

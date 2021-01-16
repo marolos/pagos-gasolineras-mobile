@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { FULL_HIGHT, FULL_WIDTH, MAPBOX_TOKEN, MAP_CENTER } from '../utils/constants';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import SearchBox from './SearchBox';
@@ -11,6 +11,12 @@ import { getMapboxRoute, sleep } from '../utils/utils';
 import { connect } from 'react-redux';
 import { setActiveTab } from '../redux/ui/actions';
 import { TabOptions } from '../redux/ui/reducers';
+import fondo from '../../assets/img/fondo.png';
+import gasolina from '../../assets/img/gasolina.png';
+import { background, info_text } from '../utils/colors';
+import AppBtn from '../shared/AppButton';
+import tailwind from 'tailwind-rn';
+import { typefaces } from '../utils/styles';
 
 MapboxGL.setAccessToken(MAPBOX_TOKEN);
 MapboxGL.setTelemetryEnabled(false);
@@ -132,27 +138,37 @@ class SearchView extends React.Component {
 			route,
 		} = this.state;
 		return (
-			<View>
-				<SearchBox onSelectResult={this.onSelectResult} onSearchNear={this.onSearchNear} />
-				<View style={styles.map.view}>
-					<MapboxGL.MapView style={styles.map.map} rotateEnabled={false}>
-						<MapboxGL.Camera centerCoordinate={center} zoomLevel={zoom} />
-						<MapboxGL.UserLocation
-							visible={showLocation}
-							onUpdate={this.updateUserLocation}
-							animated
-						/>
-						{showRoute && <RouteShape route={route} />}
-						{pointers.map((station) => (
-							<Pointer
-								key={station.id}
-								id={station.id}
-								coord={[station.longitude, station.latitude]}
-								onPress={(event) => this.onSelectPointer(station, event)}
-								label={station.name}
-							/>
-						))}
-					</MapboxGL.MapView>
+			<View style={{ height: FULL_HIGHT - 64, width: FULL_WIDTH, backgroundColor: 'white' }}>
+				<View style={tailwind('absolute')}>
+			    		<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }} />
+			    	</View>
+				<View style={tailwind('h-24')}></View>
+				<View style={[tailwind('flex rounded-t-2xl'), { backgroundColor: background, zIndex: 10 }]}>
+				<Text style={[tailwind('text-2xl ml-5 my-4'), typefaces.pb]}>Buscar</Text>
+				   <View>
+				       <SearchBox onSelectResult={this.onSelectResult} onSearchNear={this.onSearchNear} />
+				       <View style={[styles.map.view]}>
+				       	<MapboxGL.MapView style={styles.map.map} rotateEnabled={false}>
+				       		<MapboxGL.Camera centerCoordinate={center} zoomLevel={zoom} />
+				       		<MapboxGL.UserLocation
+				       			visible={showLocation}
+				       			onUpdate={this.updateUserLocation}
+				       			animated
+				       		/>
+				       		{showRoute && <RouteShape route={route} />}
+				       		{pointers.map((station) => (
+				       			<Pointer
+				       				key={station.id}
+				       				id={station.id}
+				       				coord={[station.longitude, station.latitude]}
+				       				onPress={(event) => this.onSelectPointer(station, event)}
+				       				label={station.name}
+				       			/>
+				       		))}
+				       	</MapboxGL.MapView>
+				       </View>
+					</View>	
+
 				</View>
 				{selectedStation && (
 					<CollapseSelectedStation

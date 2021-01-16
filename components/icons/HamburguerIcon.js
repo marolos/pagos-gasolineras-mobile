@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-function HamburguerIcon({ color = '#000000' }) {
+function HamburguerIcon({ color = '#ffffff' }) {
    return (
       <Svg
          width={24}
