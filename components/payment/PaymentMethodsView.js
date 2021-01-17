@@ -37,9 +37,7 @@ class PaymentMethodsView extends React.Component {
 	deleteCard = () => {
 		const card = this.state.selectedCard;
 		this.setState({ showConfirm: false });
-		if (!card) {
-			return;
-		}
+		if (!card) return
 		Fetch.delete('/payment/user/card/', card)
 			.then((_res) => console.log(_res))
 			.catch((err) => console.error(err));

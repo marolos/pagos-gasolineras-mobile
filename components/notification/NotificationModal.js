@@ -10,6 +10,7 @@ import {
 	DisableUserDetail,
 	PolicyDetail,
 	PurchaseDetail,
+	ReplyDetail,
 	TipDetail,
 	TransferDetail,
 } from './Details';
@@ -73,6 +74,8 @@ export function getDetail(type, item, onClose) {
 			return <DisableUserDetail {...item} />;
 		case NotificationType.TRANSFER:
 			return <TransferDetail {...item} />;
+		case NotificationType.REPLY:
+			return <ReplyDetail {...item}/>
 	}
 }
 

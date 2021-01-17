@@ -11,9 +11,11 @@ import { typefaces } from '../utils/styles';
 
 export default function ContactView({ navigation }) {
 	const [state, setState] = useObjState({ companies: [], loading: false });
+
 	React.useEffect(() => {
 		setState({ loading: true });
 	}, []);
+	
 	React.useEffect(() => {
 		if (state.loading) {
 			Fetch.get('/company/all/')

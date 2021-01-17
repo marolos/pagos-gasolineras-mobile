@@ -24,7 +24,7 @@ class NotificationsView extends React.Component {
 			selectedItem: null,
 		};
 	}
-	
+
 	componentDidMount() {
 		const { navigation, dispatch, route } = this.props;
 		if (route.params) {
@@ -93,14 +93,23 @@ class NotificationsView extends React.Component {
 		return (
 			<React.Fragment>
 				<View style={{ height: FULL_HIGHT - 64, width: FULL_WIDTH, backgroundColor: 'white' }}>
-				<View style={tailwind('absolute')}>
-			    		<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }} />
-			    	</View>
-					 <View style={tailwind('h-24')}></View>
-					 <View style={[tailwind('flex rounded-t-2xl'), { backgroundColor: background, zIndex: 0 }]}>
+					<View style={tailwind('absolute')}>
+						<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }} />
+					</View>
+					<View style={tailwind('h-24')}></View>
+					<View
+						style={[
+							tailwind('flex rounded-t-2xl'),
+							{ backgroundColor: background, zIndex: 0 },
+						]}
+					>
 						<FlatList
-						style={[tailwind('flex px-3 h-full')]}
-						ListHeaderComponent={<Text style={[tailwind('text-2xl ml-5 mt-4 mb-2'), typefaces.pb]}>Notificaciones</Text>}
+							style={[tailwind('flex px-3 h-full')]}
+							ListHeaderComponent={
+								<Text style={[tailwind('text-2xl ml-5 mt-4 mb-2'), typefaces.pb]}>
+									Notificaciones
+								</Text>
+							}
 							ListEmptyComponent={EmptyMessage}
 							refreshing={refreshing}
 							onRefresh={this.loadNew}
@@ -119,10 +128,8 @@ class NotificationsView extends React.Component {
 								selectedItem={selectedItem}
 							/>
 						)}
-
-					 </View>
+					</View>
 				</View>
-				
 			</React.Fragment>
 		);
 	}

@@ -150,3 +150,9 @@ export const TransferDetail = memo(({ data, body }) => (
 		</View>
 	</View>
 ));
+
+export const ReplyDetail = ({ data }) => (
+	<ScrollView style={[{ height: 250, marginHorizontal: 16 }]}>
+		<Text>{data.reply}</Text>
+	</ScrollView>
+);

@@ -15,6 +15,7 @@ export const typefaces = StyleSheet.create({
    },
 });
 
+// for compatibility with IOS use: https://ethercreative.github.io/react-native-shadow-generator/
 export const shadowStyle = {
    shadowColor: '#000',
    shadowOffset: {

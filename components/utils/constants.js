@@ -62,4 +62,5 @@ export const NotificationType = {
 	ADVERTISEMENT: 'advertisement',
 	DISABLE_USER: 'disable_user',
 	TRANSFER: 'trasfer',
+	REPLY: 'reply',
 };

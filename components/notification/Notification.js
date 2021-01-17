@@ -26,6 +26,12 @@ function Notification({ item, onSelect }) {
 
 export function getIcon(type) {
 	switch (type) {
+		case NotificationType.REPLY:
+			return (
+				<View style={styles.ads}>
+					<AdsIcon />
+				</View>
+			);
 		case NotificationType.ADVERTISEMENT:
 			return (
 				<View style={styles.ads}>
@@ -35,7 +41,7 @@ export function getIcon(type) {
 		case NotificationType.TIP:
 			return (
 				<View style={styles.tip}>
-					<AdsIcon stroke="#ec4899"/>
+					<AdsIcon stroke="#ec4899" />
 				</View>
 			);
 		case NotificationType.CHANGE_PRIVACY_POLICES:
