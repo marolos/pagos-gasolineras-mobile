@@ -10,6 +10,9 @@ import { typefaces } from '../utils/styles';
 import Fetch from '../utils/Fetch';
 import NotificationModal from './NotificationModal';
 import { TabOptions } from '../redux/ui/reducers';
+import fondo from '../../assets/img/fondo.png';
+import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
+import { background, info_text } from '../utils/colors';
 
 class NotificationsView extends React.Component {
 	constructor(props) {
@@ -89,33 +92,47 @@ class NotificationsView extends React.Component {
 		const { refreshing, loadingMore, modalVisible, selectedItem } = this.state;
 		return (
 			<React.Fragment>
-				<FlatList
-					ListEmptyComponent={EmptyMessage}
-					refreshing={refreshing}
-					onRefresh={this.loadNew}
-					data={this.props.notifications}
-					renderItem={this.renderItem}
-					keyExtractor={this.keyExtractor}
-					ItemSeparatorComponent={Line}
-					ListFooterComponent={<ListFooter loading={loadingMore} />}
-					onEndReached={this.onEndReached}
-					onEndReachedThreshold={0.3}
-				/>
-				{selectedItem && (
-					<NotificationModal
-						visible={modalVisible}
-						onClose={this.closeCollapse}
-						selectedItem={selectedItem}
-					/>
-				)}
+				<View style={{ height: FULL_HIGHT - 64, width: FULL_WIDTH, backgroundColor: 'white' }}>
+				<View style={tailwind('absolute')}>
+			    		<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }} />
+			    	</View>
+					 <View style={tailwind('h-24')}></View>
+					 <View style={[tailwind('flex rounded-t-2xl'), { backgroundColor: background, zIndex: 0 }]}>
+						<FlatList
+						style={[tailwind('flex px-3 h-full')]}
+						ListHeaderComponent={<Text style={[tailwind('text-2xl ml-5 mt-4 mb-2'), typefaces.pb]}>Notificaciones</Text>}
+							ListEmptyComponent={EmptyMessage}
+							refreshing={refreshing}
+							onRefresh={this.loadNew}
+							data={this.props.notifications}
+							renderItem={this.renderItem}
+							keyExtractor={this.keyExtractor}
+							ItemSeparatorComponent={ItemSeparator}
+							ListFooterComponent={<ListFooter loading={loadingMore} />}
+							onEndReached={this.onEndReached}
+							onEndReachedThreshold={0.3}
+						/>
+						{selectedItem && (
+							<NotificationModal
+								visible={modalVisible}
+								onClose={this.closeCollapse}
+								selectedItem={selectedItem}
+							/>
+						)}
+
+					 </View>
+				</View>
+				
 			</React.Fragment>
 		);
 	}
 }
 
+const ItemSeparator = memo(() => <View style={tailwind('h-2')} />);
+
 const ListFooter = memo(({ loading }) => {
 	return (
-		<View style={tailwind('p-6')}>
+		<View style={tailwind('p-6 mb-24')}>
 			<ActivityIndicator color="black" animating={loading} />
 		</View>
 	);

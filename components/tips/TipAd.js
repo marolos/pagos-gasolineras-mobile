@@ -4,12 +4,13 @@ import { Image, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Ripple from 'react-native-material-ripple';
 import tailwind from 'tailwind-rn';
-import LikeIcon from '../icons/LikeIcon';
+import LikeIcon from '../icons/HeartIcon';
 import Line from '../shared/Line';
 import { FULL_WIDTH } from '../utils/constants';
 import { formatISORelative } from '../utils/dateUtils';
 import Fetch from '../utils/Fetch';
-import { typefaces } from '../utils/styles';
+import { typefaces, shadowStyle3 } from '../utils/styles';
+import { btn_text } from '../utils/colors';
 
 class TipAd extends React.Component {
 	constructor(props) {
@@ -55,26 +56,31 @@ class TipAd extends React.Component {
 		const count = liked ? like_count + 1 : like_count;
 		return (
 			<React.Fragment>
-				<View style={tailwind('flex flex-row justify-between px-4 pb-2 pt-3 items-center')}>
-					<Text style={[typefaces.pm]}>{company.business_name}</Text>
-					<Text style={[tailwind('text-xs text-gray-700'), typefaces.pm]}>
-						{formatISORelative(created_at)}
-					</Text>
-				</View>
-				<Line />
-				<FastImage
-					source={{ uri: img_path }}
-					style={{ height: imgHeight }}
-					resizeMode={FastImage.resizeMode.stretch}
-				/>
-				<View style={tailwind('flex flex-row justify-between px-4 py-2')}>
-					<View>
-						<Text style={[typefaces.pm]}>{title}</Text>
-						<Text style={[tailwind('w-64 text-gray-700')]}>{description}</Text>
+				<View style={[tailwind('rounded-xl bg-white mx-1 border border-gray-300'), shadowStyle3]}>
+				   <View style={tailwind('flex flex-row justify-between px-4 pb-1 pt-2 items-center')}>
+				   	<Text style={[tailwind('text-lg'), typefaces.psb, { color: btn_text }]}>{company.business_name}</Text>
+				   	<Text style={[tailwind('text-xs text-gray-600'), typefaces.pr]}>
+				   		{formatISORelative(created_at)}
+				   	</Text>
+				   </View>
+				   <View style={tailwind('px-4')}>
+				       <FastImage
+				       	source={{ uri: img_path }}
+				       	style={{ height: imgHeight }}
+				       	resizeMode={FastImage.resizeMode.stretch}
+				       />
+				       	<View style={tailwind('py-1')}>
+				       		<Text style={[typefaces.pm]}>{title}</Text>
+				       		<Text style={[tailwind('w-64 text-gray-700')]}>{description}</Text>
+				       	</View>
+				       <View style={tailwind('flex flex-row justify-between items-center')}>
+							 <Text style={[typefaces.psb, tailwind('text-xs')]}>{count} me gusta</Text>
+				       	<LikeButton liked={liked} onPress={this.like} count={count} />
+				       </View>
+
 					</View>
-					<LikeButton liked={liked} onPress={this.like} count={count} />
+				
 				</View>
-				<Line />
 			</React.Fragment>
 		);
 	}
@@ -86,14 +92,12 @@ const LikeButton = memo(({ liked, onPress, count }) => (
 		style={tailwind('flex flex-row items-center justify-center rounded-full w-12 h-12')}
 		onPress={onPress}
 		rippleDuration={320}
-		rippleColor="#fbcfe8"
+		rippleColor="#C50510"
 		rippleOpacity={1.1}
 		rippleCentered
 	>
-		<LikeIcon width={22} fill={liked ? '#ec4899' : 'none'} stroke={liked ? '#ec4899' : '#555'} />
-		{count > 0 && (
-			<Text style={[tailwind('mt-2 ml-2 text-xs text-gray-600'), typefaces.pm]}>{count}</Text>
-		)}
+		<LikeIcon width={22} fill={liked ? "#D61620" : 'none'} stroke={liked ? "#D61620" : "#9A999E"} />
+		
 	</Ripple>
 	// </View>
 ));

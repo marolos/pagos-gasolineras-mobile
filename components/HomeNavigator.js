@@ -15,6 +15,7 @@ import ChooseCardView from './payment/ChooseCardView';
 import AddCardView from './payment/AddCardView';
 import ConfirmTopupView from './topup/ConfirmTopupView';
 import GenerateCodeView from './buy/GenerateCodeView';
+import { TabOptions } from './redux/ui/reducers';
 
 const Stack = createStackNavigator();
 
@@ -40,7 +41,7 @@ class HomeNavigator extends React.Component {
 						headerTransparent: true,
 						headerLeft: () => <CustomHeaderLeft navigation={navigation} />,
 						headerTitle: () => <CustomHeaderTitle />,
-						headerRight: () => <CustomHeaderRight navigation={navigation} />,
+						headerRight: () => <CustomHeaderRight navigation={navigation} tabOption={TabOptions.NOTIFICATIONS} />,
 					})}
 				/>
 				<Stack.Screen

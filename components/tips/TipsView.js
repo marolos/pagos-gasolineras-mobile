@@ -1,13 +1,18 @@
 import React, { memo } from 'react';
-import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, Text, View, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
 import emptyImage from '../../assets/background/empty.png';
 import Fetch from '../utils/Fetch';
 import { makeCancelable } from '../utils/utils';
+import { TabOptions } from '../redux/ui/reducers';
+import { setActiveTab } from '../redux/ui/actions';
 import TipAd from './TipAd';
-import Line from '../shared/Line';
+import fondo from '../../assets/img/fondo.png';
+import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
+import { background, info_text } from '../utils/colors';
+
 
 class TipsView extends React.Component {
 	constructor(props) {
@@ -19,10 +24,14 @@ class TipsView extends React.Component {
 	}
 
 	componentDidMount() {
+		this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
+			this.props.dispatch(setActiveTab(TabOptions.TIPS));
+		});
 		this.loadNew();
 	}
 
 	componentWillUnmount() {
+		if (this.unsubscribeFocus) this.unsubscribeFocus();
 		if (this.cancelReq) this.cancelReq.cancel();
 	}
 
@@ -69,18 +78,28 @@ class TipsView extends React.Component {
 		const { refreshing, loadingMore } = this.state;
 		const { tips } = this.props;
 		return (
-			<FlatList
-				data={tips}
-				renderItem={this.renderItem}
-				keyExtractor={this.keyExtractor}
-				refreshing={refreshing}
-				onRefresh={this.loadNew}
-				ListEmptyComponent={EmptyMessage}
-				ListFooterComponent={<ListFooter loading={loadingMore} />}
-				ItemSeparatorComponent={ItemSeparator}
-				onEndReached={this.loadOld}
-				onEndReachedThreshold={0.3}
-			/>
+			<SafeAreaView style={{ height: FULL_HIGHT - 64, width: FULL_WIDTH, backgroundColor: 'white' }}>
+            <View style={tailwind('absolute')}>
+			    		<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }} />
+			    	</View>
+					 <View style={tailwind('h-24')}></View>
+				<View style={[tailwind('flex rounded-t-2xl'), { backgroundColor: background, zIndex: 0 }]}>
+			      <FlatList
+					  style={[tailwind('flex px-3 h-full')]}
+ 			        	data={tips}
+			        	renderItem={this.renderItem}
+			        	keyExtractor={this.keyExtractor}
+			        	refreshing={refreshing}
+						  onRefresh={this.loadNew}
+						  ListHeaderComponent={<Text style={[tailwind('text-2xl ml-5 mt-4 mb-2'), typefaces.pb]}>Tips</Text>}
+			        	ListEmptyComponent={EmptyMessage}
+			        	ListFooterComponent={<ListFooter loading={loadingMore} />}
+			        	ItemSeparatorComponent={ItemSeparator}
+			        	onEndReached={this.loadOld}
+			        	onEndReachedThreshold={0.3}
+			        />
+				</View>
+			</SafeAreaView>
 		);
 	}
 }
@@ -102,7 +121,7 @@ async function loadItems(old = false, last) {
 
 const ListFooter = memo(({ loading }) => {
 	return (
-		<View style={tailwind('p-6')}>
+		<View style={tailwind('p-6 mb-20')}>
 			<ActivityIndicator color="black" animating={loading} />
 		</View>
 	);
@@ -123,6 +142,6 @@ const EmptyMessage = memo(() => {
 	);
 });
 
-const ItemSeparator = memo(() => <Line style={tailwind('h-1')} />);
+const ItemSeparator = memo(() => <View style={tailwind('h-2')} />);
 
 export default connect(({ tips }) => ({ tips }))(TipsView);

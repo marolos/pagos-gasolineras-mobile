@@ -4,7 +4,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import ProfileNavigator from './profile/ProfileNavigator';
 import HomeNavigator from './HomeNavigator';
 import SplashScreen from 'react-native-splash-screen';
-import { FULL_HIGHT } from './utils/constants';
+import { FULL_HIGHT, FULL_WIDTH } from './utils/constants';
 import { getGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import tailwind from 'tailwind-rn';
 import Fetch from './utils/Fetch';
@@ -24,10 +24,11 @@ import { getDeviceInfo, requestUserPermission } from './notification/firebaseCon
 import LoggingOutView from './auth/LoggingOutView';
 import { connect } from 'react-redux';
 import FeedbackNavigator from './feedback/FeedbackNavigator';
-import TipsNavigator from './tips/TipsNavigator';
 import BackgroundModal from './notification/BackgroundModal';
 import ContactView from './feedback/ContactView';
 import ContactNavigator from './feedback/ContactNavigator';
+import ProfileIcon2 from './icons/ProfileIcon2';
+import { dollar_text, btn_text } from './utils/colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -67,7 +68,8 @@ function AppDrawerNavigator(props) {
 	}
 	return (
 		<React.Fragment>
-			<Drawer.Navigator drawerContent={DrawerContent} initialRouteName={'home'}>
+			<Drawer.Navigator drawerContent={DrawerContent} initialRouteName={'home'} 
+			drawerStyle={[{ width: FULL_WIDTH*0.8 }, tailwind('px-1')]}>
 				<Drawer.Screen name="home" component={HomeNavigator} />
 				<Drawer.Screen name="profile" component={ProfileNavigator} />
 				<Drawer.Screen name="records" component={RecordsNavigator} />
@@ -77,7 +79,7 @@ function AppDrawerNavigator(props) {
 				<Drawer.Screen name="loggingOut" component={LoggingOutView} />
 				<Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}} />
 				<Drawer.Screen name="contact" component={ContactNavigator} />
-				<Drawer.Screen name="tips" component={TipsNavigator} />
+				{/* <Drawer.Screen name="notifications" component={NotificationsView} /> */}
 			</Drawer.Navigator>
 			<BackgroundModal />
 		</React.Fragment>
@@ -90,7 +92,7 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 	return (
 		<View>
 			<ProfileInfo />
-			<Line style={{ height: 1.5 }} />
+			<View style={tailwind('h-2')} /> 
 			<View>
 				<DrawerItem
 					icon={<ProfileIcon fill="#333" />}
@@ -113,7 +115,7 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 					navigateTo="transfers"
 				/>
 			</View>
-			<Line style={{ height: 1.5 }} />
+			
 			<View>
 				<DrawerItem
 					icon={<CardIcon />}
@@ -123,46 +125,57 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 					navigateTo="paymentMethods"
 				/>
 			</View>
-			<Line style={{ height: 1.5 }} />
-			<View>
-				<DrawerItemText
+			
+				<DrawerItem
 					text="Sugerencias y reclamos"
-					style={tailwind('pt-2')}
+					style={tailwind('py-1')}
 					navigation={navigation}
 					navigateTo="feedback"
 				/>
-				<DrawerItemText text="Políticas de servicios" navigation={navigation} />
-				<DrawerItemText text="Contácto" navigation={navigation} navigateTo="contact" />
+				<DrawerItem text="Políticas de servicios" navigation={navigation} />
+				<DrawerItem text="Contácto" navigation={navigation} navigateTo="contact" />
+				<Line style={tailwind('bg-black my-4')}/>
 				<LogoutItem navigation={navigation} />
-			</View>
 		</View>
 	);
 });
 
 const ProfileInfo = connect((state) => ({ user: state.user }))(
 	memo(({ user }) => {
+		const w = FULL_WIDTH * 0.8;
 		return (
-			<View style={tailwind('p-6')}>
-				<Text style={styles.title}>
-					{user.data.first_name} {user.data.last_name}
-				</Text>
-				<Text style={styles.info}>{user.data.email}</Text>
-				<Text style={styles.info}>Id: {user.data.cedula}</Text>
-				{user.data.is_active ? (
-					<Text style={styles.status}>activo</Text>
-				) : (
-					<Text style={styles.statusInactive}>inactivo</Text>
-				)}
+			<View style={[tailwind('flex flex-row items-center'), { padding: w*0.08 }]}>
+            <ProfileIcon2 width={w*0.35} height={w*0.35}/>
+				<View style={[tailwind('pl-2'), { width: w*0.49 }]}>
+				    <Text style={styles.title}>
+				    	{user.data.first_name} {user.data.last_name}
+				    </Text>
+				    <Text style={styles.info}>Id: {user.data.cedula}</Text>
+				    {user.data.is_active ? (
+						 <View style={tailwind('flex flex-row items-center')}>
+							 <Text style={styles.status}>Activo </Text>
+							 <View style={[tailwind('h-2 w-2 rounded'), { backgroundColor: dollar_text }]}/>
+						 </View>
+				    	
+				    ) : (
+						<View style={tailwind('flex flex-row items-center')}>
+							 <Text style={styles.status}>Inactivo </Text>
+							 <View style={tailwind('h-2 w-2 bg-red-500 rounded')}/>
+						 </View>
+				    )}
+
+				</View>
 			</View>
 		);
 	}),
 );
 
 function DrawerItem({ icon, text, style = {}, navigation, navigateTo }) {
+	const w = FULL_WIDTH * 0.8;
 	return (
 		<Ripple style={style} onPress={() => navigation.navigate(navigateTo)}>
-			<View style={styles.itemCont}>
-				{icon && <View style={styles.itemIconCont}>{icon}</View>}
+			<View style={[styles.itemCont, { paddingLeft: w*0.12 }]}>
+				{/* {icon && <View style={styles.itemIconCont}>{icon}</View>} */}
 				<Text style={styles.itemText}>{text}</Text>
 			</View>
 		</Ripple>
@@ -180,24 +193,24 @@ function DrawerItemText({ text, style = {}, navigation, navigateTo }) {
 }
 
 function LogoutItem({ style, navigation }) {
+	const w = FULL_WIDTH * 0.8;
 	return (
-		<Ripple style={style} onPress={() => navigation.navigate('logout', {})}>
-			<View style={tailwind('flex flex-row items-center py-2 px-3')}>
-				<Text style={[styles.itemTextText, { marginRight: 15 }]}>Cerrar Sesión</Text>
-				<LogoutIcon />
+		<Ripple style={{ width: w }} onPress={() => navigation.navigate('logout', {})}>
+			<View style={[tailwind('flex flex-row items-center py-2 justify-center')]}>
+				<Text style={[styles.itemText, { color: btn_text }]}>Cerrar sesión</Text>
 			</View>
 		</Ripple>
 	);
 }
 
 const styles = {
-	itemCont: tailwind('flex flex-row px-4 py-3'),
+	itemCont: tailwind('flex flex-row py-3'),
 	itemIconCont: tailwind('w-8'),
-	itemText: [tailwind('text-base text-gray-700'), typefaces.pm],
-	title: [tailwind('text-lg'), typefaces.pm],
+	itemText: [tailwind('text-base text-black'), typefaces.pr],
+	title: [tailwind('text-xl'), typefaces.pm],
 	info: [tailwind('text-sm text-gray-700'), typefaces.pm],
-	status: [tailwind('text-sm text-green-600'), typefaces.pm],
-	statusInactive: [tailwind('text-sm text-red-500'), typefaces.pm],
+	status: [tailwind('text-sm text-gray-500'), typefaces.pm],
+	statusInactive: [tailwind('text-sm text-gray-700'), typefaces.pm],
 	itemTextText: [tailwind('text-base text-gray-700'), typefaces.pr],
 	modal: {
 		bg: {},

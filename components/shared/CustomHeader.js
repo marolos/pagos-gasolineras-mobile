@@ -8,6 +8,7 @@ import Ripple from 'react-native-material-ripple';
 import TipsIcon from '../icons/TipsIcon';
 import logo from '../../assets/img/logo.png'
 import notificacion from '../../assets/img/notificaciones.png'; 
+import NotificationIcon from '../icons/NotificationIcon'
 
 export const CustomHeaderLeft = memo(({ navigation }) => {
 	return (
@@ -24,16 +25,20 @@ export const CustomHeaderLeft = memo(({ navigation }) => {
 	);
 });
 
-export const CustomHeaderRight = memo(({ navigation }) => {
-	const go = () => setTimeout(() => navigation.navigate('tips'), 120);
+const CustomHeaderRightBase = memo(({ navigation, activeTab, tabOption }) => {
+	const focused = activeTab.label === tabOption.label;
+	const go = () => setTimeout(() => navigation.navigate('tabMenu', { screen: 'notifications' }), 120);
 	return (
 		<Ripple style={styles.ripple} onPress={go} rippleDuration={200} rippleCentered>
 			<View style={[styles.view, { marginRight: 6 }]}>
-				<Image source={notificacion} style={{ width: 16, height: 18 }}/>
+				<NotificationIcon focused={focused}/>
 			</View>
 		</Ripple>
 	);
 });
+
+export const CustomHeaderRight = connect((state) => ({ activeTab: state.activeTab }))(CustomHeaderRightBase);
+
 
 const styles = {
 	ripple: [tailwind('flex flex-row items-center ml-2')],
@@ -46,6 +51,6 @@ const mapStateToProps = (state) => ({
 });
 export const CustomHeaderTitle = connect(mapStateToProps)((props) => {
 	return <View style={tailwind('flex flex-row justify-center')}>
-		<Image source={logo} style={tailwind('w-20 h-5')}/>
+		<Image source={logo} style={tailwind('w-24 h-6')}/>
 	</View>;
 });

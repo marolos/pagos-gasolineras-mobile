@@ -3,6 +3,7 @@ export const TabOptions = {
 	SEARCH: { label: 'Buscar' },
 	NOTIFICATIONS: { label: 'Notificaciones' },
 	PROFILE: { label: 'Perfil' },
+	TIPS: { label: 'Tips' },
 };
 
 export const activeTab = (state = TabOptions.GAS, action) => {

@@ -7,12 +7,12 @@ import PoliticIcon from '../icons/PoliticIcon';
 import TransferIcon from '../icons/TransferIcon';
 import { FULL_WIDTH, NotificationType } from '../utils/constants';
 import { formatISODate } from '../utils/dateUtils';
-import { typefaces } from '../utils/styles';
+import { typefaces, shadowStyle3 } from '../utils/styles';
 
 function Notification({ item, onSelect }) {
 	return (
 		<TouchableHighlight onPress={() => onSelect(item)} delayPressIn={0} underlayColor="#eee">
-			<View style={styles.touchable}>
+			<View style={[styles.touchable, shadowStyle3]}>
 				<View style={styles.iconView}>{getIcon(item.data.type)}</View>
 				<View>
 					<Text style={styles.title}>{item.title}</Text>
@@ -60,7 +60,7 @@ export function getIcon(type) {
 }
 
 const styles = {
-	touchable: tailwind('flex flex-row px-4 py-3'),
+	touchable: tailwind('flex flex-row rounded-xl bg-white border border-gray-300 px-4 py-3'),
 	iconView: tailwind('mr-4'),
 	title: [tailwind('text-sm'), typefaces.pm, { width: FULL_WIDTH - 100 }],
 	date: [tailwind('text-xs text-gray-700')],

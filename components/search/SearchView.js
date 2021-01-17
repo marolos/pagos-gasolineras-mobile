@@ -12,9 +12,7 @@ import { connect } from 'react-redux';
 import { setActiveTab } from '../redux/ui/actions';
 import { TabOptions } from '../redux/ui/reducers';
 import fondo from '../../assets/img/fondo.png';
-import gasolina from '../../assets/img/gasolina.png';
 import { background, info_text } from '../utils/colors';
-import AppBtn from '../shared/AppButton';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
 
@@ -144,7 +142,7 @@ class SearchView extends React.Component {
 			    	</View>
 				<View style={tailwind('h-24')}></View>
 				<View style={[tailwind('flex rounded-t-2xl'), { backgroundColor: background, zIndex: 10 }]}>
-				<Text style={[tailwind('text-2xl ml-5 my-4'), typefaces.pb]}>Buscar</Text>
+				<Text style={[tailwind('text-2xl ml-5 mt-4 mb-2'), typefaces.pb]}>Buscar</Text>
 				   <View>
 				       <SearchBox onSelectResult={this.onSelectResult} onSearchNear={this.onSearchNear} />
 				       <View style={[styles.map.view]}>

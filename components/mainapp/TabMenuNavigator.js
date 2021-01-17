@@ -11,8 +11,9 @@ import TipsIcon from '../icons/TipsIcon';
 import Ripple from 'react-native-material-ripple';
 import { typefaces, shadowStyle } from '../utils/styles';
 import SearchView from '../search/SearchView';
+import TipsView from '../tips/TipsView';
 import NotificationsView from '../notification/NotificationsView';
-import ProfileView from '../profile/ProfileView';
+import ProfileNavigator from '../profile/ProfileNavigator';
 import { getMessaging } from '../notification/firebaseConfig';
 import { TabOptions } from '../redux/ui/reducers';
 
@@ -36,8 +37,9 @@ function TabMenuNavigator({ navigation }) {
 		<Tab.Navigator tabBar={CustomTabBar}>
 			<Tab.Screen name="balances" component={BalancesView} />
 			<Tab.Screen name="search" component={SearchView} />
+			<Tab.Screen name="tips" component={TipsView} />
+			<Tab.Screen name="profile" component={ProfileNavigator} />
 			<Tab.Screen name="notifications" component={NotificationsView} />
-			<Tab.Screen name="profile" component={ProfileView} />
 		</Tab.Navigator>
 	);
 }
@@ -63,14 +65,14 @@ const CustomTabBarMemoized = memo(({ navigation }) => {
 					icon={SearchIcon}
 					navigation={navigation}
 				/>
-				<TabButtonBadge
-					navigateTo="notifications"
-					tabOption={TabOptions.NOTIFICATIONS}
+				<TabButton
+					navigateTo="tips"
+					tabOption={TabOptions.TIPS}
 					icon={TipsIcon}
 					navigation={navigation}
 				/>
-				<TabButtonBadge
-					navigateTo="notifications"
+				<TabButton
+					navigateTo="profile"
 					tabOption={TabOptions.PROFILE}
 					icon={ProfileIcon}
 					navigation={navigation}

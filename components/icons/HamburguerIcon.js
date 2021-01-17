@@ -4,8 +4,8 @@ import Svg, { Path } from 'react-native-svg';
 function HamburguerIcon({ color = '#ffffff' }) {
    return (
       <Svg
-         width={24}
-         height={24}
+         width={28}
+         height={28}
          viewBox="0 0 24 24"
          stroke={color}
          strokeWidth={3}
