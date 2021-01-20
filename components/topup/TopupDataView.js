@@ -24,7 +24,7 @@ function TopupDataView({ route, navigation, user }) {
 		const request = makeCancelable(
 			Fetch.get('/payment/user/card/'),
 			({ body }) => {
-				setHasCards(body.cards.result_size > 0);
+				setHasCards(body.cards.length > 0);
 				setLoaded(true);
 			},
 			(err) => {
