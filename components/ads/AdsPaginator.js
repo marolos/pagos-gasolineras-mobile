@@ -87,7 +87,7 @@ const _activeDot = <ActiveDot />
 
 const loadData = (dispatch) => {
 	let req = makeCancelable(
-		Fetch.get('/company/tipads/ads?limit=6'),
+		Fetch.get('/company/tipads/ads?limit=9'),
 		(res) => {
 			dispatch({ type: 'SET_ADS', value: res.body.ads });
 		},
