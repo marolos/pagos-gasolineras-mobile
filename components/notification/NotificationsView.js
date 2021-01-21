@@ -137,27 +137,23 @@ class NotificationsView extends React.Component {
 
 const ItemSeparator = memo(() => <View style={tailwind('h-2')} />);
 
-const ListFooter = memo(({ loading }) => {
-	return (
-		<View style={tailwind('p-6 mb-24')}>
-			<ActivityIndicator color="black" animating={loading} />
-		</View>
-	);
-});
+const ListFooter = memo(({ loading }) => (
+	<View style={tailwind('p-6 mb-24')}>
+		<ActivityIndicator color="black" animating={loading} />
+	</View>
+));
 
-const EmptyMessage = memo(() => {
-	return (
-		<View style={tailwind('items-center mb-12 mt-24')}>
-			<View>
-				<Image source={emptyImage} style={tailwind('w-32 h-48')} />
-			</View>
-			<View style={tailwind('px-12')}>
-				<Text style={[tailwind('text-gray-600 text-center mt-4'), typefaces.pm]}>
-					No tienes notificaciones
-				</Text>
-			</View>
+const EmptyMessage = memo(() => (
+	<View style={tailwind('items-center mb-12 mt-24')}>
+		<View>
+			<Image source={emptyImage} style={tailwind('w-32 h-48')} />
 		</View>
-	);
-});
+		<View style={tailwind('px-12')}>
+			<Text style={[tailwind('text-gray-600 text-center mt-4'), typefaces.pm]}>
+				No tienes notificaciones
+			</Text>
+		</View>
+	</View>
+));
 
 export default connect(({ notifications }) => ({ notifications }))(NotificationsView);

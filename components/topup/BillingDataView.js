@@ -46,7 +46,7 @@ class BillingDataView extends React.Component {
 	}
 
 	loadData = () => {
-		const {user} = this.props;
+		const { user } = this.props;
 		this.request = makeCancelable(
 			Fetch.get('/users/billing/data/'),
 			(res) => {
@@ -73,7 +73,11 @@ class BillingDataView extends React.Component {
 			return;
 		}
 		if (equalForm(user, form)) {
-			navigation.push(navigateToOnDone, data);
+			if (navigateToOnDone === 'back') {
+				navigation.goBack();
+			} else {
+				navigation.push(navigateToOnDone, data);
+			}
 			return;
 		}
 		this.setState({ loading: true });
@@ -82,7 +86,11 @@ class BillingDataView extends React.Component {
 			Fetch.put('/users/billing/data/', form),
 			(res) => {
 				this.setState({ loading: false }, () => {
-					navigation.push(navigateToOnDone, data);
+					if (navigateToOnDone === 'back') {
+						navigation.goBack();
+					} else {
+						navigation.push(navigateToOnDone, data);
+					}
 				});
 				this.props.dispatch({ type: 'LOGIN', data: { ...user, ...form } });
 			},

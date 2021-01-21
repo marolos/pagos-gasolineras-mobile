@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import BalancesView from './BalancesView';
 import tailwind from 'tailwind-rn';
@@ -9,13 +9,14 @@ import SearchIcon from '../icons/SearchIcon2';
 import ProfileIcon from '../icons/ProfileIcon2';
 import TipsIcon from '../icons/TipsIcon';
 import Ripple from 'react-native-material-ripple';
-import { typefaces, shadowStyle } from '../utils/styles';
+import {  shadowStyle } from '../utils/styles';
 import SearchView from '../search/SearchView';
 import TipsView from '../tips/TipsView';
 import NotificationsView from '../notification/NotificationsView';
 import ProfileNavigator from '../profile/ProfileNavigator';
 import { getMessaging } from '../notification/firebaseConfig';
 import { TabOptions } from '../redux/ui/reducers';
+import ProfileView, { ProfileViewFromTabMenu } from '../profile/ProfileView';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,7 +39,7 @@ function TabMenuNavigator({ navigation }) {
 			<Tab.Screen name="balances" component={BalancesView} />
 			<Tab.Screen name="search" component={SearchView} />
 			<Tab.Screen name="tips" component={TipsView} />
-			<Tab.Screen name="profile" component={ProfileNavigator} />
+			<Tab.Screen name="profile" component={ProfileViewFromTabMenu} />
 			<Tab.Screen name="notifications" component={NotificationsView} />
 		</Tab.Navigator>
 	);

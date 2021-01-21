@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Image, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import AdsPaginator from './AdsPaginator';
 import tailwind from 'tailwind-rn';
 import BalanceCard from './BalanceCard';
 import { typefaces } from '../utils/styles';
@@ -83,32 +82,33 @@ class BalancesView extends React.Component {
 		return (
 			<View style={{ height: FULL_HIGHT - 64, width: FULL_WIDTH, backgroundColor: 'white' }}>
 				<View style={tailwind('absolute')}>
-			    		<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }} />
-			    	</View>
-				<View style={tailwind('h-24')}></View> 
-			    <ScrollView
-				   contentInset={4, 4, 4, 4}
-				   style={[tailwind('flex rounded-t-2xl pb-6 px-3'), { backgroundColor: background, zIndex: 10 }]}
-			    	refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
-			    >
-			    	{/* <AdsPaginator reload={refreshing}/> */}
-			    	
-			    	{/* {balances.length > 0 && (
-			    		<View style={tailwind('mt-4 px-6')}>
-			    			<Text style={[tailwind('text-black text-sm'), typefaces.pm]}>Gasolineras</Text>
-			    			<Line style={tailwind('bg-gray-400 w-full mb-2')} />
-			    		</View>
-			    	)} */}
-					 <View style={tailwind('h-4')}></View>
-			    	<GasStationList loading={loading} data={balances} onItemPress={this.onPressStation} navigation={this.props.navigation} />
-			    	{balances.length > 0 && selectedStation && (
-			    		<CollapseModalOptions
-			    			visible={modalVisible}
-			    			station={selectedStation}
-			    			closeCollapse={this.closeCollapse}
-			    		/>
-			    	)}
-			    </ScrollView>
+					<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }} />
+				</View>
+				<View style={tailwind('h-24')}></View>
+				<ScrollView
+					style={[
+						tailwind('flex rounded-t-2xl pb-6 px-3'),
+						{ backgroundColor: background, zIndex: 10 },
+					]}
+					refreshControl={
+						<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
+					}
+				>
+					<View style={tailwind('h-4')}></View>
+					<GasStationList
+						loading={loading}
+						data={balances}
+						onItemPress={this.onPressStation}
+						navigation={this.props.navigation}
+					/>
+					{balances.length > 0 && selectedStation && (
+						<CollapseModalOptions
+							visible={modalVisible}
+							station={selectedStation}
+							closeCollapse={this.closeCollapse}
+						/>
+					)}
+				</ScrollView>
 			</View>
 		);
 	}
@@ -125,7 +125,7 @@ const GasStationList = memo(({ data, onItemPress, loading, navigation }) => {
 	if (data.length < 1) {
 		return (
 			<View>
-				<EmptyMessage navigation={navigation}/>
+				<EmptyMessage navigation={navigation} />
 			</View>
 		);
 	}
@@ -144,7 +144,7 @@ const GasStationList = memo(({ data, onItemPress, loading, navigation }) => {
 	);
 });
 
-function EmptyMessage({navigation}) {
+function EmptyMessage({ navigation }) {
 	return (
 		<View style={tailwind('items-center mt-20')}>
 			<View>
@@ -159,9 +159,10 @@ function EmptyMessage({navigation}) {
 				</Text>
 			</View>
 			<View style={tailwind('mt-10')}>
-				<AppBtn text={"Buscar"} 
-				   onPress={()=> navigation.navigate('tabMenu', { screen: 'search', params: "" })}>
-				</AppBtn>
+				<AppBtn
+					text={'Buscar'}
+					onPress={() => navigation.navigate('tabMenu', { screen: 'search', params: '' })}
+				></AppBtn>
 			</View>
 		</View>
 	);

@@ -41,7 +41,12 @@ class HomeNavigator extends React.Component {
 						headerTransparent: true,
 						headerLeft: () => <CustomHeaderLeft navigation={navigation} />,
 						headerTitle: () => <CustomHeaderTitle />,
-						headerRight: () => <CustomHeaderRight navigation={navigation} tabOption={TabOptions.NOTIFICATIONS} />,
+						headerRight: () => (
+							<CustomHeaderRight
+								navigation={navigation}
+								tabOption={TabOptions.NOTIFICATIONS}
+							/>
+						),
 					})}
 				/>
 				<Stack.Screen
@@ -52,6 +57,13 @@ class HomeNavigator extends React.Component {
 							<Label text={'Datos de facturación'} style={styles.title} focused />
 						),
 						cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+					})}
+				/>
+				<Stack.Screen
+					name="editProfileFromTabMenu"
+					component={BillingDataView}
+					options={() => ({
+						headerTitle: () => <Label text={'Editar perfil'} style={styles.title} focused />,
 					})}
 				/>
 				<Stack.Screen

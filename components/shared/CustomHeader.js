@@ -5,9 +5,7 @@ import { connect } from 'react-redux';
 import { typefaces } from '../utils/styles';
 import HamburguerIcon from '../icons/HamburguerIcon';
 import Ripple from 'react-native-material-ripple';
-import TipsIcon from '../icons/TipsIcon';
 import logo from '../../assets/img/logo.png'
-import notificacion from '../../assets/img/notificaciones.png'; 
 import NotificationIcon from '../icons/NotificationIcon'
 
 export const CustomHeaderLeft = memo(({ navigation }) => {
@@ -27,7 +25,7 @@ export const CustomHeaderLeft = memo(({ navigation }) => {
 
 const CustomHeaderRightBase = memo(({ navigation, activeTab, tabOption }) => {
 	const focused = activeTab.label === tabOption.label;
-	const go = () => setTimeout(() => navigation.navigate('tabMenu', { screen: 'notifications' }), 120);
+	const go = () => navigation.navigate('tabMenu', { screen: 'notifications' })
 	return (
 		<Ripple style={styles.ripple} onPress={go} rippleDuration={200} rippleCentered>
 			<View style={[styles.view, { marginRight: 6 }]}>
