@@ -4,7 +4,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import ProfileNavigator from './profile/ProfileNavigator';
 import HomeNavigator from './HomeNavigator';
 import SplashScreen from 'react-native-splash-screen';
-import { FULL_HIGHT, FULL_WIDTH } from './utils/constants';
+import { FULL_HIGHT } from './utils/constants';
 import { getGenericPassword, resetGenericPassword } from 'react-native-keychain';
 import tailwind from 'tailwind-rn';
 import Fetch from './utils/Fetch';
@@ -18,18 +18,16 @@ import CardIcon from './icons/CardIcon';
 import TransferNavigator from './transfer/TransfersNavigator';
 import RecordsNavigator from './records/RecordsNavigator';
 import PaymentMethodsNavigator from './payment/PaymentMethodNavigator';
-import LogoutIcon from './icons/LogoutIcon';
 import LogoutView from './auth/LogoutView';
 import { getDeviceInfo, requestUserPermission } from './notification/firebaseConfig';
 import LoggingOutView from './auth/LoggingOutView';
 import { connect } from 'react-redux';
 import FeedbackNavigator from './feedback/FeedbackNavigator';
 import BackgroundModal from './notification/BackgroundModal';
-import ContactView from './feedback/ContactView';
 import ContactNavigator from './feedback/ContactNavigator';
 import ProfileIcon2 from './icons/ProfileIcon2';
 import { dollar_text, btn_text } from './utils/colors';
-import { useNavigation } from '@react-navigation/native';
+import AdsView from './ads/AdsView';
 
 const Drawer = createDrawerNavigator();
 
@@ -83,7 +81,7 @@ function AppDrawerNavigator(props) {
 				<Drawer.Screen name="loggingOut" component={LoggingOutView} />
 				<Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}} />
 				<Drawer.Screen name="contact" component={ContactNavigator} />
-				{/* <Drawer.Screen name="notifications" component={NotificationsView} /> */}
+				<Drawer.Screen name="ads" component={AdsView} />
 			</Drawer.Navigator>
 			<BackgroundModal />
 		</React.Fragment>
@@ -123,6 +121,7 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 			<DrawerItem text="Sugerencias y reclamos" navigation={navigation} navigateTo="feedback" />
 			<DrawerItem text="Políticas de servicios" navigation={navigation} />
 			<DrawerItem text="Contácto" navigation={navigation} navigateTo="contact" />
+			<DrawerItem text="Anúncios" navigation={navigation} navigateTo="ads" />
 			<Line style={tailwind('bg-black my-4')} />
 			<LogoutItem navigation={navigation} />
 		</View>

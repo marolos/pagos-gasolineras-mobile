@@ -32,6 +32,9 @@ class BalancesView extends React.Component {
 		this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
 			this.props.dispatch(setActiveTab(TabOptions.GAS));
 		});
+		setTimeout(()=> {
+			this.props.navigation.navigate('ads')
+		}, 100)
 	}
 
 	componentWillUnmount() {

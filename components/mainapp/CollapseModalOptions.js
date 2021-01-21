@@ -11,7 +11,6 @@ import FastImage from 'react-native-fast-image';
 
 function CollapseModalOptions({ visible, closeCollapse, station }) {
 	const navigation = useNavigation();
-
 	return (
 		<Modal
 			isVisible={visible}
