@@ -126,7 +126,7 @@ class UserSelector extends React.Component {
 const styles = {
 	ripple: [
 		tailwind(
-			'flex flex-row items-center justify-between px-4 py-2 border border-gray-400 rounded',
+			'flex flex-row items-center justify-between px-4 py-2 border border-2 border-black rounded-3xl bg-white',
 		),
 		{ minWidth: 130 },
 	],

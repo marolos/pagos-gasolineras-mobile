@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, Platform } from 'react-native';
+import { View, Text, ScrollView, Image, Platform, TextInput } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import ArrowRightIcon from '../icons/ArrowRightIcon';
 import ImageIcon from '../icons/ImageIcon';
@@ -12,6 +12,8 @@ import { FULL_WIDTH } from '../utils/constants';
 import LoadingButton from '../shared/LoadingButton';
 import SimpleToast from 'react-native-simple-toast';
 import Fetch from '../utils/Fetch';
+import BackIcon from '../icons/SmallBackIcon';
+import { background, white } from '../utils/colors';
 
 export default class FeedbackView extends React.Component {
 	constructor(props) {
@@ -88,50 +90,64 @@ export default class FeedbackView extends React.Component {
 	render() {
 		const { type, img, imgHeight, imgWidth, sending } = this.state;
 		return (
-			<ScrollView keyboardShouldPersistTaps="handled" style={tailwind('p-6')}>
-				<View style={tailwind('mb-6')}>
-					<Text style={[typefaces.pm, tailwind('text-base mb-2')]}>Tipo:</Text>
+			<View style={{backgroundColor: white}}>
+				<View style={{ zIndex: 1 }}>
 					<Ripple
-						onPress={this.chooseType}
-						style={tailwind(
-							'flex flex-row justify-between border rounded-md border-gray-300 py-2 px-4 items-center',
-						)}
+						onPress={this.props.navigation.goBack}
+						style={tailwind('rounded-full p-2 w-12 items-center')}
+						rippleCentered={true}
 					>
-						<Text style={[typefaces.pr]}>{type.name ? type.label : 'Seleccionar'}</Text>
-						<ArrowRightIcon />
+						<BackIcon />
 					</Ripple>
+					<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Sugerencias y reclamos</Text>
 				</View>
-				<View style={tailwind('mb-6')}>
-					<Text style={[typefaces.pm, tailwind('text-base mb-2')]}>Detalles:</Text>
-					<BasicInput
-						placeholder="Mensaje claro y conciso"
-						onChange={(text) => (this.state.details = text)}
-						maxLength={300}
-						style={{ ...typefaces.pr, ...tailwind('w-full') }}
-						multiline={true}
-					/>
-				</View>
-				<View style={tailwind('mb-6')}>
-					<Text style={[typefaces.pm, tailwind('text-base mb-2')]}>
-						Evidencia:{' '}
-						<Text style={[typefaces.pm, tailwind('text-sm text-gray-600')]}>(opcional)</Text>
-					</Text>
-					<View style={tailwind('items-center mt-4')}>
-						{img.uri ? (
-							<ImageView
-								uri={img.uri}
-								onRemove={() => this.setState({ img: {} })}
-								dims={{ imgHeight, imgWidth }}
-							/>
-						) : (
-							<ImagePicker pickImage={this.pickImage} />
-						)}
+
+				<ScrollView keyboardShouldPersistTaps="handled" style={[tailwind('p-6'), tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}>
+					<View style={tailwind('mb-6')}>
+						<Text style={[typefaces.pm, tailwind('text-base mb-2')]}>Tipo:</Text>
+						<Ripple
+							onPress={this.chooseType}
+							style={tailwind(
+								'flex flex-row justify-between py-2 px-4 items-center border border-2 border-black rounded-3xl bg-white',
+							)}
+						>
+							<Text style={[typefaces.pr]}>{type.name ? type.label : 'Seleccionar'}</Text>
+							<ArrowRightIcon />
+						</Ripple>
 					</View>
-				</View>
-				<View style={tailwind('items-center mt-6 mb-24')}>
-					<LoadingButton text="enviar" onPress={this.send} loading={sending} />
-				</View>
-			</ScrollView>
+					<View style={tailwind('mb-6')}>
+						<Text style={[typefaces.pm, tailwind('text-base mb-2')]}>Detalles:</Text>
+						<BasicInput
+							placeholder="Mensaje claro y conciso"
+							onChange={(text) => (this.state.details = text)}
+							maxLength={300}
+							style={{ ...typefaces.pr, ...tailwind('w-full'), textAlignVertical: 'top' }}
+							multiline={true}
+							numberOfLines={7}
+						/>
+					</View>
+					<View style={tailwind('mb-6')}>
+						<Text style={[typefaces.pm, tailwind('text-base mb-2')]}>
+							Evidencia:{' '}
+							<Text style={[typefaces.pm, tailwind('text-sm text-gray-600')]}>(opcional)</Text>
+						</Text>
+						<View style={tailwind('items-center mt-4 ')}>
+							{img.uri ? (
+								<ImageView
+									uri={img.uri}
+									onRemove={() => this.setState({ img: {} })}
+									dims={{ imgHeight, imgWidth }}
+								/>
+							) : (
+								<ImagePicker pickImage={this.pickImage} />
+							)}
+						</View>
+					</View>
+					<View style={tailwind('items-center mt-6 mb-24')}>
+						<LoadingButton text="enviar" onPress={this.send} loading={sending} />
+					</View>
+				</ScrollView>
+			</View>
 		);
 	}
 }

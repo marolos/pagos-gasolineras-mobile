@@ -10,9 +10,11 @@ import { typefaces, shadowStyle3 } from '../utils/styles';
 import { makeCancelable, sortByDate } from '../utils/utils';
 import ArrowLeftDownIcon from '../icons/ArrowLeftDownIcon';
 import ArrowUpRightIcon from '../icons/ArrowUpRightIcon';
-import TransferIcon from '../icons/TransferIcon';
+//import TransferIcon from '../icons/TransferIcon';
+import BackIcon from '../icons/SmallBackIcon';
 import { formatISODate } from '../utils/dateUtils';
 import AppButton from '../shared/AppButton';
+import { background, white } from '../utils/colors';
 
 class TransfersView extends React.Component {
 	constructor(props) {
@@ -63,16 +65,22 @@ class TransfersView extends React.Component {
 	render() {
 		const { refreshing, transfers } = this.state;
 		return (
-			<FlatList
-				refreshing={refreshing}
-				onRefresh={this.loadData}
-				ListEmptyComponent={() => <EmptyMessage onAddTransfer={this.onAddTransfer} />}
-				data={transfers.sort(sortByDate('created_at'))}
-				renderItem={this.renderItem}
-				keyExtractor={this.keyExtractor}
-				ListHeaderComponent={this.header()}
-				ListFooterComponent={Footer}
-			/>
+			<View style={{backgroundColor: white}}>
+				<BackTitle navigation={this.props.navigation}/>
+
+				<View style={[tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}>
+					<FlatList
+						refreshing={refreshing}
+						onRefresh={this.loadData}
+						ListEmptyComponent={() => <EmptyMessage onAddTransfer={this.onAddTransfer} />}
+						data={transfers.sort(sortByDate('created_at'))}
+						renderItem={this.renderItem}
+						keyExtractor={this.keyExtractor}
+						ListHeaderComponent={this.header()}
+						ListFooterComponent={Footer}
+					/>
+				</View>
+			</View>
 		);
 	}
 }
@@ -154,6 +162,21 @@ const EmptyMessage = memo(({ onAddTransfer }) => {
 });
 
 const Footer = memo(() => <View style={{ height: 50 }} />);
+
+const BackTitle = memo(({ navigation }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={navigation.goBack}
+				style={tailwind('rounded-full p-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<BackIcon />
+			</Ripple>
+			<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Transferencia de saldos</Text>
+		</View>
+	)
+})
 
 function IconButton({ onPress, text, icon }) {
 	return (

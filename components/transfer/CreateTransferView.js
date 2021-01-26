@@ -16,6 +16,9 @@ import BalanceSelector from './BalanceSelector';
 import UserSelector from './UserSelector';
 import LoadingButton from '../shared/LoadingButton';
 import AppButton from '../shared/AppButton';
+import Ripple from 'react-native-material-ripple';
+import BackIcon from '../icons/SmallBackIcon';
+import { background, white } from '../utils/colors';
 
 class CreateTransferView extends React.Component {
    constructor(props) {
@@ -105,55 +108,68 @@ class CreateTransferView extends React.Component {
       const balance = this.state.gasStationBalance;
       const remaining = (balance ? balance.total : 0) - this.state.amount;
       return (
-         <View>
-            <View style={styles.user.view}>
-               <Text style={styles.user.text}>Enviar a:</Text>
-               <UserSelector onChange={this.selectUser} />
-            </View>
-            <Line style={styles.line} />
-            <View style={styles.balance.view}>
-               <Text style={styles.balance.text}>Gasolinera: </Text>
-               <BalanceSelector onChange={this.selectBalance} />
-            </View>
-            <Line style={styles.line} />
-            <View style={styles.remaining.view}>
-               <Text style={styles.remaining.text}>Saldo restante: </Text>
-               <Text style={styles.remainingStyle(remaining)}>${remaining}</Text>
-            </View>
-            <Line style={styles.line} />
-            <AddSubInput onChange={this.updateAmount} style={styles.addSub.view} />
-				{/*
-				<View style={styles.button.view}>
-               <Button
-                  text="Transferir"
-                  onPress={this.trySend}
-                  style={tailwind('w-40')}
-                  viewStyle={tailwind('py-3')}
-                  primary
-               />
+			<View style={{backgroundColor: white}}>
+				<View style={{ zIndex: 1 }}>
+					<Ripple
+						onPress={this.props.navigation.goBack}
+						style={tailwind('rounded-full p-2 w-12 items-center')}
+						rippleCentered={true}
+					>
+						<BackIcon />
+					</Ripple>
+					<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Transferencia de saldos</Text>
 				</View>
-				*/}
-				<View style={styles.button.view}>
-					<LoadingButton
-						iconPos={'right'}
-						text="Enviar"
-						onPress={this.trySend}
-						style={tailwind('w-40')}
-						loading={this.state.showLoading}
-						viewStyle={tailwind('py-3')}
+
+				<View style={[tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}>
+					<View style={styles.user.view}>
+						<Text style={styles.user.text}>Enviar a:</Text>
+						<UserSelector onChange={this.selectUser} />
+					</View>
+					<Line style={styles.line} />
+					<View style={styles.balance.view}>
+						<Text style={styles.balance.text}>Gasolinera: </Text>
+						<BalanceSelector onChange={this.selectBalance} />
+					</View>
+					<Line style={styles.line} />
+					<View style={styles.remaining.view}>
+						<Text style={styles.remaining.text}>Saldo restante: </Text>
+						<Text style={styles.remainingStyle(remaining)}>${remaining}</Text>
+					</View>
+					<Line style={styles.line} />
+					<AddSubInput onChange={this.updateAmount} style={styles.addSub.view} />
+					{/*
+					<View style={styles.button.view}>
+						<Button
+							text="Transferir"
+							onPress={this.trySend}
+							style={tailwind('w-40')}
+							viewStyle={tailwind('py-3')}
+							primary
+						/>
+					</View>
+					*/}
+					<View style={styles.button.view}>
+						<LoadingButton
+							iconPos={'right'}
+							text="Enviar"
+							onPress={this.trySend}
+							style={tailwind('w-40')}
+							loading={this.state.showLoading}
+							viewStyle={tailwind('py-3')}
+						/>
+					</View>
+					<ConfirmTransferModal
+						show={this.state.showConfirm}
+						onConfirm={this.sendTransfer}
+						onCancel={() => this.setState({ showConfirm: false })}
+						gasStation={balance ? balance : {}}
+						amount={this.state.amount}
+						userToSend={this.state.receiverIdentifier}
 					/>
+					<LoadingModal show={this.state.showLoading} text="Transfiriendo saldo." />
+					<TransferDoneModal show={this.state.showDone} onClose={this.close} />
 				</View>
-            <ConfirmTransferModal
-               show={this.state.showConfirm}
-               onConfirm={this.sendTransfer}
-               onCancel={() => this.setState({ showConfirm: false })}
-               gasStation={balance ? balance : {}}
-               amount={this.state.amount}
-               userToSend={this.state.receiverIdentifier}
-            />
-            <LoadingModal show={this.state.showLoading} text="Transfiriendo saldo." />
-            <TransferDoneModal show={this.state.showDone} onClose={this.close} />
-         </View>
+			</View>
       );
    }
 }

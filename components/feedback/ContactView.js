@@ -8,6 +8,8 @@ import { useObjState } from '../utils/hooks';
 import { LinkIcon, PhoneIcon } from './icons';
 import ingSoftLogo from '../../assets/icons/ing-soft.png';
 import { typefaces } from '../utils/styles';
+import BackIcon from '../icons/SmallBackIcon';
+import { background, white } from '../utils/colors';
 
 export default function ContactView({ navigation }) {
 	const [state, setState] = useObjState({ companies: [], loading: false });
@@ -15,7 +17,7 @@ export default function ContactView({ navigation }) {
 	React.useEffect(() => {
 		setState({ loading: true });
 	}, []);
-	
+
 	React.useEffect(() => {
 		if (state.loading) {
 			Fetch.get('/company/all/')
@@ -25,30 +27,44 @@ export default function ContactView({ navigation }) {
 	}, [state.loading]);
 
 	return (
-		<ScrollView
-			keyboardShouldPersistTaps="handled"
-			refreshControl={
-				<RefreshControl
-					refreshing={state.loading}
-					onRefresh={() => setState({ loading: true })}
-				/>
-			}
-		>
-			<View style={tailwind('p-6')}>
-				<View>
-					<Text style={[typefaces.pm, tailwind('text-center text-base mb-4')]}>
-						Empresas afiliadas
-					</Text>
-					<CompanyList companies={state.companies} />
-				</View>
-				<View style={tailwind('items-center mt-12')}>
-					<Text style={[typefaces.pm, tailwind('text-center text-base mb-4')]}>
-						Desarrollado por:
-					</Text>
-					<Developers />
-				</View>
+		<View style={{backgroundColor: white}}>
+			<View style={{ zIndex: 1 }}>
+				<Ripple
+					onPress={navigation.goBack}
+					style={tailwind('rounded-full p-2 w-12 items-center')}
+					rippleCentered={true}
+				>
+					<BackIcon />
+				</Ripple>
+				<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Contacto</Text>
 			</View>
-		</ScrollView>
+
+			<ScrollView
+				keyboardShouldPersistTaps="handled"
+				style={[tailwind('p-6'), tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}
+				refreshControl={
+					<RefreshControl
+						refreshing={state.loading}
+						onRefresh={() => setState({ loading: true })}
+					/>
+				}
+			>
+				<View style={tailwind('p-6')}>
+					<View>
+						<Text style={[typefaces.pm, tailwind('text-center text-base mb-4')]}>
+							Empresas afiliadas
+						</Text>
+						<CompanyList companies={state.companies} />
+					</View>
+					<View style={tailwind('items-center mt-12')}>
+						<Text style={[typefaces.pm, tailwind('text-center text-base mb-4')]}>
+							Desarrollado por:
+						</Text>
+						<Developers />
+					</View>
+				</View>
+			</ScrollView>
+		</View>
 	);
 }
 

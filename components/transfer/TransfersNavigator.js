@@ -8,6 +8,7 @@ import Label from '../shared/Label';
 import TransfersView from './TransfersView';
 import tailwind from 'tailwind-rn';
 import CreateTransferView from './CreateTransferView';
+import { background } from '../utils/colors';
 
 const Stack = createStackNavigator();
 
@@ -15,13 +16,15 @@ export default function TransfersNavigator(props) {
    return (
       <Stack.Navigator
          screenOptions={{
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+				cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+				headerShown: false,
+				cardStyle: { backgroundColor: background },
          }}
       >
          <Stack.Screen
             name="transfersView"
             component={TransfersView}
-            options={({ navigation }) => ({
+            /*options={({ navigation }) => ({
                headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
                headerTitle: () => (
                   <Label
@@ -30,7 +33,7 @@ export default function TransfersNavigator(props) {
                      focused
                   />
                ),
-            })}
+            })}*/
          />
          <Stack.Screen
             name="createTransferView"
