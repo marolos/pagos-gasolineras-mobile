@@ -13,6 +13,7 @@ export default function BasicInput({
 	maxLength = 100,
 	keyboardType = 'default',
 	multiline = false,
+	numberOfLines = 1,
 }) {
 	const [hasErrors, setHasError] = React.useState(false);
 	const [editing, setEditing] = React.useState(false);
@@ -41,6 +42,7 @@ export default function BasicInput({
 					setEditing(false);
 				}}
 				multiline={multiline}
+				numberOfLines={numberOfLines}
 			/>
 		</View>
 	);

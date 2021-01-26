@@ -7,6 +7,7 @@ import {
 import Label from '../shared/Label';
 import tailwind from 'tailwind-rn';
 import ContactView from './ContactView';
+import { background } from '../utils/colors';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,8 @@ export default function ContactNavigator({ navigation }) {
 		<Stack.Navigator
 			screenOptions={{
 				cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+				headerShown: false,
+				cardStyle: { backgroundColor: background },
 			}}
 		>
 			<Stack.Screen
