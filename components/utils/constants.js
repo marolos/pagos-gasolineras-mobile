@@ -11,7 +11,7 @@ export const doDirtyShit = () => {
 export const REST_API_URL =
 	process.env.NODE_ENV === 'development'
 		? 'http://localhost:8000'
-		: 'https://fuelpay.azurewebsites.net';
+		: 'https://fue.pythonanywhere.com/';
 
 export const MAPBOX_API_URL = 'https://api.mapbox.com';
 

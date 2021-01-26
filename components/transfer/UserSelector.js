@@ -6,17 +6,19 @@ import tailwind from 'tailwind-rn';
 import { shadowStyle, typefaces } from '../utils/styles';
 import EditIcon from '../icons/EditIcon';
 import BasicInput from '../shared/BasicInput';
-import Button from '../shared/Button';
+//import Button from '../shared/Button';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import Fetch from '../utils/Fetch';
 import { ScrollView } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
+import AppButton from '../shared/AppButton';
 
 class UserSelector extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			open: false,
+			press: false,
 			input: null,
 			inputShow: null,
 			showResults: false,
@@ -33,18 +35,19 @@ class UserSelector extends React.Component {
 	};
 
 	hide = () => {
-		this.setState((state) => ({ open: false }));
+		this.setState((state) => ({ open: false, input: '' }));
 	};
 
 	accept = () => {
-		this.setState(() => ({ open: false, inputShow: this.state.input }));
+		//console.log(this.state.showResults, this.state.inputShow, this.state.input, this.state.press);
+		this.setState(() => ({ open: !this.state.press, inputShow: !this.state.press ? '' : this.state.input }));
 		if (this.props.onChange) {
 			this.props.onChange(this.state.input);
 		}
 	};
 
 	onChange = (input) => {
-		this.setState(() => ({ input, showResults: !!input }));
+		this.setState(() => ({ input, showResults: !!input, press: false }));
 		if (!input) return;
 		if (input.length < 4) return;
 
@@ -60,7 +63,7 @@ class UserSelector extends React.Component {
 	};
 
 	onUserPress = (user) => {
-		this.setState(() => ({ input: user.email, showResults: false }));
+		this.setState(() => ({ input: user.email, showResults: false, press: true }));
 	};
 
 	render() {
@@ -73,9 +76,9 @@ class UserSelector extends React.Component {
 				</Ripple>
 				<ReactNativeModal isVisible={open}>
 					<View style={styles.modal.view}>
-						<View style={tailwind('flex flex-row mb-2')}>
-							<EditIcon />
-							<Text style={styles.modal.text}>Ingresar usuario</Text>
+						<View style={tailwind('flex flex-row mb-5')}>
+							{/*<EditIcon />*/}
+							<Text style={styles.modal.text}>{/*Ingresar usuario*/}Ingrese cuenta a recargar</Text>
 						</View>
 						<View>
 							<BasicInput
@@ -83,7 +86,7 @@ class UserSelector extends React.Component {
 								onChange={this.onChange}
 								defaultValue={input}
 							/>
-							{showResults && results.length > 0 && (
+							{showResults && results.length > 0 && input.length > 0 && (
 								<View style={styles.list}>
 									<ScrollView
 										keyboardShouldPersistTaps="handled"
@@ -106,8 +109,12 @@ class UserSelector extends React.Component {
 							)}
 						</View>
 						<View style={styles.button.view}>
+							{/*
 							<Button text="cancelar" onPress={this.hide} primary={false} />
 							<Button text="aceptar" onPress={this.accept} />
+							*/}
+							<AppButton text="Cancelar" onPress={this.hide} primary={false} disable={true}/>
+							<AppButton text="Aceptar" onPress={this.accept}/>
 						</View>
 					</View>
 				</ReactNativeModal>
