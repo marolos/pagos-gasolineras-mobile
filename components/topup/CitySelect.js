@@ -60,9 +60,9 @@ export default function CitySelect({ onChange, defaultValue, editable = true }) 
 
 const styles = {
 	input: {
-		main: tailwind('rounded-md border-2 border-gray-200 w-64 pl-5'),
-		show: tailwind('bg-white border-2 border-gray-600'),
-		noShow: tailwind('bg-gray-200'),
+		main: tailwind('rounded-md border border-black rounded-3xl w-64 pl-5'),
+		show: tailwind('bg-white border border-black rounded-3xl border-gray-600'),
+		noShow: tailwind('bg-white border border-black rounded-3xl'),
 		errors: tailwind('bg-white border-2 border-red-400'),
 	},
 	list: {

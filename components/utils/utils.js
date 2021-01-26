@@ -8,6 +8,7 @@ import {
 } from './constants';
 import { FetchClass } from './Fetch';
 import { cities } from './mocks';
+import { handleRucCedula } from '../utils/validator';
 
 /**
  * Create an array with chunks of the given array with equal chunkSize
@@ -175,7 +176,7 @@ export function validForm(form) {
 		return { valid: false, message: 'Debe completar todos los campos' };
 	}
 
-	if (!CEDULA_REGEX.test(form.cedula) || CHAR_REGEX.test(form.cedula)) {
+	if (!handleRucCedula(form.cedula) || CHAR_REGEX.test(form.cedula)) {
 		return { valid: false, message: 'Ingrese un número válido de cédula' };
 	}
 	if (CHAR_REGEX.test(form.phone_number)) {

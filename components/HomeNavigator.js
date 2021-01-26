@@ -53,9 +53,7 @@ class HomeNavigator extends React.Component {
 					name="billingData"
 					component={BillingDataView}
 					options={() => ({
-						headerTitle: () => (
-							<Label text={'Datos de facturación'} style={styles.title} focused />
-						),
+						headerShown: false,
 						cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
 					})}
 				/>

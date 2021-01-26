@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, Image } from 'react-native';
 import tailwind from 'tailwind-rn';
 import AddIcon from '../icons/AddIcon';
+import add from '../../assets/img/agregar.png';
 import VehicleIdItem from './VehicleIdItem';
 import AddVehicleIdItemModal from './AddVehicleIdItemModal';
 import SimpleToast from 'react-native-simple-toast';
@@ -23,11 +24,11 @@ export default function VehiclesIdInput({ defaultValue = [], onChange, loading }
 
    return (
       <View style={tailwind('w-full items-center')}>
-         <Text style={tailwind('mb-2')}>Placas de los vehiculos</Text>
+         <Text style={tailwind('mb-2')}>Placas de los vehículos</Text>
          <View style={tailwind('flex flex-row')}>
             <View
                style={[
-                  tailwind('flex flex-row flex-wrap border-2 border-gray-600 rounded-md w-56'),
+                  tailwind('flex flex-row flex-wrap border border-black rounded-xl w-56 p-1'),
                   defaultValue.length === 0 ? tailwind('border-red-400') : {},
                   { minHeight: 10 },
                ]}
@@ -50,7 +51,7 @@ export default function VehiclesIdInput({ defaultValue = [], onChange, loading }
                rippleCentered
             >
                <View style={tailwind('flex justify-center items-center')}>
-                  <AddIcon />
+                  <Image source={add} style={tailwind('w-12 h-12')}/>
                </View>
             </Ripple>
          </View>

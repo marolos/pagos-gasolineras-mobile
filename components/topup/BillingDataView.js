@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Keyboard } from 'react-native';
 import InfoIcon from '../icons/InfoIcon';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
 import BasicInput from '../shared/BasicInput';
 import LoadingButton from '../shared/LoadingButton';
-import NextIcon from '../icons/NextIcon';
 import VehiclesIdInput from './VehiclesIdInput';
 import { FULL_WIDTH, FULL_HIGHT, CEDULA_REGEX, CHAR_REGEX } from '../utils/constants';
 import { makeCancelable, equalForm, validForm } from '../utils/utils';
@@ -13,6 +12,16 @@ import SimpleToast from 'react-native-simple-toast';
 import CitySelect from './CitySelect';
 import Fetch from '../utils/Fetch';
 import { connect } from 'react-redux';
+import Ripple from 'react-native-material-ripple';
+import BackIcon from '../icons/SmallBackIcon';
+import FastImage from 'react-native-fast-image';
+import { background, 
+	white, 
+	btn_text,
+	info_text } from '../utils/colors';
+
+import { handleRucCedula } from '../utils/validator';
+
 
 class BillingDataView extends React.Component {
 	constructor(props) {
@@ -96,8 +105,13 @@ class BillingDataView extends React.Component {
 			},
 			(err) => {
 				if (err.isCanceled) return;
+				console.log(err);
 				if (err.status === 455) {
 					SimpleToast.show('Ya existe otro registro con la placa: ' + err.body.error);
+					this.setState({ loading: false });
+					return;
+				}else if(err.status === 400){
+					SimpleToast.show('La cédula ingresada ya está en uso');
 					this.setState({ loading: false });
 					return;
 				}
@@ -109,104 +123,135 @@ class BillingDataView extends React.Component {
 	render() {
 		const formData = this.state.form;
 		return (
-			<ScrollView keyboardShouldPersistTaps="handled">
-				<Message />
-				<View style={tailwind('items-center')}>
-					<View style={styles.input.container}>
-						<Text style={styles.input.text}>Nombres:</Text>
-						<BasicInput
-							defaultValue={formData.first_name}
-							placeholder="Nombres"
-							validate={(text) => text.length > 0}
-							onChange={(text) =>
-								this.setState(({ form }) => ({ form: { ...form, first_name: text } }))
-							}
-						/>
-					</View>
-					<View style={styles.input.container}>
-						<Text style={styles.input.text}>Apellidos:</Text>
-						<BasicInput
-							defaultValue={formData.last_name}
-							placeholder="Apellidos"
-							validate={(text) => text.length > 0}
-							onChange={(text) =>
-								this.setState(({ form }) => ({ form: { ...form, last_name: text } }))
-							}
-						/>
-					</View>
-					<View style={styles.input.container}>
-						<Text style={styles.input.text}>N° de documento:</Text>
-						<BasicInput
-							defaultValue={formData.cedula}
-							placeholder="Cédula o pasaporte"
-							maxLength={10}
-							keyboardType="numeric"
-							validate={(text) =>
-								text.length > 0 && !CHAR_REGEX.test(text) && CEDULA_REGEX.test(text)
-							}
-							onChange={(text) =>
-								this.setState(({ form }) => ({ form: { ...form, cedula: text } }))
-							}
-						/>
-					</View>
-					<View style={styles.input.container}>
-						<Text style={styles.input.text}>Ciudad:</Text>
-						<CitySelect
-							defaultValue={formData.city}
-							onChange={(text) =>
-								this.setState(({ form }) => ({ form: { ...form, city: text } }))
-							}
-						/>
-					</View>
-					<View style={styles.input.container}>
-						<Text style={styles.input.text}>Direccion:</Text>
-						<BasicInput
-							defaultValue={formData.address}
-							placeholder="Direccion domiciliaria"
-							validate={(text) => text.length > 0}
-							onChange={(text) =>
-								this.setState(({ form }) => ({ form: { ...form, address: text } }))
-							}
-						/>
-					</View>
-					<View style={styles.input.container}>
-						<Text style={styles.input.text}>Telefono:</Text>
-						<BasicInput
-							defaultValue={formData.phone_number}
-							placeholder="n° de teléfono"
-							validate={(text) => text.length > 0 && !CHAR_REGEX.test(text)}
-							maxLength={10}
-							keyboardType="numeric"
-							onChange={(text) =>
-								this.setState(({ form }) => ({
-									form: { ...form, phone_number: text },
-								}))
-							}
-						/>
-					</View>
-					<VehiclesIdInput
-						defaultValue={formData.vehicles_ids}
-						loading={this.state.loadingData}
-						onChange={(items) =>
-							this.setState(({ form }) => ({ form: { ...form, vehicles_ids: items } }))
-						}
-					/>
+			<View style={{ height: FULL_HIGHT, width: FULL_WIDTH, backgroundColor: white }}>
+				{this.props.route.params.company ? (
+					<View >
+					<BackTitle navigation={this.props.navigation} station={this.props.route.params}/>
 				</View>
-				<View style={styles.button.container}>
-					<LoadingButton
-						icon={<NextIcon />}
-						iconPos={'right'}
-						text="continuar"
-						style={tailwind('w-48')}
-						onPress={this.sendData}
-						loading={this.state.loading}
-					/>
-				</View>
-				{this.state.loadingData && <Spinner />}
-			</ScrollView>
+				) : <View/>}
+				
+				<ScrollView 
+					style={[tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}
+					keyboardShouldPersistTaps="handled">
+						<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mt-2 ml-6')]}>
+							Datos de facturación</Text>
+					<View style={tailwind('items-center')}>
+						<View style={styles.input.container}>
+							<Text style={styles.input.text}>Nombres:</Text>
+							<BasicInput
+								defaultValue={formData.first_name}
+								placeholder="Nombres"
+								validate={(text) => text.length > 0}
+								onChange={(text) =>
+									this.setState(({ form }) => ({ form: { ...form, first_name: text } }))
+								}
+							/>
+						</View>
+						<View style={styles.input.container}>
+							<Text style={styles.input.text}>Apellidos:</Text>
+							<BasicInput
+								defaultValue={formData.last_name}
+								placeholder="Apellidos"
+								validate={(text) => text.length > 0}
+								onChange={(text) =>
+									this.setState(({ form }) => ({ form: { ...form, last_name: text } }))
+								}
+							/>
+						</View>
+						<View style={styles.input.container}>
+							<Text style={styles.input.text}>Cédula o pasaporte:</Text>
+							<BasicInput
+								defaultValue={formData.cedula}
+								placeholder="Cédula o pasaporte"
+								maxLength={10}
+								keyboardType="numeric"
+								validate={(text) =>
+									text.length > 0 && !CHAR_REGEX.test(text) && handleRucCedula(text)
+								}
+								onChange={(text) =>
+									this.setState(({ form }) => ({ form: { ...form, cedula: text } }))
+								}
+							/>
+						</View>
+						<View style={styles.input.container}>
+							<Text style={styles.input.text}>Ciudad:</Text>
+							<CitySelect
+								defaultValue={formData.city}
+								onChange={(text) =>
+									this.setState(({ form }) => ({ form: { ...form, city: text } }))
+								}
+							/>
+						</View>
+						<View style={styles.input.container}>
+							<Text style={styles.input.text}>Direccion:</Text>
+							<BasicInput
+								defaultValue={formData.address}
+								placeholder="Direccion domiciliaria"
+								validate={(text) => text.length > 0}
+								onChange={(text) =>
+									this.setState(({ form }) => ({ form: { ...form, address: text } }))
+								}
+							/>
+						</View>
+						<View style={styles.input.container}>
+							<Text style={styles.input.text}>Teléfono:</Text>
+							<BasicInput
+								defaultValue={formData.phone_number}
+								placeholder="n° de teléfono"
+								validate={(text) => text.length > 0 && !CHAR_REGEX.test(text)}
+								maxLength={10}
+								keyboardType="numeric"
+								onChange={(text) =>
+									this.setState(({ form }) => ({
+										form: { ...form, phone_number: text },
+									}))
+								}
+							/>
+						</View>
+						<VehiclesIdInput
+							defaultValue={formData.vehicles_ids}
+							loading={this.state.loadingData}
+							onChange={(items) =>
+								this.setState(({ form }) => ({ form: { ...form, vehicles_ids: items } }))
+							}
+						/>
+					</View>
+					<View style={styles.button.container}>
+						<LoadingButton
+							text="Siguiente"
+							style={tailwind('w-40')}
+							onPress={this.sendData}
+							loading={this.state.loading}
+						/>
+					</View>
+					{this.state.loadingData && <Spinner />}
+				</ScrollView>
+			</View>
 		);
 	}
 }
+
+
+const BackTitle = memo(({ navigation, station }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={navigation.goBack}
+				style={tailwind('rounded-full p-2 pl-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<BackIcon />
+			</Ripple>
+			<View style={tailwind('flex flex-row items-center ml-12 mb-4')}>
+			<FastImage
+					source={{ uri: station.company.company_logo_path }}
+					style={tailwind('w-12 h-12')}
+				/>
+				<Text style={[tailwind('text-2xl'), typefaces.pb]}>{station.gas_station.name}</Text>
+			</View>
+		</View>
+	)
+})
 
 function Message() {
 	return (
@@ -247,7 +292,7 @@ const styles = {
 	},
 	input: {
 		container: tailwind('w-64 my-2'),
-		text: [tailwind('ml-2 text-sm'), typefaces.pr],
+		text: [tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }],
 	},
 	button: {
 		container: tailwind('flex flex-row justify-end pr-6 mt-12 mb-16'),
