@@ -6,12 +6,13 @@ import tailwind from 'tailwind-rn';
 
 import emptyImage from '../../assets/background/empty.png';
 import Fetch from '../utils/Fetch';
-import { typefaces } from '../utils/styles';
+import { typefaces, shadowStyle3 } from '../utils/styles';
 import { makeCancelable, sortByDate } from '../utils/utils';
 import ArrowLeftDownIcon from '../icons/ArrowLeftDownIcon';
 import ArrowUpRightIcon from '../icons/ArrowUpRightIcon';
 import TransferIcon from '../icons/TransferIcon';
 import { formatISODate } from '../utils/dateUtils';
+import AppButton from '../shared/AppButton';
 
 class TransfersView extends React.Component {
 	constructor(props) {
@@ -82,16 +83,18 @@ function TransferItem({ transfer, user }) {
 	return (
 		<View
 			key={transfer.id}
-			style={tailwind(
-				'flex flex-row justify-between border border-gray-300 rounded-md my-1 px-2 py-2',
-			)}
+			style={[
+				tailwind( 'flex flex-row justify-between border border-gray-300 rounded-md my-1 px-2 py-2',),
+				tailwind('mb-2 bg-white rounded-xl border border-gray-300 mx-4 p-4'), shadowStyle3,
+			]}
 		>
 			<View style={tailwind('flex flex-row')}>
 				<View style={tailwind('mr-1')}>
+					{/* 1ED895 - 19ACDA */}
 					{isReceiver ? (
-						<ArrowLeftDownIcon stroke="#1ED895" />
+						<ArrowLeftDownIcon stroke="#68ad32" />
 					) : (
-						<ArrowUpRightIcon stroke="#19ACDA" />
+						<ArrowUpRightIcon stroke="#FF0000" />
 					)}
 				</View>
 				<View>
@@ -128,7 +131,8 @@ function TransferItem({ transfer, user }) {
 
 const CreateTransferButton = memo(({ onAddTransfer }) => (
 	<View style={tailwind('p-4 flex flex-row justify-end')}>
-		<IconButton text="Transferir saldo" onPress={onAddTransfer} icon={<TransferIcon />} />
+		{/*<IconButton text="Transferir saldo" onPress={onAddTransfer} icon={<TransferIcon />} />*/}
+		<AppButton text="Transferir" onPress={onAddTransfer}/>
 	</View>
 ));
 
@@ -140,10 +144,11 @@ const EmptyMessage = memo(({ onAddTransfer }) => {
 			</View>
 			<View style={tailwind('px-12')}>
 				<Text style={[tailwind('text-gray-700 text-lg text-center mb-12'), typefaces.pm]}>
-					No haz realizado ninguna transferencia de saldo aún.
+					No haz realizado ningun movimiento.
 				</Text>
 			</View>
-			<IconButton text="Transferir saldo" onPress={onAddTransfer} icon={<TransferIcon />} />
+			{/*<IconButton text="Transferir saldo" onPress={onAddTransfer} icon={<TransferIcon />} />*/}
+			<AppButton text="Transferir" onPress={onAddTransfer}/>
 		</View>
 	);
 });

@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import ReactNativeModal from 'react-native-modal';
 import SimpleToast from 'react-native-simple-toast';
 import { connect } from 'react-redux';
@@ -9,10 +9,13 @@ import { typefaces } from '../utils/styles';
 import InfoIcon from '../icons/InfoIcon';
 import AddSubInput from '../shared/AddSubInput';
 import Button from '../shared/Button';
+import InfoIconp from '../../assets/img/popup.png';
 import Line from '../shared/Line';
 import LoadingModal from '../shared/LoadingModal';
 import BalanceSelector from './BalanceSelector';
 import UserSelector from './UserSelector';
+import LoadingButton from '../shared/LoadingButton';
+import AppButton from '../shared/AppButton';
 
 class CreateTransferView extends React.Component {
    constructor(props) {
@@ -119,7 +122,8 @@ class CreateTransferView extends React.Component {
             </View>
             <Line style={styles.line} />
             <AddSubInput onChange={this.updateAmount} style={styles.addSub.view} />
-            <View style={styles.button.view}>
+				{/*
+				<View style={styles.button.view}>
                <Button
                   text="Transferir"
                   onPress={this.trySend}
@@ -127,7 +131,18 @@ class CreateTransferView extends React.Component {
                   viewStyle={tailwind('py-3')}
                   primary
                />
-            </View>
+				</View>
+				*/}
+				<View style={styles.button.view}>
+					<LoadingButton
+						iconPos={'right'}
+						text="Enviar"
+						onPress={this.trySend}
+						style={tailwind('w-40')}
+						loading={this.state.showLoading}
+						viewStyle={tailwind('py-3')}
+					/>
+				</View>
             <ConfirmTransferModal
                show={this.state.showConfirm}
                onConfirm={this.sendTransfer}
@@ -181,13 +196,14 @@ const ConfirmTransferModal = memo(
                      </View>
                   </View>
                   <View style={tailwind('flex flex-row justify-evenly mt-8')}>
-                     <Button
-                        text={'cancelar'}
+                     <AppButton
+                        text={'Cancelar'}
                         primary={false}
-                        onPress={onCancel}
+								onPress={onCancel}
+								disable={true}
                         style={{ width: 100 }}
                      />
-                     <Button text={'confirmar'} onPress={onConfirm} />
+                     <AppButton text={'confirmar'} onPress={onConfirm} style={{ width: 120 }}/>
                   </View>
                </View>
             </View>
@@ -213,8 +229,11 @@ const TransferDoneModal = ({ show, onClose }) => {
                      Transferencia completa
                   </Text>
                </View>
+					<View style={tailwind(' flex flex-row justify-evenly mt-4 ')}>
+						<Image source={InfoIconp} style={[tailwind('w-20 h-20')]} />
+					</View>
                <View style={tailwind('flex flex-row justify-evenly mt-8')}>
-                  <Button text={'Aceptar'} onPress={onClose} style={{ width: 100 }} />
+                  <AppButton text={'Aceptar'} onPress={onClose} style={{ width: 100 }} />
                </View>
             </View>
          </View>

@@ -3,16 +3,16 @@ import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
 import Ripple from 'react-native-material-ripple';
-import { btn_primary, btn_secundary, btn_text } from '../utils/colors'
+import { btn_primary, btn_secundary, btn_text, btn_disable } from '../utils/colors'
 
-export default function AppButton({ text, onPress, primary = true, style = {}, textStyle = {}, viewStyle = {} }) {
+export default function AppButton({ text, onPress, primary = true, disable = false, style = {}, textStyle = {}, viewStyle = {} }) {
    return (
       <Ripple
          onPress={onPress}
          style={[styles.ripple, style]}
-         rippleColor={primary ? btn_primary : btn_secundary}
+         rippleColor={primary ? btn_primary : disable ? btn_disable : btn_secundary}
       >
-         <View style={[styles.view, primary ? { backgroundColor: btn_primary } : { backgroundColor: btn_secundary }, viewStyle]}>
+         <View style={[styles.view, primary ? { backgroundColor: btn_primary } : disable ? {backgroundColor: btn_disable} : { backgroundColor: btn_secundary }, viewStyle]}>
             <Text
                style={[
                   typefaces.psb,

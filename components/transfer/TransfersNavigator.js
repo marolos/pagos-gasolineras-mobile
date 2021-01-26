@@ -25,7 +25,7 @@ export default function TransfersNavigator(props) {
                headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
                headerTitle: () => (
                   <Label
-                     text={'Transferencias de saldo'}
+                     text={'Transferencia de saldos'}
                      style={tailwind('text-base mt-1')}
                      focused
                   />
@@ -37,7 +37,7 @@ export default function TransfersNavigator(props) {
             component={CreateTransferView}
             options={() => ({
                headerTitle: () => (
-                  <Label text={'Transferir saldo'} style={tailwind('text-base mt-1')} focused />
+                  <Label text={'Transferir'} style={tailwind('text-base mt-1')} focused />
                ),
             })}
          />
