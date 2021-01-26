@@ -144,12 +144,9 @@ const ListFooter = memo(({ loading }) => (
 ));
 
 const EmptyMessage = memo(() => (
-	<View style={tailwind('items-center mb-12 mt-24')}>
-		<View>
-			<Image source={emptyImage} style={tailwind('w-32 h-48')} />
-		</View>
+	<View style={tailwind('items-center mt-12')}>
 		<View style={tailwind('px-12')}>
-			<Text style={[tailwind('text-gray-600 text-center mt-4'), typefaces.pm]}>
+			<Text style={[tailwind('text-base text-center'), typefaces.pm, { color: info_text }]}>
 				No tienes notificaciones
 			</Text>
 		</View>

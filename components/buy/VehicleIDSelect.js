@@ -5,6 +5,7 @@ import tailwind from 'tailwind-rn';
 import Fetch from '../utils/Fetch';
 import { shadowStyle, typefaces } from '../utils/styles';
 import AnimatedArrowIcon from '../icons/AnimatedArrowIcon';
+import { info_text } from '../utils/colors';
 
 export default function VehicleIDSelect({ onChange }) {
    const [selected, setSelected] = React.useState(null);
@@ -32,11 +33,11 @@ export default function VehicleIDSelect({ onChange }) {
    }, [selected]);
 
    return (
-      <View style={tailwind('flex flex-row justify-between mt-6')}>
-         <Text style={[tailwind('text-base'), typefaces.pm]}>Placa: </Text>
+      <View style={tailwind('flex flex-row justify-between items-center mt-6')}>
+         <Text style={[tailwind('text-base'), typefaces.pr, { color: info_text }]}>Placa del vehículo: </Text>
          <Ripple
             style={tailwind(
-               'flex flex-row items-center justify-between w-1/2 px-4 py-2 border border-gray-400 rounded',
+               'flex flex-row items-center bg-white justify-between w-1/2 px-4 py-2 border border-black rounded-3xl',
             )}
             onPress={() => setOpen(!open)}
          >

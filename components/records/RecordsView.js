@@ -333,7 +333,7 @@ function PurchaseItem({ purchase, onTap }) {
 				<View  style={tailwind('w-11/12')}>
 					<View style={tailwind('ml-4')}>
 						<Text>
-							<Text style={[tailwind('font-bold'), typefaces.pm]}>Compra en</Text>
+							<Text style={[tailwind('font-bold'), typefaces.pm]}>Recarga en</Text>
 							{' '}
 							<Text style={[tailwind('font-bold'), typefaces.pm]}>
 								{purchase?.gas_station?.name} por

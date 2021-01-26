@@ -2,14 +2,17 @@ import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import tailwind from 'tailwind-rn';
 import Modal from 'react-native-modal';
-import ArrowDownIcon from '../icons/ArrowDownIcon';
 import { typefaces } from '../utils/styles';
-import Button from '../shared/Button';
+import Button from '../shared/AppButton';
 import { useNavigation } from '@react-navigation/native';
 import Ripple from 'react-native-material-ripple';
 import FastImage from 'react-native-fast-image';
+import BackIcon from '../icons/SmallBackIcon';
+import { background, 
+	dollar_text,  
+	info_text } from '../utils/colors';
 
-function CollapseModalOptions({ visible, closeCollapse, station }) {
+function CollapseModalOptions({ visible, closeCollapse, station}) {
 	const navigation = useNavigation();
 	return (
 		<Modal
@@ -23,22 +26,18 @@ function CollapseModalOptions({ visible, closeCollapse, station }) {
 			style={styles.modal}
 		>
 			<View style={styles.view}>
-				<View style={tailwind('p-6')}>
-					<View style={styles.title}>
-						<FastImage
-							source={{ uri: station.company.company_logo_path }}
-							style={styles.image}
-						/>
-						<Text style={styles.titleText}>{station.gas_station.name}</Text>
-					</View>
+			<View style={{zIndex: 1 }}>
+					<BackTitle closeCollapse={closeCollapse} station={station}/>
+				</View> 
+				<View style={[tailwind('flex rounded-2xl p-6 h-full'), { backgroundColor: background, zIndex: 10 }]}>
 					<View style={styles.total}>
 						<Text style={styles.totalText}>Saldo disponible:</Text>
 						<Text style={styles.totalValue}>${station.total}</Text>
 					</View>
 					<View style={styles.options}>
 						<Button
-							text={'recargar'}
-							primary={false}
+							text={'Comprar'}
+							primary={true}
 							onPress={() => {
 								closeCollapse();
 								setTimeout(
@@ -52,38 +51,54 @@ function CollapseModalOptions({ visible, closeCollapse, station }) {
 							}}
 						/>
 						<Button
-							text={'comprar'}
+							text={'Recargar'}
+							primary={false}
 							onPress={() => {
 								closeCollapse();
 								setTimeout(() => navigation.navigate('buy', station), 200);
 							}}
 						/>
 					</View>
-					<Ripple
-						style={tailwind('absolute right-0 p-6')}
-						onPress={() => {
-							setTimeout(() => closeCollapse(), 50);
-						}}
-						rippleCentered
-					>
-						<ArrowDownIcon />
-					</Ripple>
 				</View>
 			</View>
 		</Modal>
 	);
 }
 
+
+const BackTitle = memo(({ closeCollapse, station }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={() => {
+					setTimeout(() => closeCollapse(), 50);
+				}}
+				style={tailwind('rounded-full p-2 pl-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<BackIcon />
+			</Ripple>
+			<View style={tailwind('flex flex-row items-center ml-12 mb-4')}>
+			<FastImage
+					source={{ uri: station.company.company_logo_path }}
+					style={styles.image}
+				/>
+				<Text style={[tailwind('text-2xl'), typefaces.pb]}>{station.gas_station.name}</Text>
+			</View>
+		</View>
+	)
+})
+
 const styles = {
 	modal: tailwind('w-full flex justify-end items-center m-0'),
-	view: tailwind('w-full h-64 bg-white rounded-t-lg'),
+	view: tailwind('w-full h-full bg-white rounded-t-lg'),
 	title: tailwind('flex flex-row items-center'),
 	titleText: [tailwind('mt-2 ml-2 text-base'), typefaces.psb],
-	image: { width: 50, height: 50 },
-	total: tailwind('flex flex-row p-4'),
-	totalText: [tailwind('text-base'), typefaces.pm],
-	totalValue: [tailwind('text-lg text-green-600 ml-4'), typefaces.pm],
-	options: tailwind('flex flex-row justify-evenly mt-6'),
+	totalText: [tailwind('text-lg'), typefaces.pm, { color: info_text }],
+	image: tailwind('w-12 h-12 mr-3'),
+	total: tailwind('flex flex-row p-4 justify-center'),
+	totalValue:[tailwind('text-lg ml-2'), typefaces.psb, { color: dollar_text }],
+	options: tailwind('flex flex-row justify-evenly mt-12'),
 };
 
 export default memo(CollapseModalOptions);

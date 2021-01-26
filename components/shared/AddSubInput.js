@@ -27,6 +27,7 @@ export default function AddSubInput({ onChange, style = {} }) {
 				<Text style={styles.text}>$</Text>
 				<TextInput
 					value={state.text}
+					textAlign={"right"}
 					defaultValue={state.text}
 					style={styles.input}
 					placeholder="10.00"
@@ -45,10 +46,10 @@ export default function AddSubInput({ onChange, style = {} }) {
 
 const styles = {
 	view: tailwind('flex flex-row justify-evenly items-center'),
-	inputView: tailwind('border-2 border-gray-600 rounded w-32 h-12 flex flex-row items-center'),
+	inputView: tailwind('border-2 border border-black rounded-3xl w-32 h-12 flex flex-row items-center bg-white'),
 	error: tailwind('border-red-400'),
 	text: [tailwind('text-gray-600 ml-4'), typefaces.pm],
-	input: tailwind('text-gray-900 w-20'),
+	input: tailwind('text-gray-900 w-20 '),
 };
 
 export const MIN_AMOUNT = 0.0;

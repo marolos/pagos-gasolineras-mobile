@@ -100,9 +100,7 @@ class HomeNavigator extends React.Component {
 					name="buy"
 					component={BuyView}
 					options={() => ({
-						headerTitle: () => (
-							<Label text={'Comprar Combustible'} style={styles.title} focused />
-						),
+						headerShown: false,
 						cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
 					})}
 				/>
@@ -125,6 +123,7 @@ class HomeNavigator extends React.Component {
 					name="generateCode"
 					component={GenerateCodeView}
 					options={({ navigation }) => ({
+						headerShown: false,
 						headerLeft: () => (
 							<HeaderBackButton
 								onPress={() => navigation.reset({ index: 0, routes: [{ name: 'home' }] })}
