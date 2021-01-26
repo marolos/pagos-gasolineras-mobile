@@ -142,9 +142,9 @@ class SearchView extends React.Component {
 			    	</View>
 				<View style={tailwind('h-24')}></View>
 				<View style={[tailwind('flex rounded-t-2xl'), { backgroundColor: background, zIndex: 10 }]}>
-				<Text style={[tailwind('text-2xl ml-5 mt-4 mb-2'), typefaces.pb]}>Buscar</Text>
+				
+				<SearchBox onSelectResult={this.onSelectResult} onSearchNear={this.onSearchNear} />
 				   <View>
-				       <SearchBox onSelectResult={this.onSelectResult} onSearchNear={this.onSearchNear} />
 				       <View style={[styles.map.view]}>
 				       	<MapboxGL.MapView style={styles.map.map} rotateEnabled={false}>
 				       		<MapboxGL.Camera centerCoordinate={center} zoomLevel={zoom} />

@@ -4,7 +4,7 @@ import tailwind from 'tailwind-rn';
 import Modal from 'react-native-modal';
 import ArrowDownIcon from '../icons/ArrowDownIcon';
 import { typefaces } from '../utils/styles';
-import Button from '../shared/Button';
+import Button from '../shared/AppButton';
 import Ripple from 'react-native-material-ripple';
 import Fetch from '../utils/Fetch';
 import FastImage from 'react-native-fast-image';
@@ -131,13 +131,13 @@ class CollapseSelectedStation extends React.Component {
 							</View>
 						</View>
 						<View style={styles.feedback.view}>
-							<FeedbackButton onPress={this.onFeedback} />
+							
 						</View>
 						<View style={styles.options}>
 							{loaded && (
 								<React.Fragment>
-									<Button text={'recargar'} onPress={this.onTopup} primary={!hasCredit} />
-									{hasCredit && <Button text={'comprar'} onPress={this.onBuy} />}
+									<Button text={'Comprar'} onPress={this.onTopup} />
+									{hasCredit && <Button text={'Recargar'} onPress={this.onBuy} primary={false}/>}
 								</React.Fragment>
 							)}
 						</View>

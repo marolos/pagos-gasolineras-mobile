@@ -3,7 +3,7 @@ import { View, TextInput, Keyboard, ActivityIndicator, Text } from 'react-native
 import { FULL_HIGHT, FULL_WIDTH } from '../utils/constants';
 import tailwind from 'tailwind-rn';
 import { shadowStyle2, typefaces } from '../utils/styles';
-import SearchIcon from '../icons/SearchIcon';
+import SearchIcon from '../icons/SearchIcon2';
 import Animated, { Easing } from 'react-native-reanimated';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import Fetch from '../utils/Fetch';
@@ -68,15 +68,23 @@ class SearchBox extends React.Component {
          return loading ? (
             <ActivityIndicator size="small" color="black" animating />
          ) : (
-            <Ripple rippleCentered style={tailwind('p-2')} onPress={() => Keyboard.dismiss()}>
-               <CloseIcon height={12} width={12} />
+            <Ripple rippleCentered style={tailwind('p-2')} onPress={() => {
+					this.textInput.clear();
+					Keyboard.dismiss()
+				}}>
+               <CloseIcon height={14} width={14} />
             </Ripple>
          );
       }
       return loading ? (
          <ActivityIndicator size="small" color="black" animating />
       ) : (
-         <SearchIcon fill={'#777'} focused />
+			<Ripple rippleCentered style={tailwind('p-2')} onPress={() => {
+				this.textInput.focus();
+			}}>
+				<SearchIcon fill={'#000'} height={20} width={20}/>
+
+			</Ripple>
       );
    };
 
@@ -88,6 +96,7 @@ class SearchBox extends React.Component {
    };
 
    onSearchNear = async () => {
+		this.textInput.clear();
       this.setState({ loading: true, open: false });
       Keyboard.dismiss();
       if (this.props.onSearchNear) {
@@ -101,14 +110,17 @@ class SearchBox extends React.Component {
       return (
          <View style={styles.view}>
             <ScrollView keyboardShouldPersistTaps="handled" style={styles.boxScrollView}>
-               <View style={styles.box}>
-                  <TextInput
-                     style={styles.textInput}
-                     placeholder="nombre, dirección"
-                     onChangeText={this.onChangeText}
-                  />
-                  {this.getIcon(loading, open)}
-               </View>
+					<View style={tailwind('flex flex-row items-center')}>
+						<View style={styles.box}>
+							<TextInput
+								ref={input => { this.textInput = input } }
+								style={styles.textInput}
+								placeholder="Nombre, dirección"
+								onChangeText={this.onChangeText}
+							/>
+						</View>
+						{this.getIcon(loading, open)}
+					</View>
             </ScrollView>
             {open && (
                <ResultList
@@ -174,20 +186,18 @@ function SearchNearButton({ onPress }) {
 
 const styles = {
    boxScrollView: { zIndex: 5 },
-   view: [{ position: 'absolute', top: 10, left: 5 }, tailwind('flex items-center')],
+   view: [tailwind('flex items-center')],
    box: [
-      tailwind('flex flex-row items-center justify-between bg-white px-6 rounded-md m-3'),
-      shadowStyle2,
-      { width: FULL_WIDTH - (24 + 10) },
+      tailwind('flex flex-row items-center bg-white px-6 border rounded-3xl m-3'),
+      { width: FULL_WIDTH * 0.8 },
    ],
    bg: {
       position: 'absolute',
       backgroundColor: 'white',
-      top: -20,
       zIndex: 4,
       ...tailwind('rounded-b-full'),
 	},
-	textInput: tailwind('w-56'),
+	textInput: tailwind('w-full'),
    resultList: {
       scroll: [tailwind('absolute w-full'), { zIndex: 5, top: 85 }],
       ripple: tailwind('flex flex-row items-center justify-between px-6 pt-1 pb-2'),
