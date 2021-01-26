@@ -68,7 +68,7 @@ class HomeNavigator extends React.Component {
 					name="topupData"
 					component={TopupDataView}
 					options={() => ({
-						headerShown: false
+						headerShown: false,
 						// headerTitle: () => <Label text={'Recargar saldo'} style={styles.title} focused />,
 					})}
 				/>
@@ -76,13 +76,15 @@ class HomeNavigator extends React.Component {
 					name="chooseCard"
 					component={ChooseCardView}
 					options={() => ({
-						headerTitle: () => <Label text={'Elegir tarjeta'} style={styles.title} focused />,
+						headerShown: false,
+						//headerTitle: () => <Label text={'Elegir tarjeta'} style={styles.title} focused />,
 					})}
 				/>
 				<Stack.Screen
 					name="addCard"
 					component={AddCardView}
 					options={() => ({
+						headerShown: false,
 						headerTitle: () => (
 							<Label text={'Ingresar tarjeta'} style={styles.title} focused />
 						),

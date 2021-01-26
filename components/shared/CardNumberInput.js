@@ -34,9 +34,9 @@ function CardNumberInput({ onChange }) {
 
 const styles = {
    img: { width: 30, resizeMode: 'contain' },
-   view: tailwind('flex flex-row items-center rounded-md border-2 border-gray-200 pl-4 w-full'),
+   view: tailwind('flex flex-row items-center rounded-3xl border border-black w-64 pl-5 bg-white w-full'),
    editing: tailwind('bg-white border-2 border-gray-600'),
-   noEdit: tailwind('bg-gray-200'),
+   noEdit: tailwind('bg-white'),
    icon: tailwind('mr-2 w-8'),
    input: [tailwind('w-56 text-base')],
 };

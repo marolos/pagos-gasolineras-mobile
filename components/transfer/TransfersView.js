@@ -14,7 +14,7 @@ import ArrowUpRightIcon from '../icons/ArrowUpRightIcon';
 import BackIcon from '../icons/SmallBackIcon';
 import { formatISODate } from '../utils/dateUtils';
 import AppButton from '../shared/AppButton';
-import { background, white } from '../utils/colors';
+import { background, white, info_text } from '../utils/colors';
 
 class TransfersView extends React.Component {
 	constructor(props) {
@@ -147,11 +147,11 @@ const CreateTransferButton = memo(({ onAddTransfer }) => (
 const EmptyMessage = memo(({ onAddTransfer }) => {
 	return (
 		<View style={tailwind('items-center mb-12 mt-16')}>
-			<View>
+			{/*<View>
 				<Image source={emptyImage} style={[tailwind('w-32 h-48')]} />
-			</View>
-			<View style={tailwind('px-12')}>
-				<Text style={[tailwind('text-gray-700 text-lg text-center mb-12'), typefaces.pm]}>
+			</View>*/}
+			<View style={tailwind('px-12 pb-8')}>
+				<Text style={[tailwind('text-sm text-center'), typefaces.pm, { color: info_text }]}>
 					No haz realizado ningun movimiento.
 				</Text>
 			</View>

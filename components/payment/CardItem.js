@@ -8,7 +8,7 @@ import amexLogo from '../../assets/images/amex.png';
 import dinersLogo from '../../assets/images/diners.png';
 import discoverLogo from '../../assets/images/discover.png';
 import maestroLogo from '../../assets/images/maestro.png';
-import { typefaces } from '../utils/styles';
+import { shadowStyle3, typefaces } from '../utils/styles';
 import RadioIcon from '../icons/RadioIcon';
 
 export default function CardItem({ holderName, type, onPress, selected }) {
@@ -18,12 +18,14 @@ export default function CardItem({ holderName, type, onPress, selected }) {
 			onPress={onPress}
 			style={[styles.ripple, selected ? styles.selected : styles.selected]}
 		>
-			<View style={styles.view}>
-				<Image source={getCardLogo(type)} style={styles.image} />
-				<Text style={styles.text}>{holderName}</Text>
-			</View>
-			<View style={styles.iconView}>
-				<RadioIcon selected={selected} />
+			<View style={tailwind( 'rounded-xl flex flex-row justify-between px-6 py-5', )}>
+				<View style={styles.view}>
+					<Image source={getCardLogo(type)} style={styles.image} />
+					<Text style={styles.text}>{holderName}</Text>
+				</View>
+				<View style={styles.iconView}>
+					<RadioIcon selected={selected} />
+				</View>
 			</View>
 		</Ripple>
 	);
@@ -49,13 +51,11 @@ export function getCardLogo(type) {
 }
 
 const styles = {
-	ripple: tailwind(
-		'flex flex-row justify-between items-center bg-white border rounded-lg mb-3 px-3 h-12',
-	),
+	ripple: [tailwind('mb-2 bg-white rounded-xl border border-gray-300'), shadowStyle3],
 	selected: tailwind('border-gray-400'),
 	noSelected: tailwind('border-gray-200'),
 	view: tailwind('flex flex-row items-center'),
 	image: { width: 30, resizeMode: 'contain' },
-	text: [tailwind('ml-3 mt-1'), typefaces.pm],
+	text: [tailwind('ml-3 mt-1'), typefaces.psb, tailwind('text-base')],
 	iconView: tailwind('mr-1 mt-1 items-center'),
 };

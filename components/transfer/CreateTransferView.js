@@ -194,7 +194,7 @@ const ConfirmTransferModal = memo(
                <View style={tailwind('p-6 rounded-md')}>
                   <View style={tailwind('flex flex-row')}>
                      <InfoIcon />
-                     <Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>
+                     <Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>
                         Confirmar Transferencia
                      </Text>
                   </View>
@@ -242,9 +242,8 @@ const TransferDoneModal = ({ show, onClose }) => {
       >
          <View style={tailwind('w-full bg-white rounded-lg')}>
             <View style={tailwind('p-6 rounded-md')}>
-               <View style={tailwind('flex flex-row')}>
-                  <InfoIcon />
-                  <Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>
+               <View style={tailwind('flex flex-row  justify-evenly')}>
+                  <Text style={[tailwind('text-xl'), typefaces.psb]}>
                      Transferencia completa
                   </Text>
                </View>

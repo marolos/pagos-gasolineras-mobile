@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, TextInput, Text, ScrollView } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import tailwind from 'tailwind-rn';
@@ -11,6 +11,10 @@ import { connect } from 'react-redux';
 import { FULL_HIGHT } from '../utils/constants';
 import SimpleToast from 'react-native-simple-toast';
 import Fetch from '../utils/Fetch';
+import Ripple from 'react-native-material-ripple';
+import SmallBackIcon from '../icons/SmallBackIcon';
+import FastImage from 'react-native-fast-image';
+import { background, btn_text, info_text, white } from '../utils/colors';
 
 const initialState = {
 	cardNumber: '',
@@ -57,70 +61,102 @@ function AddCardView({ navigation, route, user }) {
 			});
 	}
 	return (
-		<ScrollView keyboardShouldPersistTaps="handled">
-			<View style={styles.addCard.view}>
-				<View>
-					<Text style={styles.holderText}>Nombre del titular:</Text>
-					<CustomInput
-						maxLength={100}
-						containerStyle={styles.holderInputC}
-						inputStyle={styles.holderInputI}
-						placeholder="Ingresar nombre"
-						onChange={(text) => dispatch({ type: 'name', value: text })}
-					/>
-				</View>
-				<View style={styles.number.view}>
-					<Text style={styles.number.text}>Tarjeta de crédito o débito:</Text>
-					<CardNumberInput
-						onChange={(text) => dispatch({ type: 'card_number', value: text })}
-					/>
-				</View>
-				<View style={styles.addCard.view0}>
-					<View style={styles.cvc.view}>
-						<Text style={styles.cvc.text}>CVC: </Text>
-						<CustomInput
-							maxLength={3}
-							containerStyle={styles.cvc.inputC}
-							inputStyle={styles.cvc.inputI}
-							placeholder="cvc"
-							keyboardType="numeric"
-							onChange={(text) => dispatch({ type: 'cvc', value: text })}
-						/>
+
+		<View style={{ flex: 1, backgroundColor: white }}>
+			<BackTitle navigation={navigation}  station={route.params}/>
+
+			<View style={[tailwind('flex rounded-2xl'), { flex: 1, backgroundColor: background, zIndex: 10 }]}>
+				<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mt-2 ml-6')]}>
+					Comprar saldo
+				</Text>
+
+				{/*<ScrollView keyboardShouldPersistTaps="handled">*/}
+					<View style={styles.addCard.view}>
+						<View>
+							<Text style={styles.holderText}>Nombre del titular:</Text>
+							<CustomInput
+								maxLength={100}
+								containerStyle={styles.holderInputC}
+								inputStyle={styles.holderInputI}
+								placeholder="Ingresar nombre"
+								onChange={(text) => dispatch({ type: 'name', value: text })}
+							/>
+						</View>
+						<View style={styles.number.view}>
+							<Text style={styles.holderText}>Tarjeta de crédito o débito:</Text>
+							<CardNumberInput
+								onChange={(text) => dispatch({ type: 'card_number', value: text })}
+							/>
+						</View>
+						<View style={styles.addCard.view0}>
+							<View style={styles.cvc.view}>
+								<Text style={styles.holderText}>CVC: </Text>
+								<CustomInput
+									maxLength={3}
+									containerStyle={styles.cvc.inputC}
+									inputStyle={styles.cvc.inputI}
+									placeholder="cvc"
+									keyboardType="numeric"
+									onChange={(text) => dispatch({ type: 'cvc', value: text })}
+								/>
+							</View>
+							<View style={styles.exp.view}>
+								<Text style={styles.holderText}>Expiración: </Text>
+								<CustomInput
+									maxLength={5}
+									containerStyle={styles.exp.inputC}
+									format={(currentText, text) => formatExpiryDate(currentText, text)}
+									inputStyle={styles.exp.inputI}
+									placeholder="mm/aa"
+									keyboardType="numeric"
+									onChange={(text) => dispatch({ type: 'expiry', value: text })}
+								/>
+							</View>
+						</View>
+						<View style={styles.save}>
+							<Text style={styles.saveText}>Guardar la tarjeta</Text>
+							<CheckBox
+								onChange={(value) => dispatch({ type: 'save', value: value })}
+								defaultValue={state.save}
+							/>
+						</View>
+						<View style={styles.nextView}>
+							<LoadingButton
+								icon={<NextIcon />}
+								iconPos={'right'}
+								text="continuar"
+								style={styles.nextButton}
+								onPress={next}
+								loading={state.loading}
+							/>
+						</View>
 					</View>
-					<View style={styles.exp.view}>
-						<Text style={styles.exp.text}>Expiración: </Text>
-						<CustomInput
-							maxLength={5}
-							containerStyle={styles.exp.inputC}
-							format={(currentText, text) => formatExpiryDate(currentText, text)}
-							inputStyle={styles.exp.inputI}
-							placeholder="mm/aa"
-							keyboardType="numeric"
-							onChange={(text) => dispatch({ type: 'expiry', value: text })}
-						/>
-					</View>
-				</View>
-				<View style={styles.save}>
-					<Text style={styles.saveText}>Guardar la tarjeta</Text>
-					<CheckBox
-						onChange={(value) => dispatch({ type: 'save', value: value })}
-						defaultValue={state.save}
-					/>
-				</View>
-				<View style={styles.nextView}>
-					<LoadingButton
-						icon={<NextIcon />}
-						iconPos={'right'}
-						text="continuar"
-						style={styles.nextButton}
-						onPress={next}
-						loading={state.loading}
-					/>
-				</View>
+				{/*</ScrollView>*/}
 			</View>
-		</ScrollView>
+		</View>
 	);
 }
+
+const BackTitle = memo(({ navigation, station }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={navigation.goBack}
+				style={tailwind('rounded-full p-2 pl-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<SmallBackIcon />
+			</Ripple>
+			<View style={tailwind('flex flex-row items-center ml-12 mb-4')}>
+			<FastImage
+					source={{ uri: station.company.company_logo_path }}
+					style={tailwind('w-12 h-12')}
+				/>
+				<Text style={[tailwind('text-2xl'), typefaces.pb]}>{station.gas_station.name}</Text>
+			</View>
+		</View>
+	)
+})
 
 function getCardObject(state) {
 	const expiry = state.expiry.split('/');
@@ -171,7 +207,7 @@ function CustomInput({
 }
 
 const styles = {
-	holderText: [tailwind('ml-2 text-sm'), typefaces.pm],
+	holderText: [tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }],
 	holderInputI: tailwind('w-64'),
 	holderInputC: tailwind('w-full'),
 	number: { view: tailwind('mt-4'), text: [tailwind('ml-2 text-sm'), typefaces.pm] },
@@ -188,13 +224,13 @@ const styles = {
 		inputC: tailwind('w-full'),
 	},
 	addCard: {
-		view: { position: 'relative', flex: 1, height: FULL_HIGHT - 40, padding: 24 },
+		view: { position: 'relative', flex: 1, padding: 24 },
 		view0: tailwind('flex flex-row justify-between mt-4'),
 	},
 	customInput: {
-		view: tailwind('rounded-md border-2 border-gray-200 pl-4'),
+		view: tailwind('rounded-3xl border border-black w-64 pl-5 bg-white'),
 		editing: tailwind('bg-white border-2 border-gray-600'),
-		noEditing: tailwind('bg-gray-200'),
+		noEditing: tailwind('bg-white'),
 		input: tailwind('w-12 text-base'),
 	},
 	save: tailwind('flex flex-row justify-end mt-12'),

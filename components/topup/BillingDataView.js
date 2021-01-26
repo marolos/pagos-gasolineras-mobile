@@ -110,7 +110,7 @@ class BillingDataView extends React.Component {
 					SimpleToast.show('Ya existe otro registro con la placa: ' + err.body.error);
 					this.setState({ loading: false });
 					return;
-				}else if(err.status === 400){
+				} else if (err.status === 400){
 					SimpleToast.show('La cédula ingresada ya está en uso');
 					this.setState({ loading: false });
 					return;
@@ -129,7 +129,6 @@ class BillingDataView extends React.Component {
 					<BackTitle navigation={this.props.navigation} station={this.props.route.params}/>
 				</View>
 				) : <View/>}
-				
 				<ScrollView 
 					style={[tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}
 					keyboardShouldPersistTaps="handled">

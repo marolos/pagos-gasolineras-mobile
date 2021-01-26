@@ -68,7 +68,7 @@ function TopupDataView({ route, navigation, user }) {
 			<ScrollView 
 				style={[tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}>
 				<View style={styles.main}>
-				<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mt-2 ml-6')]}>
+					<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mt-2 ml-6')]}>
 							Comprar saldo</Text>
 					<View style={styles.billing.container}>
 						<Text style={styles.billing.text}>Facturación:</Text>

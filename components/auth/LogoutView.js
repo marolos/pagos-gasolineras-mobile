@@ -4,15 +4,16 @@ import tailwind from 'tailwind-rn';
 import { FULL_HIGHT, FULL_WIDTH } from '../utils/constants';
 import { typefaces } from '../utils/styles';
 import Button from '../shared/Button';
+import AppButton from '../shared/AppButton';
 
 export default function LogoutView({ navigation }) {
 	return (
 		<View style={styles.container}>
 			<View style={styles.bg} />
 			<View style={tailwind('bg-white rounded-lg p-6 items-center w-4/5')}>
-				<Text style={[typefaces.pm]}>¿Cerrar sesión?</Text>
+			<Text style={[tailwind('text-xl'), typefaces.psb]}>¿Cerrar sesión?</Text>
 				<View style={tailwind('flex flex-row mt-4')}>
-					<Button
+					<AppButton
 						text="no"
 						style={tailwind('w-2/5 mr-4')}
 						primary={false}
@@ -20,7 +21,7 @@ export default function LogoutView({ navigation }) {
 							navigation.navigate('home');
 						}}
 					/>
-					<Button
+					<AppButton
 						text="si"
 						style={tailwind('w-2/5')}
 						onPress={() => {
