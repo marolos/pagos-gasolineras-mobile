@@ -18,7 +18,7 @@ import LoadingButton from '../shared/LoadingButton';
 import AppButton from '../shared/AppButton';
 import Ripple from 'react-native-material-ripple';
 import BackIcon from '../icons/SmallBackIcon';
-import { background, white } from '../utils/colors';
+import { background, white, btn_text } from '../utils/colors';
 
 class CreateTransferView extends React.Component {
    constructor(props) {
@@ -120,22 +120,25 @@ class CreateTransferView extends React.Component {
 					<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Transferencia de saldos</Text>
 				</View>
 
-				<View style={[tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}>
+				<View style={[tailwind('flex rounded-2xl p-6'), { backgroundColor: background, zIndex: 10 }]}>
+					<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mb-2 pl-3')]}>
+						Transferir
+					</Text>
 					<View style={styles.user.view}>
 						<Text style={styles.user.text}>Enviar a:</Text>
 						<UserSelector onChange={this.selectUser} />
 					</View>
-					<Line style={styles.line} />
+					{/*<Line style={styles.line} />*/}
 					<View style={styles.balance.view}>
 						<Text style={styles.balance.text}>Gasolinera: </Text>
 						<BalanceSelector onChange={this.selectBalance} />
 					</View>
-					<Line style={styles.line} />
+					{/*<Line style={styles.line} />*/}
 					<View style={styles.remaining.view}>
 						<Text style={styles.remaining.text}>Saldo restante: </Text>
 						<Text style={styles.remainingStyle(remaining)}>${remaining}</Text>
 					</View>
-					<Line style={styles.line} />
+					{/*<Line style={styles.line} />*/}
 					<AddSubInput onChange={this.updateAmount} style={styles.addSub.view} />
 					{/*
 					<View style={styles.button.view}>
@@ -259,15 +262,15 @@ const TransferDoneModal = ({ show, onClose }) => {
 
 const styles = {
    user: {
-      view: tailwind('p-6'),
+      view: tailwind('p-3 '),
       text: [tailwind('text-base mb-1'), typefaces.pm],
    },
    balance: {
-      view: tailwind('flex flex-row items-center justify-between p-6'),
+      view: tailwind('flex flex-row items-center justify-between px-3 py-5'),
       text: [tailwind('text-base'), typefaces.pm],
    },
    remaining: {
-      view: tailwind('flex flex-row p-8'),
+      view: tailwind('flex flex-row p-3'),
       text: [tailwind('text-base'), typefaces.pm],
    },
    addSub: {

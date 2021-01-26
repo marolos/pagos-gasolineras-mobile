@@ -123,7 +123,7 @@ export default class FeedbackView extends React.Component {
 							maxLength={300}
 							style={{ ...typefaces.pr, ...tailwind('w-full'), textAlignVertical: 'top' }}
 							multiline={true}
-							numberOfLines={7}
+							numberOfLines={9}
 						/>
 					</View>
 					<View style={tailwind('mb-6')}>

@@ -15,9 +15,9 @@ import Ripple from 'react-native-material-ripple';
 import Fetch from '../utils/Fetch';
 import BackIcon from '../icons/SmallBackIcon';
 import InfoIcon from '../../assets/img/popup.png'
-import { background, 
+import { background,
 	dollar_text,
-	btn_text, 
+	btn_text,
 	info_text } from '../utils/colors';
 
 export default class BuyView extends React.Component {
@@ -80,7 +80,6 @@ export default class BuyView extends React.Component {
 					createdPurchase: res.body.purchase,
 				});
 				setTimeout(()=> this.makePurchaseDone(res.body.purchase), 5000)
-				
 			})
 			.catch((err) => {
 				console.error(err);
@@ -165,7 +164,7 @@ export default class BuyView extends React.Component {
 						onCancel={this.close}
 						onConfirm={this.goCodeView}
 					/>
-				</View> 
+				</View>
 				<View style={[tailwind('absolute'), { bottom: 100, right: FULL_WIDTH / 4 }]}>
 					<Button
 						text="Recargar"
@@ -284,10 +283,8 @@ const BuyDoneModal = memo(({ show, onCancel, onConfirm }) => {
 						<Button
 							text={'Generar QR'}
 							onPress={onConfirm}
-							style={{ width: 100 }}
-							style={tailwind('w-32')}
+							style={[{ width: 100 }, tailwind('w-32')]}
 						/>
-						
 					</View>
 				</View>
 			</View>
