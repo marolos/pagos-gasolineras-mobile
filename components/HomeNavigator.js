@@ -68,7 +68,8 @@ class HomeNavigator extends React.Component {
 					name="topupData"
 					component={TopupDataView}
 					options={() => ({
-						headerTitle: () => <Label text={'Recargar saldo'} style={styles.title} focused />,
+						headerShown: false
+						// headerTitle: () => <Label text={'Recargar saldo'} style={styles.title} focused />,
 					})}
 				/>
 				<Stack.Screen

@@ -1,24 +1,30 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import NextIcon from '../icons/NextIcon';
 import tailwind from 'tailwind-rn';
 import Line from '../shared/Line';
 import ArrowRightIcon from '../icons/ArrowRightIcon';
-import { typefaces } from '../utils/styles';
+import { typefaces, shadowStyle3 } from '../utils/styles';
 import AddSubInput from '../shared/AddSubInput';
-import { FULL_HIGHT, IVA_RATE, COMMISION } from '../utils/constants';
+import { FULL_HIGHT, IVA_RATE, COMMISION, FULL_WIDTH } from '../utils/constants';
 import Ripple from 'react-native-material-ripple';
 import { makeCancelable } from '../utils/utils';
 import { connect } from 'react-redux';
 import SimpleToast from 'react-native-simple-toast';
 import Fetch from '../utils/Fetch';
+import BackIcon from '../icons/SmallBackIcon';
+import FastImage from 'react-native-fast-image';
+import { background, 
+	dollar_text,
+	btn_text, 
+	info_text } from '../utils/colors';
 
 function TopupDataView({ route, navigation, user }) {
 	const [amount, setAmount] = React.useState(0);
 	const [hasCards, setHasCards] = React.useState(false);
 	const [loaded, setLoaded] = React.useState(false);
-
+	console.log(route);
 	React.useEffect(() => {
 		setLoaded(false);
 		const request = makeCancelable(
@@ -55,56 +61,87 @@ function TopupDataView({ route, navigation, user }) {
 	}
 
 	return (
-		<ScrollView>
-			<View style={styles.main}>
-				<View style={styles.billing.container}>
-					<Text style={styles.billing.text}>Facturacion:</Text>
-					<View>
-						<Ripple onPress={navigation.goBack}>
-							<View style={styles.billing.buttonContainer}>
-								<Text style={[typefaces.pm]}>
-									{user.first_name} {user.last_name}
-								</Text>
-								<View style={styles.billing.arrowContainer}>
-									<Text style={styles.billing.arrowText}>editar</Text>
-									<ArrowRightIcon />
+		<View style={{ height: FULL_HIGHT, width: FULL_WIDTH }}>
+			<View style={{zIndex: 1 }}>
+					<BackTitle navigation={navigation} station={route.params}/>
+				</View>
+			<ScrollView 
+				style={[tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}>
+				<View style={styles.main}>
+				<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mt-2 ml-6')]}>
+							Comprar saldo</Text>
+					<View style={styles.billing.container}>
+						<Text style={styles.billing.text}>Facturación:</Text>
+						<View>
+							<Ripple 
+								style={[tailwind('mb-2 bg-white rounded-xl border border-gray-300'), shadowStyle3]}
+								onPress={navigation.goBack}>
+								<View style={styles.billing.buttonContainer}>
+									<Text style={[typefaces.psb, tailwind('text-base')]}>
+										{user.first_name} {user.last_name}
+									</Text>
+									<View style={styles.billing.arrowContainer}>
+										<Text style={styles.billing.arrowText}>Editar</Text>
+									</View>
 								</View>
-							</View>
-						</Ripple>
+							</Ripple>
+						</View>
+					</View>
+					<View style={styles.billing.container}>
+						<View style={tailwind('flex flex-row')}>
+							<Text style={styles.billing.text}>
+								Gasolinera:
+							</Text>
+							<Text style={[tailwind('ml-8 text-base')]} >{route.params.gas_station.name}</Text>
+						</View>
+						<View>
+							<Text style={styles.billing.text}>Cantidad en $:</Text>
+							<AddSubInput onChange={setAmount} />
+						</View>
+					</View>
+					<View style={tailwind('px-6 pt-3')}>
+						<View style={tailwind('h-4')}/>
+						<View style={tailwind('p-6 border rounded-2xl mx-6 bg-white items-center')}>
+							<Resume amount={amount} />
+						</View>
+					</View>
+					<View style={tailwind('absolute bottom-0 right-0')}>
+						{loaded ? (
+							<LoadingButton
+								text="Siguiente"
+								style={tailwind('w-40 self-end mr-6 mb-12')}
+								onPress={() => next()}
+							/>
+						) : (
+							<ActivityIndicator animating color="black" />
+						)}
 					</View>
 				</View>
-				<Line style={styles.line} />
-				<View style={styles.billing.container}>
-					<View>
-						<Text style={[tailwind('text-base'), typefaces.pm]}>
-							Gasolinera: {route.params.gas_station.name}
-						</Text>
-					</View>
-					<View>
-						<Text style={styles.billing.text}>Cantidad en dolares:</Text>
-						<AddSubInput onChange={setAmount} />
-					</View>
-				</View>
-				<View style={styles.billing.container}>
-					<Resume amount={amount} />
-				</View>
-				<View style={tailwind('absolute bottom-0 right-0')}>
-					{loaded ? (
-						<LoadingButton
-							icon={<NextIcon />}
-							iconPos={'right'}
-							text="continuar"
-							style={tailwind('w-48 self-end mr-6 mb-12')}
-							onPress={() => next()}
-						/>
-					) : (
-						<ActivityIndicator animating color="black" />
-					)}
-				</View>
-			</View>
-		</ScrollView>
+			</ScrollView>
+		</View>
 	);
 }
+
+const BackTitle = memo(({ navigation, station }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={navigation.goBack}
+				style={tailwind('rounded-full p-2 pl-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<BackIcon />
+			</Ripple>
+			<View style={tailwind('flex flex-row items-center ml-12 mb-4')}>
+			<FastImage
+					source={{ uri: station.company.company_logo_path }}
+					style={tailwind('w-12 h-12')}
+				/>
+				<Text style={[tailwind('text-2xl'), typefaces.pb]}>{station.gas_station.name}</Text>
+			</View>
+		</View>
+	)
+})
 
 export function Resume({ amount, showAmount = false, useGreen = true, extra = null }) {
 	const [values, setValues] = React.useState({ subtotal: 0, iva: 0, total: 0 });
@@ -122,52 +159,56 @@ export function Resume({ amount, showAmount = false, useGreen = true, extra = nu
 		<View>
 			{showAmount && (
 				<View style={styles.section.container}>
+					
+					
+				</View>
+			)}
+			<View style={tailwind('flex flex-row items-center')}>
+				<View style={tailwind('items-end')}>
+				{showAmount && (
 					<Text style={styles.section.textm}>Cantidad:</Text>
-					<Text style={styles.section.textr}>$ {amount}</Text>
+				)}
+					<Text style={styles.section.textm}>Sub-total:</Text>
+					<Text style={styles.section.textm}>IVA:</Text>
+					<Text style={styles.section.textm}>Comision:</Text>
+					<Text style={styles.section.textr}>Total:</Text>
+					{extra && (
+						<Text style={styles.section.textr}>{extra.label}:</Text>
+					)}
 				</View>
-			)}
-			<View style={styles.section.container}>
-				<Text style={styles.section.textm}>Subtotal:</Text>
-				<Text style={styles.section.textr}>$ {values.subtotal}</Text>
-			</View>
-			<View style={styles.section.container}>
-				<Text style={styles.section.textm}>IVA (12%):</Text>
-				<Text style={styles.section.textr}>$ {values.iva}</Text>
-			</View>
-			<View style={styles.section.container}>
-				<Text style={styles.section.textm}>Comision:</Text>
-				<Text style={styles.section.textr}>$ 0.25</Text>
-			</View>
-			<View style={styles.section.container}>
-				<Text style={styles.section.textr}>Total a pagar:</Text>
-				<Text style={styles.section.total(useGreen)}>$ {values.total}</Text>
-			</View>
-			{extra && (
-				<View style={styles.section.container}>
-					<Text style={styles.section.textm}>{extra.label}:</Text>
-					<Text style={styles.section.textr}>{extra.value}</Text>
+				<View>
+				{showAmount && (
+					<Text style={[styles.section.textm, { color: btn_text }, typefaces.psb]}>$ {amount}</Text>
+				)}
+					<Text style={[styles.section.textm, { color: btn_text }, typefaces.psb]}>$ {values.subtotal}</Text>
+					<Text style={[styles.section.textm, { color: btn_text }, typefaces.psb]}>$ {values.iva}</Text>
+					<Text style={[styles.section.textm, { color: btn_text }, typefaces.psb]}>$ 0.25</Text>
+					<Text style={[styles.section.textr, { color: btn_text }, typefaces.psb]}>$ {values.total}</Text>
+					{extra && (
+						<Text style={[styles.section.textr, { color: btn_text }, typefaces.psb]}>{extra.value}</Text>
+					)}
 				</View>
-			)}
+			</View>
 		</View>
 	);
 }
 
 const styles = {
-	main: { flex: 1, height: FULL_HIGHT - 40 },
+	main: { flex: 1, height: FULL_HIGHT - 65 },
 	billing: {
-		container: tailwind('p-6'),
-		text: [tailwind('text-base mb-2'), typefaces.pm],
+		container: tailwind('px-6 py-3'),
+		text: [tailwind('text-sm mb-2'), typefaces.pr, { color: info_text }],
 		buttonContainer: tailwind(
-			'border rounded-lg border-gray-400 flex flex-row justify-between px-6 py-4',
+			'rounded-xl flex flex-row justify-between px-6 py-5',
 		),
 		arrowContainer: tailwind('flex flex-row items-center'),
-		arrowText: [typefaces.pm, tailwind('mr-4 ')],
+		arrowText: [typefaces.pr, tailwind('text-sm'), { color: info_text }],
 	},
 	line: tailwind('w-full bg-gray-300 my-2'),
 	section: {
 		container: tailwind('flex flex-row justify-between w-56'),
-		textm: [tailwind('text-base'), typefaces.pm],
-		textr: [tailwind('text-base'), typefaces.pr],
+		textm: [tailwind('text-base mb-1 mr-4'), typefaces.pr],
+		textr: [tailwind('text-base mr-4'), typefaces.pr],
 		total: (useGreen) => [
 			tailwind('text-base'),
 			useGreen ? tailwind('text-green-600') : tailwind('text-black'),
