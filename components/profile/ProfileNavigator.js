@@ -22,6 +22,7 @@ export default function ProfileNavigator({ navigation }) {
 				name="profileView"
 				component={ProfileView}
 				options={() => ({
+					headerShown: false,
 					headerLeft: () => <HeaderBackButton onPress={navigation.goBack} />,
 					headerTitle: () => (
 						<Label text={'Perfil'} style={tailwind('text-base mt-1')} focused={true} />
@@ -32,6 +33,7 @@ export default function ProfileNavigator({ navigation }) {
 				name="editProfile"
 				component={BillingDataView}
 				options={() => ({
+					headerShown: false,
 					headerTitle: () => (
 						<Label text={'Editar perfil'} style={tailwind('text-base mt-1')} focused={true} />
 					),

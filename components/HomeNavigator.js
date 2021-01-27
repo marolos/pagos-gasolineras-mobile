@@ -61,6 +61,7 @@ class HomeNavigator extends React.Component {
 					name="editProfileFromTabMenu"
 					component={BillingDataView}
 					options={() => ({
+						headerShown: false,
 						headerTitle: () => <Label text={'Editar perfil'} style={styles.title} focused />,
 					})}
 				/>

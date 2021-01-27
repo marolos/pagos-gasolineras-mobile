@@ -308,7 +308,7 @@ const BackTitle = memo(({ navigation }) => {
 			<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Historial</Text>
 		</View>
 	)
-})
+});
 
 function PurchasesList({ data, onItemTap }) {
 	return (

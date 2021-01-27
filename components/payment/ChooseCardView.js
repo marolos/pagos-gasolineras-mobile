@@ -95,10 +95,8 @@ function ChooseCardView({ user, navigation, route }) {
 					<Text style={[typefaces.psb, tailwind('mr-10 self-start mt-3'), {color: btn_text}]} onPress={() => navigation.push('addCard', { ...route.params })}>Usar otra tarjeta</Text>
 
 					<LoadingButton
-						icon={<NextIcon />}
-						iconPos={'right'}
-						text="continuar"
-						style={tailwind('w-48 self-end mr-6 mb-12')}
+						text="Siguiente"
+						style={tailwind('w-40 self-end mr-6 mb-12')}
 						onPress={next}
 					/>
 				</View>

@@ -128,7 +128,7 @@ class BillingDataView extends React.Component {
 					<View >
 					<BackTitle navigation={this.props.navigation} station={this.props.route.params}/>
 				</View>
-				) : <View/>}
+				) : <BackTitle2 navigation={this.props.navigation}/>}
 				<ScrollView 
 					style={[tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}
 					keyboardShouldPersistTaps="handled">
@@ -217,7 +217,7 @@ class BillingDataView extends React.Component {
 					</View>
 					<View style={styles.button.container}>
 						<LoadingButton
-							text="Siguiente"
+							text={this.props.route.params.company? "Siguiente" : "Guardar"}
 							style={tailwind('w-40')}
 							onPress={this.sendData}
 							loading={this.state.loading}
@@ -250,7 +250,22 @@ const BackTitle = memo(({ navigation, station }) => {
 			</View>
 		</View>
 	)
-})
+});
+
+const BackTitle2 = memo(({ navigation }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={navigation.goBack}
+				style={tailwind('rounded-full p-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<BackIcon />
+			</Ripple>
+			<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Editar Perfil</Text>
+		</View>
+	)
+});
 
 function Message() {
 	return (

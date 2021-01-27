@@ -122,9 +122,7 @@ function AddCardView({ navigation, route, user }) {
 						</View>
 						<View style={styles.nextView}>
 							<LoadingButton
-								icon={<NextIcon />}
-								iconPos={'right'}
-								text="continuar"
+								text="Siguiente"
 								style={styles.nextButton}
 								onPress={next}
 								loading={state.loading}
@@ -236,7 +234,7 @@ const styles = {
 	save: tailwind('flex flex-row justify-end mt-12'),
 	saveText: [tailwind('mr-2'), typefaces.pm],
 	nextView: tailwind('absolute bottom-0 right-0'),
-	nextButton: tailwind('w-48 self-end mr-6 mb-12'),
+	nextButton: tailwind('w-40 self-end mr-6 mb-12'),
 };
 
 export default connect((state) => ({ user: state.user.data }))(AddCardView);

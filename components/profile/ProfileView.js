@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Ripple from 'react-native-material-ripple';
@@ -12,12 +12,20 @@ import MapPinIcon from '../icons/MapPinIcon';
 import ProfileIcon from '../icons/ProfileIcon';
 import { FULL_HIGHT, FULL_WIDTH } from '../utils/constants';
 import { typefaces } from '../utils/styles';
+import { TabOptions } from '../redux/ui/reducers';
+import { setActiveTab } from '../redux/ui/actions';
+import BackIcon from '../icons/SmallBackIcon';
+import { background } from '../utils/colors';
+
 
 import fondo from '../../assets/img/fondo.png';
+let into = 0;
+let into2 = 0;
 
-function renderView(user) {
+function renderView(user, drawer=false) {
 	return (
-		<ScrollView style={tailwind('p-6 bg-white rounded-t-2xl')}>
+		<ScrollView style={[tailwind('p-6 bg-white h-full rounded-t-2xl'), 
+		drawer ? { backgroundColor: background } : { backgroundColor: 'white' }]}>
 			<View>
 				<Text style={[tailwind('text-blue-800'), typefaces.pm]}>Datos Personales:</Text>
 				<Item
@@ -38,15 +46,16 @@ function renderView(user) {
 					hasValue={!!user.phone_number}
 				/>
 				<Item
-					label="dirección"
-					value={` ${user.city}, ${user.address}`}
+					label="Dirección"
+					value={user.city && user.address ? `${user.city}, ${user.address}` : 
+					user.city ? `${user.city}` : user.address ? `${user.address}`: ''}
 					icon={<MapPinIcon strokeWidth={0.9} width={22} height={22} />}
 					hasValue={!!user.address}
 				/>
 			</View>
 			<View style={tailwind('mt-4')}>
 				<Text style={[tailwind('text-blue-800 mb-2'), typefaces.pm]}>Vehículos:</Text>
-				{user.vehicles_ids.map((v) => (
+				{user?.vehicles_ids?.map((v) => (
 					<VehicleItem key={v.number} {...v} />
 				))}
 			</View>
@@ -54,25 +63,54 @@ function renderView(user) {
 	);
 }
 
+const BackTitle = memo(({ navigation }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={navigation.goBack}
+				style={tailwind('rounded-full p-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<BackIcon />
+			</Ripple>
+			<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Perfil</Text>
+		</View>
+	)
+});
+
 function ProfileView({ user, navigation }) {
 	if (!user.phone_number || !user.city) {
-		navigation.push('editProfile', { navigateToOnDone: 'profileView' });
-		return <></>;
+		if(into2 == 0){
+			navigation.push('editProfile', { navigateToOnDone: 'profileView' });
+			into2++;
+			return <></>;
+		}
 	}
 	return (
 		<View>
+			<View style={{zIndex: 1 }}>
+					<BackTitle navigation={navigation}/>
+				</View> 
 			<EditButton
+				style={{ top: 120 }}
 				onPress={() => navigation.push('editProfile', { navigateToOnDone: 'profileView' })}
 			/>
-			{renderView(user)}
+			{renderView(user, true)}
 		</View>
 	);
 }
 
-function _ProfileViewFromTabMenu({ user, navigation }) {
+function _ProfileViewFromTabMenu({ user, navigation, dispatch }) {
+	navigation.addListener('focus', () => {
+		dispatch(setActiveTab(TabOptions.PROFILE));
+	});
+
 	if (!user.phone_number || !user.city) {
-		navigation.push('editProfile', { navigateToOnDone: 'profileView' });
-		return <></>;
+		if(into == 0){
+			navigation.push('editProfileFromTabMenu', { navigateToOnDone: 'profile' });
+			into++;
+			return <></>;
+		}
 	}
 	return (
 		<React.Fragment>
@@ -83,7 +121,7 @@ function _ProfileViewFromTabMenu({ user, navigation }) {
 				style={{ top: 120 }}
 				onPress={() => navigation.navigate('editProfileFromTabMenu', { navigateToOnDone: 'back' })}
 			/>
-			<View style={tailwind('mt-24')}>{renderView(user, navigation)}</View>
+			<View style={tailwind('mt-24')}>{renderView(user)}</View>
 		</React.Fragment>
 	);
 }
