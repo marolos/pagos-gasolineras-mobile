@@ -66,11 +66,11 @@ export function getIcon(type) {
 }
 
 const styles = {
-	touchable: tailwind('flex flex-row rounded-xl bg-white border border-gray-300 px-4 py-3'),
+	touchable: tailwind('flex flex-row rounded-xl bg-white border border-gray-300 px-4 py-3 items-center'),
 	iconView: tailwind('mr-4'),
-	title: [tailwind('text-sm'), typefaces.pm, { width: FULL_WIDTH - 100 }],
+	title: [tailwind('text-sm'), typefaces.psb, { width: FULL_WIDTH - 100 }],
 	date: [tailwind('text-xs text-gray-700')],
-	body: [{ fontSize: 13 }, typefaces.pr, { width: FULL_WIDTH - 80 }],
+	body: [{ fontSize: 13 }, typefaces.pr, { width: FULL_WIDTH - 90 }, tailwind('text-left')],
 	changePolicy: tailwind('w-8 h-8 rounded-full bg-red-100 flex items-center justify-center'),
 	transfer: tailwind('w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center'),
 	purchase: tailwind('w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center'),

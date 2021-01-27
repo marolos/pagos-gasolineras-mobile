@@ -6,29 +6,29 @@ import SimpleToast from 'react-native-simple-toast';
 import tailwind from 'tailwind-rn';
 import StarIcon from '../icons/StarIcon';
 import BasicInput from '../shared/BasicInput';
-import Button from '../shared/Button';
+import Button from '../shared/AppButton';
 import LoadingButton from '../shared/LoadingButton';
 import Fetch from '../utils/Fetch';
 import { typefaces } from '../utils/styles';
 
 export const PolicyDetail = memo(({ data }) => (
 	<ScrollView style={[{ height: 250, marginHorizontal: 16 }]}>
-		<Text>{data.polices}</Text>
+		<Text style={tailwind('text-justify')}>{data.polices}</Text>
 	</ScrollView>
 ));
 
 export const PurchaseDetail = memo(({ data, body, onClose }) => (
-	<View>
-		<Text>{body}</Text>
+	<View style={tailwind('items-center content-center px-4')}>
+		<Text style={tailwind('text-justify')}>{body}</Text>
 		<View style={tailwind('mt-4')}>
 			<Text style={[typefaces.pm]}>
-				Amount: <Text style={[tailwind('text-green-600')]}>${data.amount}</Text>
+				Monto: <Text style={[tailwind('text-green-600')]}>${data.amount}</Text>
 			</Text>
 			<Text style={[typefaces.pm]}>
 				Combustible: <Text>{data.fueltype}</Text>
 			</Text>
 			<View style={tailwind('my-3')}>
-				<Text style={tailwind('text-center')}>Calificar Servicio:</Text>
+				<Text style={tailwind('text-center mb-2')}>Calificar Servicio:</Text>
 				<PurchaseRating onClose={onClose} purchaseId={data.purchase_id} />
 			</View>
 		</View>
@@ -80,13 +80,13 @@ class PurchaseRating extends React.Component {
 							<StarIcon
 								fill={value === 1 ? '#fbbf24' : '#bbb'}
 								stroke={value === 1 ? '#fbbf24' : '#bbb'}
-								width={26}
-								height={26}
+								width={32}
+								height={32}
 							/>
 						</Ripple>
 					))}
 				</View>
-				<View>
+				<View style={tailwind('items-center')}>
 					<BasicInput
 						placeholder="Comentario (opcional)"
 						onChange={(text) => (this.comment = text)}
@@ -96,10 +96,14 @@ class PurchaseRating extends React.Component {
 					/>
 				</View>
 				<View style={tailwind('flex flex-row items-center mt-4')}>
-					<Button text="cerrar" onPress={this.props.onClose} primary={false} />
+					<Button 
+						style={tailwind('w-32')}
+						viewStyle={{ paddingBottom: 10, paddingTop: 10 }}
+						text="Cerrar" onPress={this.props.onClose} primary={false} />
+						<View style={tailwind('w-4')}/>
 					<LoadingButton
-						text="hecho"
-						style={tailwind('w-32 ml-2')}
+						text="Enviar"
+						style={tailwind('w-32')}
 						viewStyle={{ paddingBottom: 10, paddingTop: 10 }}
 						onPress={this.sendRating}
 					/>
@@ -133,8 +137,8 @@ export const DisableUserDetail = memo(({ data }) => <View />);
 
 export const TransferDetail = memo(({ data, body }) => (
 	<View>
-		<Text>{body}</Text>
-		<View>
+		<Text style={tailwind('text-justify')}>{body}</Text>
+		<View style={tailwind('mt-2')}>
 			<Text>
 				Transferido por: <Text>{data.sender}</Text>
 			</Text>
@@ -153,6 +157,9 @@ export const TransferDetail = memo(({ data, body }) => (
 
 export const ReplyDetail = ({ data }) => (
 	<ScrollView style={[{ height: 250, marginHorizontal: 16 }]}>
-		<Text>{data.reply}</Text>
+		<Text style={typefaces.psb}>Mensaje original</Text>
+		<Text style={tailwind('text-justify')}>{data.message}</Text>
+		<Text style={[typefaces.psb, tailwind('mt-4')]}>Respuesta</Text>
+		<Text style={tailwind('text-justify')}>{data.reply}</Text>
 	</ScrollView>
 );

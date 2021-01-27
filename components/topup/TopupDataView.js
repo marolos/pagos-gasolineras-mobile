@@ -24,7 +24,6 @@ function TopupDataView({ route, navigation, user }) {
 	const [amount, setAmount] = React.useState(0);
 	const [hasCards, setHasCards] = React.useState(false);
 	const [loaded, setLoaded] = React.useState(false);
-	console.log(route);
 	React.useEffect(() => {
 		setLoaded(false);
 		const request = makeCancelable(

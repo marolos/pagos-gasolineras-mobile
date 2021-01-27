@@ -14,7 +14,7 @@ import {
 	TipDetail,
 	TransferDetail,
 } from './Details';
-import Button from '../shared/Button';
+import Button from '../shared/AppButton';
 import { formatISODate } from '../utils/dateUtils';
 
 class NotificationModal extends React.Component {
@@ -26,7 +26,6 @@ class NotificationModal extends React.Component {
 	render() {
 		const { onClose, visible, selectedItem } = this.props;
 		const { type } = selectedItem.data;
-
 		return (
 			<ReactNativeModal
 				isVisible={visible}
@@ -42,7 +41,9 @@ class NotificationModal extends React.Component {
 					<View style={tailwind('flex flex-row mt-2')}>
 						<View style={tailwind('mr-4')}>{getIcon(type)}</View>
 						<View>
-							<Text style={[tailwind('text-sm'), typefaces.pm]}>{selectedItem.title}</Text>
+							<View style={{ width: FULL_WIDTH *0.72}}>
+								<Text style={[tailwind('text-sm'), typefaces.psb]}>{selectedItem.title}</Text>
+							</View>
 							<Text>{formatISODate(selectedItem.created_at, 'PPP')}</Text>
 						</View>
 					</View>
@@ -51,7 +52,7 @@ class NotificationModal extends React.Component {
 						{type === NotificationType.PURCHASE_DONE ? (
 							<></>
 						) : (
-							<Button onPress={onClose} text="cerrar" />
+							<Button onPress={onClose} text="Cerrar" />
 						)}
 					</View>
 				</View>
@@ -81,7 +82,7 @@ export function getDetail(type, item, onClose) {
 
 const styles = {
 	modal: [tailwind('rounded'), { hight: 500 }],
-	view: [tailwind('p-4 flex bg-white rounded-lg'), { width: FULL_WIDTH - 40 }],
+	view: [tailwind('p-4 flex bg-white rounded-xl'), { width: FULL_WIDTH - 40 }],
 	close: tailwind('mt-4 p-6'),
 };
 
