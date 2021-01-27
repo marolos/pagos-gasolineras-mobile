@@ -78,7 +78,7 @@ class UserSelector extends React.Component {
 					<View style={styles.modal.view}>
 						<View style={tailwind('flex flex-row mb-5')}>
 							{/*<EditIcon />*/}
-							<Text style={[tailwind('text-xl ml-4'), styles.modal.text, typefaces.psb]}>{/*Ingresar usuario*/}Ingrese cuenta a recargar</Text>
+							<Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>{/*Ingresar usuario*/}Ingrese cuenta a recargar</Text>
 						</View>
 						<View>
 							<BasicInput

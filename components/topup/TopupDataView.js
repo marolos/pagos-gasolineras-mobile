@@ -18,7 +18,8 @@ import FastImage from 'react-native-fast-image';
 import { background, 
 	dollar_text,
 	btn_text, 
-	info_text } from '../utils/colors';
+	info_text, 
+	black} from '../utils/colors';
 
 function TopupDataView({ route, navigation, user }) {
 	const [amount, setAmount] = React.useState(0);
@@ -157,10 +158,7 @@ export function Resume({ amount, showAmount = false, useGreen = true, extra = nu
 	return (
 		<View>
 			{showAmount && (
-				<View style={styles.section.container}>
-					
-					
-				</View>
+				<View style={styles.section.container}></View>
 			)}
 			<View style={tailwind('flex flex-row items-center')}>
 				<View style={tailwind('items-end')}>
@@ -177,14 +175,14 @@ export function Resume({ amount, showAmount = false, useGreen = true, extra = nu
 				</View>
 				<View>
 				{showAmount && (
-					<Text style={[styles.section.textm, { color: btn_text }, typefaces.psb]}>$ {amount}</Text>
+					<Text style={[styles.section.textm, { color: black }, typefaces.psb]}>$ {amount}</Text>
 				)}
-					<Text style={[styles.section.textm, { color: btn_text }, typefaces.psb]}>$ {values.subtotal}</Text>
-					<Text style={[styles.section.textm, { color: btn_text }, typefaces.psb]}>$ {values.iva}</Text>
-					<Text style={[styles.section.textm, { color: btn_text }, typefaces.psb]}>$ 0.25</Text>
-					<Text style={[styles.section.textr, { color: btn_text }, typefaces.psb]}>$ {values.total}</Text>
+					<Text style={[styles.section.textm, { color: black }, typefaces.psb]}>$ {values.subtotal}</Text>
+					<Text style={[styles.section.textm, { color: black }, typefaces.psb]}>$ {values.iva}</Text>
+					<Text style={[styles.section.textm, { color: black }, typefaces.psb]}>$ 0.25</Text>
+					<Text style={[styles.section.textr, { color: black }, typefaces.psb]}>$ {values.total}</Text>
 					{extra && (
-						<Text style={[styles.section.textr, { color: btn_text }, typefaces.psb]}>{extra.value}</Text>
+						<Text style={[styles.section.textr, { color: black }, typefaces.psb]}>{extra.value}</Text>
 					)}
 				</View>
 			</View>
@@ -206,8 +204,8 @@ const styles = {
 	line: tailwind('w-full bg-gray-300 my-2'),
 	section: {
 		container: tailwind('flex flex-row justify-between w-56'),
-		textm: [tailwind('text-base mb-1 mr-4'), typefaces.pr],
-		textr: [tailwind('text-base mr-4'), typefaces.pr],
+		textm: [tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }],
+		textr: [tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }],
 		total: (useGreen) => [
 			tailwind('text-base'),
 			useGreen ? tailwind('text-green-600') : tailwind('text-black'),

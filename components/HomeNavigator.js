@@ -95,6 +95,7 @@ class HomeNavigator extends React.Component {
 					name="confirmTopup"
 					component={ConfirmTopupView}
 					options={() => ({
+						headerShown: false,
 						headerTitle: () => <Label text={'Confirmar'} style={styles.title} focused />,
 					})}
 				/>

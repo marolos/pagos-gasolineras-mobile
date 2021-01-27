@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import React, { memo } from 'react';
+import { View, Text, ActivityIndicator, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Resume } from './TopupDataView';
 import { typefaces } from '../utils/styles';
@@ -11,6 +11,12 @@ import CheckRoundedIcon from '../icons/CheckRoundedIcon';
 import { getOrderByAmount } from '../utils/utils';
 import SimpleToast from 'react-native-simple-toast';
 import Fetch from '../utils/Fetch';
+import Ripple from 'react-native-material-ripple';
+import SmallBackIcon from '../icons/SmallBackIcon';
+import FastImage from 'react-native-fast-image';
+import { background, black, btn_text, info_text, white } from '../utils/colors';
+import AppButton from '../shared/AppButton';
+import InfoIconp from '../../assets/img/popup.png';
 
 class ConfirmTopupView extends React.Component {
 	constructor(props) {
@@ -77,53 +83,65 @@ class ConfirmTopupView extends React.Component {
 		const { amount, company, gas_station } = this.props.route.params;
 		const balance_id = this.props.route.params.id;
 		return (
-			<View style={tailwind('items-center h-full')}>
-				<View style={tailwind('mt-12')}>
-					<Message />
-				</View>
-				<View style={tailwind('mt-12')}>
-					<Resume amount={amount} useGreen={false} showAmount />
-				</View>
-				<Modal
-					isVisible={this.state.showConfirmCancel}
-					animationIn="fadeIn"
-					animationOut="fadeOut"
-					backdropTransitionOutTiming={0}
-					style={tailwind('flex items-center')}
-				>
-					<ConfirmCancel
-						onCancel={this.cancel}
-						onContinue={() => this.setState({ showConfirmCancel: false })}
-					/>
-				</Modal>
-				<Modal
-					isVisible={this.state.showModal}
-					animationIn="fadeIn"
-					animationOut="fadeOut"
-					backdropTransitionOutTiming={0}
-					style={tailwind('flex items-center')}
-				>
-					<View style={tailwind('w-full h-56 bg-white rounded-lg')}>
-						{this.state.sending && <Wait />}
-						{!this.state.sending && (
-							<Done
-								onDoneClose={this.onDoneClose}
-								onDoneGoBuy={this.onDoneGoBuy}
-								amount={amount}
-								company={company}
-								gas_station={gas_station}
-								balance_id={balance_id}
+			<View style={{ flex: 1, backgroundColor: white }}>
+				<BackTitle navigation={this.props.navigation}  station={this.props.route.params}/>
+
+				
+				<View style={[tailwind('flex rounded-2xl'), { flex: 1, backgroundColor: background, zIndex: 10 }]}>
+					<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mt-2 ml-6')]}>
+						Comprar saldo
+					</Text>
+
+					<View style={tailwind('items-center h-full')}>
+						{/*<View style={tailwind('mt-12')}>
+							<Message />
+						</View>*/}
+						<View style={tailwind('mt-12')}>
+							<Resume amount={amount} useGreen={false} showAmount />
+						</View>
+						<Modal
+							isVisible={this.state.showConfirmCancel}
+							animationIn="fadeIn"
+							animationOut="fadeOut"
+							backdropTransitionOutTiming={0}
+							style={tailwind('flex items-center')}
+						>
+							<ConfirmCancel
+								onCancel={this.cancel}
+								onContinue={() => this.setState({ showConfirmCancel: false })}
 							/>
-						)}
+						</Modal>
+						<Modal
+							isVisible={this.state.showModal}
+							animationIn="fadeIn"
+							animationOut="fadeOut"
+							backdropTransitionOutTiming={0}
+							style={tailwind('flex items-center')}
+						>
+							<View style={tailwind('w-full bg-white rounded-lg')}>
+								{this.state.sending && <Wait />}
+								{!this.state.sending && (
+									<Done
+										onDoneClose={this.onDoneClose}
+										onDoneGoBuy={this.onDoneGoBuy}
+										amount={amount}
+										company={company}
+										gas_station={gas_station}
+										balance_id={balance_id}
+									/>
+								)}
+							</View>
+						</Modal>
+						<View style={tailwind('mt-20 flex flex-row')}>
+							<AppButton
+								text={'cancelar'}
+								onPress={() => this.setState({ showConfirmCancel: true })}
+								primary={false}
+								disable={true}
+							/>
+							<AppButton text={'recargar'} onPress={this.accept} style={tailwind('ml-4')} />
+						</View>
 					</View>
-				</Modal>
-				<View style={tailwind('absolute bottom-0 right-0 mb-8 mr-8 flex flex-row')}>
-					<Button
-						text={'cancelar'}
-						onPress={() => this.setState({ showConfirmCancel: true })}
-						primary={false}
-					/>
-					<Button text={'recargar'} onPress={this.accept} style={tailwind('ml-4')} />
 				</View>
 			</View>
 		);
@@ -133,7 +151,7 @@ class ConfirmTopupView extends React.Component {
 function Wait(props) {
 	return (
 		<View style={tailwind('p-6 rounded-md')}>
-			<Text style={[tailwind('text-base'), typefaces.pm]}>Realizando la recarga.</Text>
+			<Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>Realizando la recarga.</Text>
 			<View style={tailwind('h-32 flex flex-row justify-center')}>
 				<ActivityIndicator color="black" size="large" animating />
 			</View>
@@ -145,35 +163,62 @@ function Done({ amount, gas_station, onDoneClose, onDoneGoBuy }) {
 	return (
 		<View style={tailwind('p-6 rounded-md')}>
 			<View style={tailwind('flex flex-row')}>
-				<CheckRoundedIcon />
-				<Text style={[tailwind('text-base ml-4'), typefaces.psb]}>Hecho</Text>
+				{/*<CheckRoundedIcon />*/}
+				<Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>Recarga completada</Text>
+			</View>
+			<View style={tailwind(' flex flex-row justify-evenly mt-4 ')}>
+				<Image source={InfoIconp} style={[tailwind('w-20 h-20')]} />
 			</View>
 			<View style={tailwind('flex flex-row justify-center mt-8')}>
-				<Text style={[tailwind('text-sm'), typefaces.pm]}>
-					Se han recargado ${amount} en {gas_station.name}
+				<Text style={[tailwind('text-sm mb-2'), typefaces.pr, { color: info_text }]}>
+					Se han recargado {' '}
+						<Text style={[tailwind('text-sm mb-2'), typefaces.pr, { color: black }]}>${amount}</Text>
+					{' '}en {' '}
+						<Text style={[tailwind('text-sm mb-2'), typefaces.pr, { color: black }]}>{gas_station.name}</Text>
 				</Text>
 			</View>
 			<View style={tailwind('flex flex-row justify-evenly mt-8')}>
-				<Button text={'cerrar'} primary={false} onPress={onDoneClose} style={{ width: 100 }} />
-				<Button text={'realizar compra'} onPress={onDoneGoBuy} style={{ width: 150 }} />
+				<AppButton text={'cerrar'} onPress={onDoneClose} style={tailwind('mr-5')}/>
+				<AppButton text={'realizar compra'} primary={false} onPress={onDoneGoBuy}/>
 			</View>
 		</View>
 	);
 }
+
+const BackTitle = memo(({ navigation, station }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={navigation.goBack}
+				style={tailwind('rounded-full p-2 pl-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<SmallBackIcon />
+			</Ripple>
+			<View style={tailwind('flex flex-row items-center ml-12 mb-4')}>
+			<FastImage
+					source={{ uri: station.company.company_logo_path }}
+					style={tailwind('w-12 h-12')}
+				/>
+				<Text style={[tailwind('text-2xl'), typefaces.pb]}>{station.gas_station.name}</Text>
+			</View>
+		</View>
+	)
+})
 
 function ConfirmCancel({ onCancel, onContinue }) {
 	return (
 		<View style={tailwind('w-full bg-white rounded-lg')}>
 			<View style={tailwind('p-6 rounded-md')}>
 				<View style={tailwind('flex flex-row')}>
-					<InfoIcon />
-					<Text style={[tailwind('text-sm ml-4'), typefaces.psb]}>
+					{/*<InfoIcon />*/}
+					<Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>
 						¿Desea cancelar la recarga?
 					</Text>
 				</View>
 				<View style={tailwind('flex flex-row justify-evenly mt-8')}>
-					<Button text={'no'} primary={false} onPress={onContinue} style={{ width: 100 }} />
-					<Button text={'si'} onPress={onCancel} />
+					<AppButton text={'no'} primary={false} disable={true} onPress={onContinue} style={{ width: 100 }} />
+					<AppButton text={'si'} onPress={onCancel} style={{ width: 100 }}/>
 				</View>
 			</View>
 		</View>
