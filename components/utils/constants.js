@@ -9,7 +9,7 @@ export const doDirtyShit = () => {
 };
 
 export const REST_API_URL =
-	process.env.NODE_ENV === 'development'
+	process.env.NODE_ENV === 'development' && false
 		? 'http://localhost:8000'
 		: 'https://fue.pythonanywhere.com/';
 

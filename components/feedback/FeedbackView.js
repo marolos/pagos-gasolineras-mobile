@@ -13,7 +13,7 @@ import LoadingButton from '../shared/LoadingButton';
 import SimpleToast from 'react-native-simple-toast';
 import Fetch from '../utils/Fetch';
 import BackIcon from '../icons/SmallBackIcon';
-import { background, white } from '../utils/colors';
+import { background, info_text, white } from '../utils/colors';
 
 export default class FeedbackView extends React.Component {
 	constructor(props) {
@@ -104,7 +104,7 @@ export default class FeedbackView extends React.Component {
 
 				<ScrollView keyboardShouldPersistTaps="handled" style={[tailwind('p-6'), tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}>
 					<View style={tailwind('mb-6')}>
-						<Text style={[typefaces.pm, tailwind('text-base mb-2')]}>Tipo:</Text>
+						<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>Categoría:</Text>
 						<Ripple
 							onPress={this.chooseType}
 							style={tailwind(
@@ -116,20 +116,20 @@ export default class FeedbackView extends React.Component {
 						</Ripple>
 					</View>
 					<View style={tailwind('mb-6')}>
-						<Text style={[typefaces.pm, tailwind('text-base mb-2')]}>Detalles:</Text>
+						<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>Detalles:</Text>
 						<BasicInput
 							placeholder="Mensaje claro y conciso"
 							onChange={(text) => (this.state.details = text)}
 							maxLength={300}
-							style={{ ...typefaces.pr, ...tailwind('w-full'), textAlignVertical: 'top' }}
+							style={{ ...typefaces.pr, ...tailwind('w-full border border-2 border-black rounded-3xl bg-white'), textAlignVertical: 'top' }}
 							multiline={true}
 							numberOfLines={9}
 						/>
 					</View>
 					<View style={tailwind('mb-6')}>
-						<Text style={[typefaces.pm, tailwind('text-base mb-2')]}>
+						<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>
 							Evidencia:{' '}
-							<Text style={[typefaces.pm, tailwind('text-sm text-gray-600')]}>(opcional)</Text>
+							<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>(opcional)</Text>
 						</Text>
 						<View style={tailwind('items-center mt-4 ')}>
 							{img.uri ? (
@@ -157,7 +157,7 @@ function ImagePicker({ pickImage }) {
 		<Ripple
 			onPress={pickImage}
 			style={tailwind(
-				'flex flex-row items-center justify-between border rounded-md border-gray-400 py-2 px-4 ',
+				'flex flex-row items-center justify-between border border-2 border-black rounded-3xl bg-white py-2 px-4 ',
 			)}
 			rippleDuration={350}
 		>

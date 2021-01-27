@@ -18,7 +18,7 @@ import LoadingButton from '../shared/LoadingButton';
 import AppButton from '../shared/AppButton';
 import Ripple from 'react-native-material-ripple';
 import BackIcon from '../icons/SmallBackIcon';
-import { background, white, btn_text } from '../utils/colors';
+import { background, white, btn_text, info_text } from '../utils/colors';
 
 class CreateTransferView extends React.Component {
    constructor(props) {
@@ -262,15 +262,15 @@ const TransferDoneModal = ({ show, onClose }) => {
 const styles = {
    user: {
       view: tailwind('p-3 '),
-      text: [tailwind('text-base mb-1'), typefaces.pm],
+      text: [tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }],
    },
    balance: {
       view: tailwind('flex flex-row items-center justify-between px-3 py-5'),
-      text: [tailwind('text-base'), typefaces.pm],
+      text: [tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }],
    },
    remaining: {
       view: tailwind('flex flex-row p-3'),
-      text: [tailwind('text-base'), typefaces.pm],
+      text: [tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }],
    },
    addSub: {
       view: tailwind('p-6'),
