@@ -18,7 +18,7 @@ import LoadingButton from '../shared/LoadingButton';
 import AppButton from '../shared/AppButton';
 import Ripple from 'react-native-material-ripple';
 import BackIcon from '../icons/SmallBackIcon';
-import { background, white, btn_text, info_text } from '../utils/colors';
+import { background, white, btn_text, info_text, black } from '../utils/colors';
 
 class CreateTransferView extends React.Component {
    constructor(props) {
@@ -193,22 +193,22 @@ const ConfirmTransferModal = memo(
             <View style={tailwind('w-full bg-white rounded-lg')}>
                <View style={tailwind('p-6 rounded-md')}>
                   <View style={tailwind('flex flex-row')}>
-                     <InfoIcon />
+                     {/*<InfoIcon />*/}
                      <Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>
                         Confirmar Transferencia
                      </Text>
                   </View>
                   <View style={tailwind('p-6')}>
                      <View style={tailwind('flex flex-row items-center')}>
-                        <Text style={[tailwind('text-sm'), typefaces.pm]}>Usuario: </Text>
-                        <Text style={[tailwind('text-sm'), typefaces.pr]}>{userToSend}</Text>
+                        <Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>Usuario: </Text>
+                        <Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: black }]}>{userToSend}</Text>
                      </View>
                      <View style={tailwind('flex flex-row items-center')}>
-                        <Text style={[tailwind('text-sm'), typefaces.pm]}>Gasolinera: </Text>
-                        <Text style={[tailwind('text-sm'), typefaces.pr]}>{gasStation.name}</Text>
+                        <Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>Gasolinera: </Text>
+                        <Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: black }]}>{gasStation.name}</Text>
                      </View>
                      <View style={tailwind('flex flex-row items-center')}>
-                        <Text style={[tailwind('text-sm'), typefaces.pm]}>Cantidad: </Text>
+                        <Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>Cantidad: </Text>
                         <Text style={[tailwind('text-sm text-green-600'), typefaces.pm]}>
                            ${amount}
                         </Text>

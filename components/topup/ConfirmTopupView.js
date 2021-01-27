@@ -89,7 +89,7 @@ class ConfirmTopupView extends React.Component {
 				
 				<View style={[tailwind('flex rounded-2xl'), { flex: 1, backgroundColor: background, zIndex: 10 }]}>
 					<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mt-2 ml-6')]}>
-						Comprar saldo
+						Confirmar datos de compra
 					</Text>
 
 					<View style={tailwind('items-center h-full')}>
@@ -134,12 +134,12 @@ class ConfirmTopupView extends React.Component {
 						</Modal>
 						<View style={tailwind('mt-20 flex flex-row')}>
 							<AppButton
-								text={'cancelar'}
+								text={'Cancelar'}
 								onPress={() => this.setState({ showConfirmCancel: true })}
 								primary={false}
 								disable={true}
 							/>
-							<AppButton text={'recargar'} onPress={this.accept} style={tailwind('ml-4')} />
+							<AppButton text={'Aceptar'} onPress={this.accept} style={tailwind('ml-4')} />
 						</View>
 					</View>
 				</View>
@@ -151,7 +151,7 @@ class ConfirmTopupView extends React.Component {
 function Wait(props) {
 	return (
 		<View style={tailwind('p-6 rounded-md')}>
-			<Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>Realizando la recarga.</Text>
+			<Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>Realizando la compra</Text>
 			<View style={tailwind('h-32 flex flex-row justify-center')}>
 				<ActivityIndicator color="black" size="large" animating />
 			</View>
@@ -164,7 +164,7 @@ function Done({ amount, gas_station, onDoneClose, onDoneGoBuy }) {
 		<View style={tailwind('p-6 rounded-md')}>
 			<View style={tailwind('flex flex-row')}>
 				{/*<CheckRoundedIcon />*/}
-				<Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>Recarga completada</Text>
+				<Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>Compra completada</Text>
 			</View>
 			<View style={tailwind(' flex flex-row justify-evenly mt-4 ')}>
 				<Image source={InfoIconp} style={[tailwind('w-20 h-20')]} />
@@ -178,8 +178,8 @@ function Done({ amount, gas_station, onDoneClose, onDoneGoBuy }) {
 				</Text>
 			</View>
 			<View style={tailwind('flex flex-row justify-evenly mt-8')}>
-				<AppButton text={'cerrar'} onPress={onDoneClose} style={tailwind('mr-5')}/>
-				<AppButton text={'realizar compra'} primary={false} onPress={onDoneGoBuy}/>
+				<AppButton text={'Cerrar'} onPress={onDoneClose} style={tailwind('mr-5')}/>
+				<AppButton text={'Realizar recarga'} primary={false} onPress={onDoneGoBuy}/>
 			</View>
 		</View>
 	);
@@ -217,8 +217,8 @@ function ConfirmCancel({ onCancel, onContinue }) {
 					</Text>
 				</View>
 				<View style={tailwind('flex flex-row justify-evenly mt-8')}>
-					<AppButton text={'no'} primary={false} disable={true} onPress={onContinue} style={{ width: 100 }} />
-					<AppButton text={'si'} onPress={onCancel} style={{ width: 100 }}/>
+					<AppButton text={'No'} primary={false} disable={true} onPress={onContinue} style={{ width: 100 }} />
+					<AppButton text={'Si'} onPress={onCancel} style={{ width: 100 }}/>
 				</View>
 			</View>
 		</View>

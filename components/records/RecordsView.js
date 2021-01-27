@@ -48,7 +48,7 @@ class RecordsView extends React.Component {
 			showFbtn: false,
 			filtersVisible: false,
 			filterActive: false,
-			showPurchase: false
+			showPurchase: false,
 		};
 	}
 

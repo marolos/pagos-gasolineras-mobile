@@ -18,7 +18,7 @@ export default function CardItem({ holderName, type, onPress, selected }) {
 			onPress={onPress}
 			style={[styles.ripple, selected ? styles.selected : styles.selected]}
 		>
-			<View style={tailwind( 'rounded-xl flex flex-row justify-between px-6 py-5', )}>
+			<View style={tailwind( 'rounded-xl flex flex-row justify-between px-6 py-5')}>
 				<View style={styles.view}>
 					<Image source={getCardLogo(type)} style={styles.image} />
 					<Text style={styles.text}>{holderName}</Text>

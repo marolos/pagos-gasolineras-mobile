@@ -15,8 +15,8 @@ import { connect } from 'react-redux';
 import Ripple from 'react-native-material-ripple';
 import BackIcon from '../icons/SmallBackIcon';
 import FastImage from 'react-native-fast-image';
-import { background, 
-	white, 
+import { background,
+	white,
 	btn_text,
 	info_text } from '../utils/colors';
 
@@ -217,7 +217,7 @@ class BillingDataView extends React.Component {
 					</View>
 					<View style={styles.button.container}>
 						<LoadingButton
-							text={this.props.route.params.company? "Siguiente" : "Guardar"}
+							text={this.props.route.params.company ? "Siguiente" : "Guardar"}
 							style={tailwind('w-40')}
 							onPress={this.sendData}
 							loading={this.state.loading}

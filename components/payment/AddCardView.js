@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View, TextInput, Text, ScrollView } from 'react-native';
+import { View, TextInput, Text, ScrollView, Image } from 'react-native';
 import LoadingButton from '../shared/LoadingButton';
 import tailwind from 'tailwind-rn';
 import NextIcon from '../icons/NextIcon';
@@ -15,6 +15,9 @@ import Ripple from 'react-native-material-ripple';
 import SmallBackIcon from '../icons/SmallBackIcon';
 import FastImage from 'react-native-fast-image';
 import { background, btn_text, info_text, white } from '../utils/colors';
+import ReactNativeModal from 'react-native-modal';
+import InfoIconp from '../../assets/img/popup.png';
+import AppButton from '../shared/AppButton';
 
 const initialState = {
 	cardNumber: '',
@@ -45,21 +48,61 @@ const reducer = (state, action) => {
 
 function AddCardView({ navigation, route, user }) {
 	const [state, dispatch] = React.useReducer(reducer, initialState);
+	const [showDone, setshowDone] = React.useState(false);
+
 	function next() {
 		dispatch({ type: 'loading' });
 		Fetch.post('/payment/user/card/', getCardObject(state))
 			.then((res) => {
 				dispatch({ type: 'end_loading' });
-				navigation.navigate('confirmTopup', {
-					...route.params,
-					card: { ...res.body, save: state.save },
-				});
+
+				route.params.previous === 'paymentMethod' ?
+					setshowDone(true)
+				:
+					navigation.navigate( 'confirmTopup', {
+						...route.params,
+						card: { ...res.body, save: state.save },
+					});
 			})
 			.catch((err) => {
 				SimpleToast.show('Datos incorrectos o tarjeta ya registrada.');
 				dispatch({ type: 'end_loading' });
 			});
 	}
+
+	const TransferDoneModal = ({ show, onClose }) => {
+		return (
+			<ReactNativeModal
+				isVisible={show}
+				animationIn="fadeIn"
+				animationOut="fadeOut"
+				backdropTransitionOutTiming={0}
+				style={tailwind('flex items-center')}
+			>
+				<View style={tailwind('w-full bg-white rounded-lg')}>
+					<View style={tailwind('p-6 rounded-md')}>
+						<View style={tailwind('flex flex-row  justify-evenly')}>
+							<Text style={[tailwind('text-xl'), typefaces.psb]}>
+								Tarjeta agregada
+							</Text>
+						</View>
+						<View style={tailwind(' flex flex-row justify-evenly mt-4 ')}>
+							<Image source={InfoIconp} style={[tailwind('w-20 h-20')]} />
+						</View>
+						<View style={tailwind('flex flex-row justify-evenly mt-8')}>
+							<AppButton text={'Aceptar'} onPress={onClose} style={{ width: 100 }} />
+						</View>
+					</View>
+				</View>
+			</ReactNativeModal>
+		);
+	};
+
+	const close = () => {
+      setshowDone(false);
+		navigation.reset({ index: 0, key: null, routes: [{ name: 'home' }] });
+   };
+
 	return (
 
 		<View style={{ flex: 1, backgroundColor: white }}>
@@ -67,7 +110,7 @@ function AddCardView({ navigation, route, user }) {
 
 			<View style={[tailwind('flex rounded-2xl'), { flex: 1, backgroundColor: background, zIndex: 10 }]}>
 				<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mt-2 ml-6')]}>
-					Comprar saldo
+					{route.params.previous === 'paymentMethod' ? "Agregar tarjeta" : "Comprar saldo"}
 				</Text>
 
 				{/*<ScrollView keyboardShouldPersistTaps="handled">*/}
@@ -122,7 +165,7 @@ function AddCardView({ navigation, route, user }) {
 						</View>
 						<View style={styles.nextView}>
 							<LoadingButton
-								text="Siguiente"
+								text={route.params.previous === 'paymentMethod' ? "Guardar" : "Siguiente"}
 								style={styles.nextButton}
 								onPress={next}
 								loading={state.loading}
@@ -130,6 +173,7 @@ function AddCardView({ navigation, route, user }) {
 						</View>
 					</View>
 				{/*</ScrollView>*/}
+				<TransferDoneModal show={showDone} onClose={close} />
 			</View>
 		</View>
 	);
@@ -146,11 +190,18 @@ const BackTitle = memo(({ navigation, station }) => {
 				<SmallBackIcon />
 			</Ripple>
 			<View style={tailwind('flex flex-row items-center ml-12 mb-4')}>
-			<FastImage
-					source={{ uri: station.company.company_logo_path }}
-					style={tailwind('w-12 h-12')}
-				/>
-				<Text style={[tailwind('text-2xl'), typefaces.pb]}>{station.gas_station.name}</Text>
+				{
+					station.previous === 'paymentMethod' ?
+					<Text style={[tailwind('text-2xl'), typefaces.pb]}>Método de pago</Text>
+					:
+					<>
+						<FastImage
+							source={{ uri: station.company.company_logo_path }}
+							style={tailwind('w-12 h-12')}
+						/>
+						<Text style={[tailwind('text-2xl'), typefaces.pb]}>{station.gas_station.name}</Text>
+					</>
+				}
 			</View>
 		</View>
 	)

@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, FlatList, Image } from 'react-native';
-import { typefaces } from '../utils/styles';
+import { typefaces, shadowStyle3 } from '../utils/styles';
 import emptyImage from '../../assets/background/empty.png';
 import Line from '../shared/Line';
 import { connect } from 'react-redux';
 import Fetch from '../utils/Fetch';
 import InfoIcon from '../icons/InfoIcon';
 import tailwind from 'tailwind-rn';
-import Button from '../shared/Button';
+import FloatingButton from '../shared/FloatingButton';
 import ReactNativeModal from 'react-native-modal';
 import { getCardLogo } from './CardItem';
 import Ripple from 'react-native-material-ripple';
 import DeleteIcon from '../icons/DeleteIcon';
+import SmallBackIcon from '../icons/SmallBackIcon';
+import { background, btn_text, info_text, white } from '../utils/colors';
+import AppButton from '../shared/AppButton';
+import AddIcon from '../../assets/img/agregar.png';
 
 class PaymentMethodsView extends React.Component {
 	state = {
@@ -60,29 +64,64 @@ class PaymentMethodsView extends React.Component {
 		const { refreshing, showConfirm } = this.state;
 		return (
 			<React.Fragment>
-				<FlatList
-					ListEmptyComponent={EmptyMessage}
-					refreshing={refreshing}
-					onRefresh={this.loadCards}
-					data={this.props.cards}
-					renderItem={this.renderItem}
-					keyExtractor={this.keyExtractor}
-					ItemSeparatorComponent={Line}
+				<FloatingButton
+					icon={
+						<View>
+							<Image source={AddIcon} style={[tailwind('w-16 h-16')]} />
+						</View>
+					}
+					onPress={() => this.props.navigation.push('addCardPaymentMethodsView', { ...this.props.route.params, previous: 'paymentMethod' } )}
 				/>
-				<ConfirmDelete
-					show={showConfirm}
-					close={() => this.setState({ showConfirm: false })}
-					confirm={this.deleteCard}
-				/>
+
+				<View style={{ flex: 1, backgroundColor: white }}>
+					<BackTitle navigation={this.props.navigation} />
+
+					<View style={[tailwind('flex rounded-2xl p-6'), { flex: 1, backgroundColor: background, zIndex: 10 }]}>
+						<Text style={[{ color: btn_text }, typefaces.psb, tailwind('text-lg mb-2 pl-3')]}>
+							Elegir tarjeta
+						</Text>
+						<FlatList
+							ListEmptyComponent={EmptyMessage}
+							refreshing={refreshing}
+							onRefresh={this.loadCards}
+							data={this.props.cards}
+							renderItem={this.renderItem}
+							keyExtractor={this.keyExtractor}
+							ItemSeparatorComponent={Line}
+						/>
+						{/*<Text style={[typefaces.psb, tailwind('mr-10 self-start mt-3'), {color: btn_text}]} onPress={() => this.props.navigation.push('addCardPaymentMethodsView', { ...this.props.route.params, previous: 'paymentMethod' } )}>Usar otra tarjeta</Text>*/}
+						<ConfirmDelete
+							show={showConfirm}
+							close={() => this.setState({ showConfirm: false })}
+							confirm={this.deleteCard}
+						/>
+					</View>
+				</View>
 			</React.Fragment>
 		);
 	}
 }
 
+const BackTitle = memo(({ navigation }) => {
+	return (
+		<View style={{ zIndex: 1 }}>
+			<Ripple
+				onPress={navigation.goBack}
+				style={tailwind('rounded-full p-2 w-12 items-center')}
+				rippleCentered={true}
+			>
+				<SmallBackIcon />
+			</Ripple>
+			<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Metodos de pago</Text>
+		</View>
+	)
+})
+
 function CardItemRemovable({ item, onDelete }) {
 	const { holder_name, type } = item;
 	return (
-		<View style={tailwind('flex flex-row justify-between px-6 py-4')}>
+		<View style={[tailwind( 'flex flex-row justify-between border border-gray-300 rounded-md my-1 px-2 py-2',),
+			tailwind('mb-2 bg-white rounded-xl border border-gray-300 p-4'), shadowStyle3]}>
 			<View style={styles.view}>
 				<Image source={getCardLogo(type)} style={styles.image} />
 				<Text style={styles.text}>{holder_name}</Text>
@@ -97,11 +136,11 @@ function CardItemRemovable({ item, onDelete }) {
 function EmptyMessage() {
 	return (
 		<View style={tailwind('items-center mb-12 mt-24')}>
-			<View>
+			{/*<View>
 				<Image source={emptyImage} style={tailwind('w-32 h-48')} />
-			</View>
+			</View>*/}
 			<View style={tailwind('px-12')}>
-				<Text style={[tailwind('text-gray-600 text-center mt-4'), typefaces.pm]}>
+				<Text style={[tailwind('text-sm text-center'), typefaces.pm, { color: info_text }]}>
 					No tiene tarjetas guardadas
 				</Text>
 			</View>
@@ -120,12 +159,12 @@ function ConfirmDelete({ show, close, confirm }) {
 		>
 			<View style={tailwind('p-6 rounded-md bg-white')}>
 				<View style={tailwind('flex flex-row')}>
-					<InfoIcon />
-					<Text style={[tailwind('text-base ml-4'), typefaces.psb]}>¿Borrar tarjeta?</Text>
+					{/*<InfoIcon />*/}
+					<Text style={[tailwind('text-xl ml-4'), typefaces.psb]}>¿Borrar tarjeta?</Text>
 				</View>
 				<View style={tailwind('flex flex-row justify-evenly mt-8')}>
-					<Button text={'cancelar'} onPress={close} primary={false} style={{ width: 100 }} />
-					<Button text={'borrar'} onPress={confirm} style={{ width: 100, marginLeft: 20 }} />
+					<AppButton text={'Cancelar'} onPress={close} primary={false} disable={true} style={{ width: 100 }} />
+					<AppButton text={'Borrar'} onPress={confirm} style={{ width: 100, marginLeft: 20 }} />
 				</View>
 			</View>
 		</ReactNativeModal>
