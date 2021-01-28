@@ -21,6 +21,8 @@ import { EMAIL_REGEX } from '../utils/constants';
 import fondo from '../../assets/img/fondo.png';
 import logo from '../../assets/img/logo.png';
 import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
+import Ripple from 'react-native-material-ripple';
+import { EyeOff, Eye } from './icons';
 
 class LoginView extends React.Component {
 	state = {
@@ -32,6 +34,7 @@ class LoginView extends React.Component {
 			password: '',
 		},
 		sent1: false,
+		showPass: false,
 	};
 
 	onLogin = () => {
@@ -96,6 +99,10 @@ class LoginView extends React.Component {
 		this.props.navigation.push(option);
 	};
 
+	switchShow = ()=> {
+		this.setState(({showPass})=> ({showPass: !showPass}))
+	}
+
 	render() {
 		return (
 			<ScrollView keyboardShouldPersistTaps="handled">
@@ -115,12 +122,27 @@ class LoginView extends React.Component {
 								placeholder="Correo Electrónico"
 								onChangeText={this.onChangeEmail}
 							/>
-							<TextInput
-								style={[tailwind('rounded-3xl border w-full pl-5 mt-4'), typefaces.pm]}
-								placeholder="Contraseña"
-								secureTextEntry={true}
-								onChangeText={this.onChangePassword}
-							/>
+							<View>
+								<TextInput
+									style={[tailwind('rounded-3xl border w-full pl-5 mt-4'), typefaces.pm]}
+									placeholder="Contraseña"
+									secureTextEntry={!this.state.showPass}
+									onChangeText={this.onChangePassword}
+								/>
+								<Ripple
+									style={[
+										tailwind(
+											'absolute rounded-full w-8 h-8 flex flex-col justify-center items-center',
+										),
+										{ top: 28, right: 20 },
+									]}
+									onPress={this.switchShow}
+									rippleDuration={250}
+									rippleCentered
+								>
+									{this.state.showPass ? <Eye /> : <EyeOff />}
+								</Ripple>
+							</View>
 						</View>
 						<View style={tailwind('flex flex-row justify-end')}>
 							<ResetPassMessage navigateTo={this.navigateTo} />

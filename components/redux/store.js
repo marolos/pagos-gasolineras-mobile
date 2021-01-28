@@ -32,6 +32,8 @@ const reducers = persistReducer(
 const store = createStore(reducers, applyMiddleware(thunk));
 const persistor = persistStore(store);
 
+
 export const getPersistor = () => persistor;
 export const getStore = () => store;
 export const getState = () => store.getState();
+

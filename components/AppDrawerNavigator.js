@@ -9,12 +9,12 @@ import { getGenericPassword, resetGenericPassword } from 'react-native-keychain'
 import tailwind from 'tailwind-rn';
 import Fetch from './utils/Fetch';
 import Line from './shared/Line';
-import ProfileIcon from './icons/ProfileIcon';
-import TransferIcon from './icons/TransferIcon';
+// import ProfileIcon from './icons/ProfileIcon';
+// import TransferIcon from './icons/TransferIcon';
 import { typefaces } from './utils/styles';
 import Ripple from 'react-native-material-ripple';
-import BookIcon from './icons/BookIcon';
-import CardIcon from './icons/CardIcon';
+// import BookIcon from './icons/BookIcon';
+// import CardIcon from './icons/CardIcon';
 import TransferNavigator from './transfer/TransfersNavigator';
 import RecordsNavigator from './records/RecordsNavigator';
 import PaymentMethodsNavigator from './payment/PaymentMethodNavigator';
@@ -95,25 +95,25 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 		<View>
 			<ProfileInfo />
 			<DrawerItem
-				icon={<ProfileIcon fill="#333" />}
+				// icon={<ProfileIcon fill="#333" />}
 				text="Perfil"
 				navigation={navigation}
 				navigateTo="profile"
 			/>
 			<DrawerItem
-				icon={<BookIcon />}
+				// icon={<BookIcon />}
 				text="Historial"
 				navigation={navigation}
 				navigateTo="records"
 			/>
 			<DrawerItem
-				icon={<TransferIcon width={20} />}
+				// icon={<TransferIcon width={20} />}
 				text="Transferencias"
 				navigation={navigation}
 				navigateTo="transfers"
 			/>
 			<DrawerItem
-				icon={<CardIcon />}
+				// icon={<CardIcon />}
 				text="Métodos de pagos"
 				navigation={navigation}
 				navigateTo="paymentMethods"
@@ -130,10 +130,10 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 
 const ProfileInfo = connect((state) => ({ user: state.user }))(
 	memo(({ user }) => (
-		<View style={tailwind('flex flex-row items-center p-6')}>
-			<ProfileIcon2 width={56} height={56} />
-			<View style={tailwind('pl-2')}>
-				<Text style={styles.title}>
+		<View style={tailwind('flex flex-row items-center p-4')}>
+			<ProfileIcon2 width={48} height={48} />
+			<View style={tailwind('pl-2 mt-4')}>
+				<Text style={[styles.title, { maxWidth: 192}]}>
 					{user.data.first_name} {user.data.last_name}
 				</Text>
 				<Text style={styles.info}>Id: {user.data.cedula}</Text>
@@ -175,15 +175,11 @@ const styles = {
 	itemCont: tailwind('flex flex-row py-3 pl-8'),
 	itemIconCont: tailwind('w-8'),
 	itemText: [tailwind('text-base text-black'), typefaces.pr],
-	title: [tailwind('text-xl'), typefaces.pm],
+	title: [tailwind('text-lg'), typefaces.pm],
 	info: [tailwind('text-sm text-gray-700'), typefaces.pm],
 	status: [tailwind('text-sm text-gray-500'), typefaces.pm],
 	statusInactive: [tailwind('text-sm text-gray-700'), typefaces.pm],
 	itemTextText: [tailwind('text-base text-gray-700'), typefaces.pr],
-	modal: {
-		bg: {},
-	},
 };
 
 export default AppDrawerNavigator;
-
