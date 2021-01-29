@@ -1,11 +1,19 @@
 import React from 'react';
 import { View, TextInput } from 'react-native';
+import Ripple from 'react-native-material-ripple';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
+import { Eye, EyeOff } from './icons';
 
 export default function PasswordInput({ placeholder, onChange, validate, style }) {
 	const [hasErrors, setHasError] = React.useState(false);
 	const [editing, setEditing] = React.useState(false);
+	const [showPAss, setshowPAss] = React.useState(false);
+
+	const switchShow = ()=> {
+		setshowPAss(!showPAss);
+	}
+
 	return (
 		<View>
 			<TextInput
@@ -27,8 +35,21 @@ export default function PasswordInput({ placeholder, onChange, validate, style }
 				onEndEditing={(e) => {
 					setEditing(false);
 				}}
-				secureTextEntry={true}
+				secureTextEntry={!showPAss}
 			/>
+			<Ripple
+				style={[
+					tailwind(
+						'absolute rounded-full w-8 h-8 flex flex-col justify-center items-center',
+					),
+					{ top: 10, right: 20 },
+				]}
+				onPress={switchShow}
+				rippleDuration={250}
+				rippleCentered
+			>
+				{showPAss ? <Eye /> : <EyeOff />}
+			</Ripple>
 		</View>
 	);
 }
