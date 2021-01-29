@@ -171,7 +171,7 @@ function Done({ amount, gas_station, onDoneClose, onDoneGoBuy }) {
 			</View>
 			<View style={tailwind('flex flex-row justify-center mt-8')}>
 				<Text style={[tailwind('text-sm mb-2'), typefaces.pr, { color: info_text }]}>
-					Se han recargado {' '}
+					Se han comprado {' '}
 						<Text style={[tailwind('text-sm mb-2'), typefaces.pr, { color: black }]}>${amount}</Text>
 					{' '}en {' '}
 						<Text style={[tailwind('text-sm mb-2'), typefaces.pr, { color: black }]}>{gas_station.name}</Text>

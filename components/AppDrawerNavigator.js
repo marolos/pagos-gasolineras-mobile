@@ -99,8 +99,8 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 				navigateTo="profile"
 			/> */}
 			<DrawerItem text="Noticias" navigation={navigation} navigateTo="ads" />
-			<DrawerItem text="Historial" navigation={navigation} navigateTo="records" />
 			<DrawerItem text="Transferencias" navigation={navigation} navigateTo="transfers" />
+			<DrawerItem text="Historial" navigation={navigation} navigateTo="records" />
 			<DrawerItem text="Métodos de pagos" navigation={navigation} navigateTo="paymentMethods" />
 			<DrawerItem text="Sugerencias y reclamos" navigation={navigation} navigateTo="feedback" />
 			<DrawerItem text="Políticas de servicios" navigation={navigation} navigateTo="policy" />
