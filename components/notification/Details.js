@@ -44,8 +44,17 @@ class PurchaseRating extends React.Component {
 		this.comment = '';
 	}
 
+	componentDidMount() {
+		let { purchaseId } = this.props;
+		Fetch.get(`/purchase/rate/${purchaseId}/`)
+			.then((res) => {
+				this.setState({ rating: res.body.rating });
+			})
+			.catch((err) => console.error(err));
+	}
+
 	sendRating = () => {
-		const { purchaseId } = this.props;
+		let { purchaseId } = this.props;
 		Fetch.post(`/purchase/rate/${purchaseId}/`, {
 			rating: this.state.rating,
 			comment: this.comment,
@@ -96,11 +105,14 @@ class PurchaseRating extends React.Component {
 					/>
 				</View>
 				<View style={tailwind('flex flex-row items-center mt-4')}>
-					<Button 
+					<Button
 						style={tailwind('w-32')}
 						viewStyle={{ paddingBottom: 10, paddingTop: 10 }}
-						text="Cerrar" onPress={this.props.onClose} primary={false} />
-						<View style={tailwind('w-4')}/>
+						text="Cerrar"
+						onPress={this.props.onClose}
+						primary={false}
+					/>
+					<View style={tailwind('w-4')} />
 					<LoadingButton
 						text="Enviar"
 						style={tailwind('w-32')}
