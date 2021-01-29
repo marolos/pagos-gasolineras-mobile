@@ -83,15 +83,15 @@ export default class FeedbackView extends React.Component {
 			})
 			.finally(() => {
 				this.setState({ sending: false });
-				this.props.navigation.goBack()
+				this.props.navigation.goBack();
 			});
 	};
 
 	render() {
 		const { type, img, imgHeight, imgWidth, sending } = this.state;
 		return (
-			<View style={{backgroundColor: white}}>
-				<View style={{ zIndex: 1 }}>
+			<React.Fragment>
+				<View style={{ zIndex: 1, backgroundColor: white }}>
 					<Ripple
 						onPress={this.props.navigation.goBack}
 						style={tailwind('rounded-full p-2 w-12 items-center')}
@@ -99,12 +99,23 @@ export default class FeedbackView extends React.Component {
 					>
 						<BackIcon />
 					</Ripple>
-					<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>Sugerencias y reclamos</Text>
+					<Text style={[tailwind('text-2xl ml-16 mb-4'), typefaces.pb]}>
+						Sugerencias y reclamos
+					</Text>
 				</View>
 
-				<ScrollView keyboardShouldPersistTaps="handled" style={[tailwind('p-6'), tailwind('flex rounded-2xl pb-6'), { backgroundColor: background, zIndex: 10 }]}>
+				<ScrollView
+					keyboardShouldPersistTaps="handled"
+					style={[
+						tailwind('p-6'),
+						tailwind('flex rounded-2xl pb-6'),
+						{ backgroundColor: background, zIndex: 10 },
+					]}
+				>
 					<View style={tailwind('mb-6')}>
-						<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>Categoría:</Text>
+						<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>
+							Categoría:
+						</Text>
 						<Ripple
 							onPress={this.chooseType}
 							style={tailwind(
@@ -116,12 +127,18 @@ export default class FeedbackView extends React.Component {
 						</Ripple>
 					</View>
 					<View style={tailwind('mb-6')}>
-						<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>Detalles:</Text>
+						<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>
+							Detalles:
+						</Text>
 						<BasicInput
 							placeholder="Mensaje claro y conciso"
 							onChange={(text) => (this.state.details = text)}
 							maxLength={300}
-							style={{ ...typefaces.pr, ...tailwind('w-full border border-2 border-black rounded-3xl bg-white'), textAlignVertical: 'top' }}
+							style={{
+								...typefaces.pr,
+								...tailwind('w-full border border-2 border-black rounded-3xl bg-white'),
+								textAlignVertical: 'top',
+							}}
 							multiline={true}
 							numberOfLines={9}
 						/>
@@ -129,7 +146,9 @@ export default class FeedbackView extends React.Component {
 					<View style={tailwind('mb-6')}>
 						<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>
 							Evidencia:{' '}
-							<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>(opcional)</Text>
+							<Text style={[tailwind('ml-2 text-sm'), typefaces.pr, { color: info_text }]}>
+								(opcional)
+							</Text>
 						</Text>
 						<View style={tailwind('items-center mt-4 ')}>
 							{img.uri ? (
@@ -147,7 +166,7 @@ export default class FeedbackView extends React.Component {
 						<LoadingButton text="enviar" onPress={this.send} loading={sending} />
 					</View>
 				</ScrollView>
-			</View>
+			</React.Fragment>
 		);
 	}
 }

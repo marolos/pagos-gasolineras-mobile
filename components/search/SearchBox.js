@@ -199,7 +199,7 @@ const styles = {
 	},
 	textInput: tailwind('w-full'),
    resultList: {
-      scroll: [tailwind('absolute w-full'), { zIndex: 5, top: 85 }],
+      scroll: [tailwind('absolute w-full'), { zIndex: 5, top: 85, maxHeight: 280 }],
       ripple: tailwind('flex flex-row items-center justify-between px-6 pt-1 pb-2'),
       view0: tailwind('flex flex-row items-center'),
       view1: tailwind('ml-3'),

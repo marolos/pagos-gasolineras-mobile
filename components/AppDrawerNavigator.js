@@ -9,12 +9,8 @@ import { getGenericPassword, resetGenericPassword } from 'react-native-keychain'
 import tailwind from 'tailwind-rn';
 import Fetch from './utils/Fetch';
 import Line from './shared/Line';
-// import ProfileIcon from './icons/ProfileIcon';
-// import TransferIcon from './icons/TransferIcon';
 import { typefaces } from './utils/styles';
 import Ripple from 'react-native-material-ripple';
-// import BookIcon from './icons/BookIcon';
-// import CardIcon from './icons/CardIcon';
 import TransferNavigator from './transfer/TransfersNavigator';
 import RecordsNavigator from './records/RecordsNavigator';
 import PaymentMethodsNavigator from './payment/PaymentMethodNavigator';
@@ -28,6 +24,7 @@ import ContactNavigator from './feedback/ContactNavigator';
 import ProfileIcon2 from './icons/ProfileIcon2';
 import { dollar_text, btn_text } from './utils/colors';
 import AdsView from './ads/AdsView';
+import PolicyView from './feedback/PolicyView';
 
 const Drawer = createDrawerNavigator();
 
@@ -73,7 +70,8 @@ function AppDrawerNavigator(props) {
 				drawerStyle={tailwind('px-1')}
 			>
 				<Drawer.Screen name="home" component={HomeNavigator} />
-				<Drawer.Screen name="profile" component={ProfileNavigator} />
+				<Drawer.Screen name="ads" component={AdsView} />
+				{/* <Drawer.Screen name="profile" component={ProfileNavigator} /> */}
 				<Drawer.Screen name="records" component={RecordsNavigator} />
 				<Drawer.Screen name="paymentMethods" component={PaymentMethodsNavigator} />
 				<Drawer.Screen name="transfers" component={TransferNavigator} />
@@ -81,7 +79,7 @@ function AppDrawerNavigator(props) {
 				<Drawer.Screen name="loggingOut" component={LoggingOutView} />
 				<Drawer.Screen name="feedback" component={FeedbackNavigator} options={{}} />
 				<Drawer.Screen name="contact" component={ContactNavigator} />
-				<Drawer.Screen name="ads" component={AdsView} />
+				<Drawer.Screen name="policy" component={PolicyView} />
 			</Drawer.Navigator>
 			<BackgroundModal />
 		</React.Fragment>
@@ -94,34 +92,19 @@ const DrawerContentMemoized = memo(({ navigation }) => {
 	return (
 		<View>
 			<ProfileInfo />
-			<DrawerItem
+			{/* <DrawerItem
 				// icon={<ProfileIcon fill="#333" />}
 				text="Perfil"
 				navigation={navigation}
 				navigateTo="profile"
-			/>
-			<DrawerItem
-				// icon={<BookIcon />}
-				text="Historial"
-				navigation={navigation}
-				navigateTo="records"
-			/>
-			<DrawerItem
-				// icon={<TransferIcon width={20} />}
-				text="Transferencias"
-				navigation={navigation}
-				navigateTo="transfers"
-			/>
-			<DrawerItem
-				// icon={<CardIcon />}
-				text="Métodos de pagos"
-				navigation={navigation}
-				navigateTo="paymentMethods"
-			/>
+			/> */}
+			<DrawerItem text="Noticias" navigation={navigation} navigateTo="ads" />
+			<DrawerItem text="Historial" navigation={navigation} navigateTo="records" />
+			<DrawerItem text="Transferencias" navigation={navigation} navigateTo="transfers" />
+			<DrawerItem text="Métodos de pagos" navigation={navigation} navigateTo="paymentMethods" />
 			<DrawerItem text="Sugerencias y reclamos" navigation={navigation} navigateTo="feedback" />
-			<DrawerItem text="Políticas de servicios" navigation={navigation} />
+			<DrawerItem text="Políticas de servicios" navigation={navigation} navigateTo="policy" />
 			<DrawerItem text="Contácto" navigation={navigation} navigateTo="contact" />
-			<DrawerItem text="Anúncios" navigation={navigation} navigateTo="ads" />
 			<Line style={tailwind('bg-black my-4')} />
 			<LogoutItem navigation={navigation} />
 		</View>
@@ -133,7 +116,7 @@ const ProfileInfo = connect((state) => ({ user: state.user }))(
 		<View style={tailwind('flex flex-row items-center p-4')}>
 			<ProfileIcon2 width={48} height={48} />
 			<View style={tailwind('pl-2 mt-4')}>
-				<Text style={[styles.title, { maxWidth: 192}]}>
+				<Text style={[styles.title, { maxWidth: 192 }]}>
 					{user.data.first_name} {user.data.last_name}
 				</Text>
 				<Text style={styles.info}>Id: {user.data.cedula}</Text>
