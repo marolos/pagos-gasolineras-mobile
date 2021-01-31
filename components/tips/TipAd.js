@@ -50,7 +50,6 @@ class TipAd extends React.Component {
 	};
 
 	render() {
-		console.log(this.props.data);
 		const { liked, imgHeight } = this.state;
 		const { company, created_at, img_path, title, description, like_count } = this.props.data;
 		const count = liked ? like_count + 1 : like_count;
