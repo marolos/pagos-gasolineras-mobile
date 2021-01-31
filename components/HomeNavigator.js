@@ -111,6 +111,7 @@ class HomeNavigator extends React.Component {
 					name="buyAfterTopup"
 					component={BuyView}
 					options={({ navigation }) => ({
+						headerShown: false,
 						headerLeft: () => (
 							<HeaderBackButton
 								onPress={() => navigation.reset({ index: 0, routes: [{ name: 'home' }] })}

@@ -3,7 +3,6 @@ import { ActivityIndicator, FlatList, Image, Text, View, SafeAreaView } from 're
 import { connect } from 'react-redux';
 import tailwind from 'tailwind-rn';
 import { typefaces } from '../utils/styles';
-import emptyImage from '../../assets/background/empty.png';
 import Fetch from '../utils/Fetch';
 import { makeCancelable } from '../utils/utils';
 import { TabOptions } from '../redux/ui/reducers';

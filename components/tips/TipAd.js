@@ -5,7 +5,6 @@ import FastImage from 'react-native-fast-image';
 import Ripple from 'react-native-material-ripple';
 import tailwind from 'tailwind-rn';
 import LikeIcon from '../icons/HeartIcon';
-import Line from '../shared/Line';
 import { FULL_WIDTH } from '../utils/constants';
 import { formatISORelative } from '../utils/dateUtils';
 import Fetch from '../utils/Fetch';

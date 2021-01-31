@@ -4,34 +4,36 @@ import FastImage from 'react-native-fast-image';
 import Swiper from 'react-native-swiper';
 import { connect } from 'react-redux';
 import tailwind from 'tailwind-rn';
-import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
+import { FULL_WIDTH, ADS_MAX_HEIGHT } from '../utils/constants';
 import Fetch from '../utils/Fetch';
 import { makeCancelable } from '../utils/utils';
-import { btn_text } from '../utils/colors';
+import { btn_text, btn_primary } from '../utils/colors';
 
 const DURATION = 4;
 
-function AdsPaginator({ ads, dispatch, reload }) {
+function HomeAdsPaginator({ ads_home, dispatch, reload }) {
 	React.useEffect(() => {
 		const cleanUp = loadData(dispatch);
 		return cleanUp;
 	}, [reload]);
 
 	return (
-		<Swiper
-			key={'0'}
-			showsButtons={false}
-			dot={_dot}
-			activeDot={_activeDot}
-			paginationStyle={{ bottom: 10 }}
-			autoplay
-			loop
-			autoplayTimeout={DURATION}
-		>
-			{ads.map((ad) => (
-				<AdsItem href={ad.img_path} key={ad.id} />
-			))}
-		</Swiper>
+		<View style={styles.main}>
+		    <Swiper
+		    	key={'0'}
+		    	showsButtons={false}
+		    	dot={_dot}
+		    	activeDot={_activeDot}
+		    	paginationStyle={{ bottom: 10 }}
+		    	autoplay
+		    	loop
+		    	autoplayTimeout={DURATION}
+		    >
+		    	{ads_home.map((ad) => (
+		    		<AdsItem href={ad.img_path} key={ad.id} />
+		    	))}
+		    </Swiper>
+		</View>
 	);
 }
 
@@ -59,9 +61,9 @@ const _activeDot = <ActiveDot />;
 
 const loadData = (dispatch) => {
 	let req = makeCancelable(
-		Fetch.get('/company/tipads/ads/?limit=9&show_in_home=false'),
+		Fetch.get('/company/tipads/ads/?limit=6&show_in_home=true'),
 		(res) => {
-			dispatch({ type: 'SET_ADS', value: res.body.ads });
+			dispatch({ type: 'SET_ADS_HOME', value: res.body.ads });
 		},
 		(err) => {
 			if (err.isCanceled) return;
@@ -73,10 +75,17 @@ const loadData = (dispatch) => {
 };
 
 const styles = {
-	dot: tailwind('w-2 h-2 m-1 bg-white bg-opacity-25 border border-white rounded-full'),
-	activeDot: tailwind('w-2 h-2 m-1 bg-white rounded-full'),
-	image: { width: FULL_WIDTH - 24, height: FULL_HIGHT - 82, borderRadius: 24},
+	main: { width: FULL_WIDTH, height: ADS_MAX_HEIGHT },
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		flexDirection: 'row',
+		padding: 10,
+	},
+	dot: [tailwind('w-2 h-2 m-1 rounded-full'), { backgroundColor: btn_text }],
+	activeDot: [tailwind('w-2 h-2 m-1 rounded-full'), { backgroundColor: btn_primary }],
+	image: { width: FULL_WIDTH, height: ADS_MAX_HEIGHT, opacity: 0.9 },
 	loader: tailwind('flex flex-row justify-center items-center'),
 };
 
-export default connect(({ ads }) => ({ ads }))(memo(AdsPaginator));
+export default connect(({ ads_home }) => ({ ads_home }))(memo(HomeAdsPaginator));

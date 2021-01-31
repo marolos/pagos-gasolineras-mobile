@@ -23,6 +23,7 @@ const reducers = persistReducer(
 			'tips',
 			'ads',
 			'cards',
+			'ads_home'
 		],
 		transforms: [encryptor],
 	},

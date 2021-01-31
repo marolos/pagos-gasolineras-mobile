@@ -36,7 +36,7 @@ export const theme = {
 export const FULL_WIDTH = Dimensions.get('window').width;
 export const FULL_HIGHT = Dimensions.get('window').height;
 
-export const ADS_MAX_HEIGHT = 240;
+export const ADS_MAX_HEIGHT = FULL_HIGHT * 0.30;
 
 export const ADD_VALUE_STEP = 10.0;
 

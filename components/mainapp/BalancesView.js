@@ -14,6 +14,7 @@ import gasolina from '../../assets/img/gasolina.png';
 import { FULL_WIDTH, FULL_HIGHT } from '../utils/constants';
 import { background, info_text } from '../utils/colors';
 import AppBtn from '../shared/AppButton';
+import HomeAdsPaginator from '../ads/HomeAdsPaginator';
 
 class BalancesView extends React.Component {
 	constructor(props) {
@@ -83,11 +84,10 @@ class BalancesView extends React.Component {
 	render() {
 		const { balances, refreshing, loading, selectedStation, modalVisible } = this.state;
 		return (
-			<View style={{ height: FULL_HIGHT - 64, width: FULL_WIDTH, backgroundColor: 'white' }}>
-				<View style={tailwind('absolute')}>
-					<Image source={fondo} style={{ width: FULL_WIDTH, height: FULL_HIGHT }} />
-				</View>
-				<View style={tailwind('h-24')}></View>
+			<View style={{ height: FULL_HIGHT - 64, width: FULL_WIDTH, backgroundColor: '#205ECA' }}>
+				
+				{/* <View style={tailwind('h-24')}></View> */}
+				<HomeAdsPaginator reload={refreshing}/>
 				<ScrollView
 					style={[
 						tailwind('flex rounded-t-2xl pb-6 px-3'),
