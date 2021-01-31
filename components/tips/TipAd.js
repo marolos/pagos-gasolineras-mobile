@@ -50,6 +50,7 @@ class TipAd extends React.Component {
 	};
 
 	render() {
+		console.log(this.props.data);
 		const { liked, imgHeight } = this.state;
 		const { company, created_at, img_path, title, description, like_count } = this.props.data;
 		const count = liked ? like_count + 1 : like_count;
@@ -57,7 +58,7 @@ class TipAd extends React.Component {
 			<React.Fragment>
 				<View style={[tailwind('rounded-xl bg-white mx-1 border border-gray-300'), shadowStyle3]}>
 				   <View style={tailwind('flex flex-row justify-between px-4 pb-1 pt-2 items-center')}>
-				   	<Text style={[tailwind('text-lg'), typefaces.psb, { color: btn_text }]}>{company.business_name}</Text>
+				   	{/* <Text style={[tailwind('text-lg'), typefaces.psb, { color: btn_text }]}>{company?.business_name}</Text> */}
 				   	<Text style={[tailwind('text-xs text-gray-600'), typefaces.pr]}>
 				   		{formatISORelative(created_at)}
 				   	</Text>
