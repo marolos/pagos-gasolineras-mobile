@@ -10,9 +10,9 @@ export default function PasswordInput({ placeholder, onChange, validate, style }
 	const [editing, setEditing] = React.useState(false);
 	const [showPAss, setshowPAss] = React.useState(false);
 
-	const switchShow = ()=> {
+	const switchShow = () => {
 		setshowPAss(!showPAss);
-	}
+	};
 
 	return (
 		<View>
@@ -37,17 +37,7 @@ export default function PasswordInput({ placeholder, onChange, validate, style }
 				}}
 				secureTextEntry={!showPAss}
 			/>
-			<Ripple
-				style={[
-					tailwind(
-						'absolute rounded-full w-8 h-8 flex flex-col justify-center items-center',
-					),
-					{ top: 10, right: 20 },
-				]}
-				onPress={switchShow}
-				rippleDuration={250}
-				rippleCentered
-			>
+			<Ripple style={styles.eyeRipple} onPress={switchShow} rippleDuration={250} rippleCentered>
 				{showPAss ? <Eye /> : <EyeOff />}
 			</Ripple>
 		</View>
@@ -59,4 +49,8 @@ const styles = {
 	editing: tailwind('bg-white border-2 border-gray-600'),
 	noEditing: tailwind('bg-white'),
 	error: tailwind('bg-white border-2 border-red-400'),
+	eyeRipple: [
+		tailwind('absolute rounded-full w-8 h-8 flex flex-col justify-center items-center'),
+		{ top: 10, right: 20 },
+	],
 };
